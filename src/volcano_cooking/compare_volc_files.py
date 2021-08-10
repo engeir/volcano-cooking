@@ -1,15 +1,27 @@
 """Compare values in two .nc files.
 
-A quick way of printing all relevant information found in the forcing data file used by
-CESM2 (or similar) and compare this to the values stored in the file with synthetic data.
+A quick way of comparing all relevant information found in the forcing data file used by
+CESM2 (or similar) with the values stored in the file with synthetic data. The latest
+synthetically created file is used.
 """
 
+import os
 import pprint
+import sys
 
 import xarray as xr
 
 original_file = "data/originals/volcan-eesm_global_2015_so2-emissions-database_v1.0.nc"
-synthetic_file = "data/output/synthetic_volcanoes.nc"
+if not os.path.isfile(original_file):
+    sys.exit(f"Can't find file {original_file}")
+synth_dir = "data/output"
+synth_files = [
+    f for f in os.listdir(synth_dir) if os.path.isfile(os.path.join(synth_dir, f))
+]
+if len(synth_files) == 0:
+    sys.exit("No output files found.")
+synth_files.sort()
+synthetic_file = os.path.join(synth_dir, synth_files[-1])
 
 forcing = xr.open_dataset(original_file, decode_times=False)
 my_forcing = xr.open_dataset(synthetic_file, decode_times=False)

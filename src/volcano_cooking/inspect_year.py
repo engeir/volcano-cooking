@@ -5,9 +5,15 @@ import xarray as xr
 
 year = 1865
 
-file = "data/output/synthetic_volcanoes.nc"
-if not os.path.isfile(file):
-    sys.exit("Can't find the file. Sorry...")
+synth_dir = "data/output"
+synth_files = [
+    f for f in os.listdir(synth_dir) if os.path.isfile(os.path.join(synth_dir, f))
+]
+if len(synth_files) == 0:
+    sys.exit("No output files found.")
+synth_files.sort()
+file = os.path.join(synth_dir, synth_files[-1])
+print(file)
 
 f = xr.open_dataset(file, decode_times=False)
 
@@ -40,5 +46,5 @@ col_width = 12
 print("".join(element.ljust(col_width) for element in var_list_short))
 for i, y in enumerate(f.variables["Year_of_Emission"].data):
     if y <= year:
-        p_list = [str(f.variables[var_list[j]].data[i]) for j in range(10)]
+        p_list = [str(f.variables[var_list[j]].data[i])[:10] for j in range(10)]
         print("".join(element.ljust(col_width) for element in p_list))

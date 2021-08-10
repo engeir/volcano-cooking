@@ -1,8 +1,21 @@
+"""Compare two variables across the original and synthetic forcing files."""
+import os
+import sys
+
 import matplotlib.pyplot as plt
 import xarray as xr
 
-xax_file = "data/output/synthetic_volcanoes.nc"
 yax_file = "data/originals/volcan-eesm_global_2015_so2-emissions-database_v1.0.nc"
+if not os.path.isfile(yax_file):
+    sys.exit(f"Can't find file {yax_file}")
+synth_dir = "data/output"
+synth_files = [
+    f for f in os.listdir(synth_dir) if os.path.isfile(os.path.join(synth_dir, f))
+]
+if len(synth_files) == 0:
+    sys.exit("No output files found.")
+synth_files.sort()
+xax_file = os.path.join(synth_dir, synth_files[-1])
 
 f1 = xr.open_dataset(xax_file, decode_times=False)
 l1 = "Synthetic"
