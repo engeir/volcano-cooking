@@ -5,10 +5,15 @@ import sys
 import matplotlib.pyplot as plt
 import xarray as xr
 
-yax_file = "data/originals/volcan-eesm_global_2015_so2-emissions-database_v1.0.nc"
+orig_dir = "data/originals"
+if not os.path.isdir(orig_dir):
+    os.makedirs(orig_dir)
+yax_file = f"{orig_dir}/volcan-eesm_global_2015_so2-emissions-database_v1.0.nc"
 if not os.path.isfile(yax_file):
     sys.exit(f"Can't find file {yax_file}")
 synth_dir = "data/output"
+if not os.path.isdir(synth_dir):
+    os.makedirs(synth_dir)
 synth_files = [
     f for f in os.listdir(synth_dir) if os.path.isfile(os.path.join(synth_dir, f))
 ]
@@ -42,6 +47,7 @@ y1 = f1.variables[var_list[y_ax]].data
 x2 = f2.variables[var_list[x_ax]].data
 y2 = abs(f2.variables[var_list[y_ax]].data)
 
+plt.figure(figsize=(12, 9))
 plt.semilogy()
 plt.scatter(x1, y1, label=l1)
 plt.scatter(x2, y2, label=l2)

@@ -6,6 +6,8 @@ import xarray as xr
 year = 1865
 
 synth_dir = "data/output"
+if not os.path.isdir(synth_dir):
+    os.makedirs(synth_dir)
 synth_files = [
     f for f in os.listdir(synth_dir) if os.path.isfile(os.path.join(synth_dir, f))
 ]

@@ -11,10 +11,15 @@ import sys
 
 import xarray as xr
 
+orig_dir = "data/originals/"
+if not os.path.isdir(orig_dir):
+    os.makedirs("data/originals/")
 original_file = "data/originals/volcan-eesm_global_2015_so2-emissions-database_v1.0.nc"
 if not os.path.isfile(original_file):
     sys.exit(f"Can't find file {original_file}")
 synth_dir = "data/output"
+if not os.path.isdir(synth_dir):
+    os.makedirs(synth_dir)
 synth_files = [
     f for f in os.listdir(synth_dir) if os.path.isfile(os.path.join(synth_dir, f))
 ]

@@ -126,8 +126,11 @@ def create_volcanoes(size: int = 251, init_year: int = 1850) -> None:
         Units="km_above_mean_sea_level"
     )
 
+    synth_dir = "data/output"
+    if not os.path.isdir(synth_dir):
+        os.makedirs(synth_dir)
     now = datetime.datetime.now().strftime("%Y%m%d_%H%M")
-    out_file = f"data/output/synthetic_volcanoes_{now}.nc"
+    out_file = f"{synth_dir}/synthetic_volcanoes_{now}.nc"
     if os.path.isfile(out_file):
         sys.exit(f"The file {out_file} already exists.")
     # The format is important for when you give the .nc file to the .ncl script that creates
