@@ -50,11 +50,11 @@ lats = np.zeros(size, dtype=np.float32)  # Equator
 longs = np.ones(size, dtype=np.float32)
 # This part is probably important. I need to make sure the ratio between sum of emission
 # for a given volcano and the column emission is smaller than 1e-6.
-tes = 1e-2 * 3**(np.random.normal(.1, 1., size=size).astype(np.float32) + veis)
+tes = 1e-2 * 3 ** (np.random.normal(0.1, 1.0, size=size).astype(np.float32) + veis)
 scale_max = np.array([80 if v > 3 else 10 for v in veis])
 scale_min = np.array([20 if v > 3 else 1 for v in veis])
-mxihs = np.abs(np.random.normal(1, 2., size=size).astype(np.float32) * scale_max)
-miihs = np.abs(np.random.normal(1, 2., size=size).astype(np.float32) * scale_min)
+mxihs = np.abs(np.random.normal(1, 2.0, size=size).astype(np.float32) * scale_max)
+miihs = np.abs(np.random.normal(1, 2.0, size=size).astype(np.float32) * scale_min)
 for idx, (i, j) in enumerate(zip(miihs, mxihs)):
     miihs[idx] = min(i, j)
     mxihs[idx] = max(i, j)
