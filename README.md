@@ -12,10 +12,10 @@ $ poetry run volcano-cooking
 ```
 
 ```sh
-git clone https://github.com/engeir/volcano-cooking.git
-cd volcano-cooking
-poetry install
-poetry run volcano-cooking
+$ git clone https://github.com/engeir/volcano-cooking.git
+$ cd volcano-cooking
+$ poetry install
+$ poetry run volcano-cooking
 ```
 
 ## Data
