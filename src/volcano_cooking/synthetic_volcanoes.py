@@ -12,6 +12,8 @@ import sys
 import numpy as np
 import xarray as xr
 
+import volcano_cooking.create as create
+
 # ====================================================================================== #
 # Need:
 #
@@ -45,29 +47,29 @@ def create_volcanoes(size: int = 251, init_year: int = 1850) -> None:
         size: int
             The total number of eruptsions
         init_year: int
-            The first year an eruption can happen
+            Change the first year an eruption can happen
     """
+    # NOTE: should this be created from an FPP?
     eruptions = np.random.randint(1, high=20, size=size, dtype=np.int8)
     # We don't want eruptions that have a VEI greater than 7.
+    # NOTE: should this be created from an FPP?
     veis = np.random.normal(4, 1, size=size).round().astype(np.int8) % 7
-    yoes = np.cumsum(np.random.randint(0, high=2, size=size, dtype=np.int16)) + int(
-        init_year
-    )
-    moes = np.random.randint(1, high=12, size=size, dtype=np.int8)
-    does = np.random.randint(1, high=28, size=size, dtype=np.int8)
-    # Make sure dates are increasing!
-    # idx = list of arrays of indexes pointing to the same year
-    idxs = [np.where(yoes == i)[0] for i in np.unique(yoes)]
-    # sort months with indexes
-    # sort days with indexes
-    for idx in idxs:
-        moes[idx] = np.sort(moes[idx])
-        does[idx] = np.sort(does[idx])
+
+    # Create dates
+    yoes, moes, does = create.random_dates(size, init_year)
+    # Place all volcanoes at equator
     lats = np.zeros(size, dtype=np.float32)  # Equator
     longs = np.ones(size, dtype=np.float32)
+
     # This part is probably important. I need to make sure the ratio between sum of
-    # emission for a given volcano and the column emission is smaller than 1e-6.
+    # emission and the column emission for a given volcano is smaller than 1e-6.
+    # NOTE: should this be created from an FPP?
     tes = 1e-2 * 3 ** (np.random.normal(0.1, 1.0, size=size).astype(np.float32) + veis)
+
+    # When we set the minimum and maximum injection heights we should make sure the
+    # minimum value really is less than the maximum value, hence the for loop at the end.
+    # The variables 'scale_min' and 'scale_max' were adjusted based on the helper script
+    # './inspect_X-vs-Y.py'.
     scale_max = np.array([80 if v > 3 else 10 for v in veis])
     scale_min = np.array([20 if v > 3 else 1 for v in veis])
     mxihs = np.abs(np.random.normal(1, 2.0, size=size).astype(np.float32) * scale_max)
