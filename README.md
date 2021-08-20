@@ -11,7 +11,7 @@ $ poetry install
 $ poetry run volcano-cooking
 ```
 
-```console
+```sh
 git clone https://github.com/engeir/volcano-cooking.git
 cd volcano-cooking
 poetry install
