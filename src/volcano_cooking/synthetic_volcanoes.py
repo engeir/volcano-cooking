@@ -74,6 +74,15 @@ def create_volcanoes(size: int = 251, init_year: int = 1850) -> None:
     # emission and the column emission for a given volcano is smaller than 1e-6.
     # NOTE: should this be created from an FPP?
     tes = convert.vei_to_totalemission(veis)
+    v = convert.totalemission_to_vei(tes)
+    import matplotlib.pyplot as plt
+
+    plt.hist(veis, bins=[0, 1, 2, 3, 4, 5, 6, 7])
+    plt.title("1")
+    plt.figure()
+    plt.hist(v, bins=[0, 1, 2, 3, 4, 5, 6, 7])
+    plt.title("2")
+    plt.show()
 
     miihs, mxihs = convert.vei_to_injectionheights(veis)
 

@@ -53,21 +53,14 @@ def totalemission_to_vei(tes: np.ndarray) -> np.ndarray:
     ValueError
         If the output is not an array of int8.
     """
-    base = 7
-    veis = (
-        np.log(tes) / np.log(base)
-        - np.log(1e-2) / np.log(base)
-        - np.random.normal(0.1, 1.0, size=len(tes))
-    )
-    veis = abs(veis.astype(np.int8))
-    c = np.argmax(np.bincount(veis))
-    veis = (veis - c + 4) % 7
+    base = 4
+    veis = np.log(tes) / np.log(base)
+    veis -= np.min(veis) - 0.8
+    veis = veis.astype(np.int8) % 7
+
     if veis.dtype != np.int8:
         raise ValueError(f"{veis.dtype = }. Need int8.")
-    print(
-        "The totalemission_to_vei function is not the best. "
-        + "Consider just generating your own VEI's"
-    )
+
     return veis
 
 
