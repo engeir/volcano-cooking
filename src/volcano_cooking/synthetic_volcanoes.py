@@ -12,7 +12,8 @@ import sys
 import numpy as np
 import xarray as xr
 
-import volcano_cooking.create as create
+import volcano_cooking.modules.convert as convert
+import volcano_cooking.modules.create as create
 
 # ====================================================================================== #
 # Need:
@@ -43,17 +44,19 @@ def create_volcanoes(size: int = 251, init_year: int = 1850) -> None:
     This will re-create the same data as can be found in forcing files used within the
     CESM2 general circulation model.
 
-    Args:
-        size: int
-            The total number of eruptsions
-        init_year: int
-            Change the first year an eruption can happen
+    Parameters
+    ----------
+    size: int
+        The total number of eruptsions
+    init_year: int
+        Change the first year an eruption can happen
     """
-    # NOTE: should this be created from an FPP?
+    # This only (in the real data set) store a number for each volcanic event, increasing
+    # as new events occur. If a volcanic eruption lasts over several dates (years?) the
+    # number is repeated, giving a list similar to [1, 2, 3, 4, 4, 4, 5, 5, 6, 7, ...]
+    # where the fourth and fifth eruptions lasted over more than one year. Anyways, its
+    # most likely not important, so I just put gibberish in it.
     eruptions = np.random.randint(1, high=20, size=size, dtype=np.int8)
-    # We don't want eruptions that have a VEI greater than 7.
-    # NOTE: should this be created from an FPP?
-    veis = np.random.normal(4, 1, size=size).round().astype(np.int8) % 7
 
     # Create dates
     yoes, moes, does = create.random_dates(size, init_year)
@@ -61,22 +64,18 @@ def create_volcanoes(size: int = 251, init_year: int = 1850) -> None:
     lats = np.zeros(size, dtype=np.float32)  # Equator
     longs = np.ones(size, dtype=np.float32)
 
+    # We don't want eruptions that have a VEI greater than 7.
+    # NOTE: should this be created from an FPP?
+    veis = np.random.normal(4, 1, size=size).round().astype(np.int8) % 7
+    # plt.hist(veis, bins=[0, 1, 2, 3, 4, 5, 6, 7, 8])
+    # print(veis)
+
     # This part is probably important. I need to make sure the ratio between sum of
     # emission and the column emission for a given volcano is smaller than 1e-6.
     # NOTE: should this be created from an FPP?
-    tes = 1e-2 * 3 ** (np.random.normal(0.1, 1.0, size=size).astype(np.float32) + veis)
+    tes = convert.vei_to_totalemission(veis)
 
-    # When we set the minimum and maximum injection heights we should make sure the
-    # minimum value really is less than the maximum value, hence the for loop at the end.
-    # The variables 'scale_min' and 'scale_max' were adjusted based on the helper script
-    # './inspect_X-vs-Y.py'.
-    scale_max = np.array([80 if v > 3 else 10 for v in veis])
-    scale_min = np.array([20 if v > 3 else 1 for v in veis])
-    mxihs = np.abs(np.random.normal(1, 2.0, size=size).astype(np.float32) * scale_max)
-    miihs = np.abs(np.random.normal(1, 2.0, size=size).astype(np.float32) * scale_min)
-    for idx, (i, j) in enumerate(zip(miihs, mxihs)):
-        miihs[idx] = min(i, j)
-        mxihs[idx] = max(i, j)
+    miihs, mxihs = convert.vei_to_injectionheights(veis)
 
     my_frc = xr.Dataset(
         data_vars=dict(
@@ -99,12 +98,13 @@ def create_volcanoes(size: int = 251, init_year: int = 1850) -> None:
             Notes="All emissions are created from a filtered Poisson process (FPP).",
         ),
     )
+
     # Names are unimportant. The real data set would list the name of the volcano here,
     # e.g. Mt. Pinatubo.
     names = ""
-    for i in range(size):
+    for _ in range(size):
         names += "Dummy, "
-    names = names[:-2]
+    names = names[:-2]  # Removing the last comma and whitespace
     my_frc.Longitude.encoding["_FillValue"] = False
     my_frc["Eruption"] = my_frc.Eruption.assign_attrs(
         # The volcano number is a reference to the geographical location of the eruption.

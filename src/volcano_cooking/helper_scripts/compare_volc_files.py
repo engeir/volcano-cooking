@@ -2,7 +2,7 @@
 
 A quick way of comparing all relevant information found in the forcing data file used by
 CESM2 (or similar) with the values stored in the file with synthetic data. The latest
-synthetically created file is used.
+created file with synthetic data is used.
 """
 
 import os
