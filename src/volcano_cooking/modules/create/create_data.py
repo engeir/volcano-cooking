@@ -1,0 +1,185 @@
+"""Script that implement the class which correctly created a netCDF4 file and saves it."""
+
+import datetime
+import os
+import sys
+from typing import Optional
+
+import numpy as np
+import xarray as xr
+
+
+class Data:
+    def __init__(
+        self,
+        eruptions: np.ndarray,
+        yoes: np.ndarray,
+        moes: np.ndarray,
+        does: np.ndarray,
+        lats: np.ndarray,
+        lons: np.ndarray,
+        tes: np.ndarray,
+        veis: np.ndarray,
+        miihs: np.ndarray,
+        mxihs: np.ndarray,
+    ):
+        """Initialise object by giving all variables that should be put in the .nc file.
+
+        Parameters
+        ----------
+        eruptions: np.ndarray
+            Eruption number
+        yoes : np.ndarray
+            Years (four digit number) that the volcanoes occurred
+        moes : np.ndarray
+            Months (two digit number) that the volcanoes occurred
+        does : np.ndarray
+            Days (two digit number) that the volcanoes occurred
+        lats : np.ndarray
+            Latitudinal coordinate
+        lons : np.ndarray
+            Longitudinal coordinate
+        tes : np.ndarray
+            Total emission from a volcano at corresponding date
+        veis : np.ndarray
+            VEI (Volcanic Explosivity Index) of a volcano at corresponding date
+        miihs : np.ndarray
+            Minimum injection height
+        mxihs : np.ndarray
+            Maximum injection height
+        """
+        self.eruptions = eruptions
+        self.yoes = yoes
+        self.moes = moes
+        self.does = does
+        self.lats = lats
+        self.lons = lons
+        self.tes = tes
+        self.veis = veis
+        self.miihs = miihs
+        self.mxihs = mxihs
+        self.run_check()
+        self.my_frc: Optional[xr.Dataset] = None
+
+    def run_check(self):
+        """Check the data type of each numpy array.
+
+        Raises
+        ------
+        ValueError
+            If any of the ten numpy arrays contain data of wrong type a ValueError is
+            raised.
+        """
+        if (
+            self.eruptions.dtype != np.int8
+            or self.veis.dtype != np.int8
+            or self.moes.dtype != np.int8
+            or self.does.dtype != np.int8
+        ):
+            raise ValueError(
+                f"{self.eruptions.dtype = }, "
+                + f"{self.veis.dtype = }, "
+                + f"{self.moes.dtype = }, "
+                + f"{self.does.dtype = }. All must be int8."
+            )
+        if self.yoes.dtype != np.int16:
+            raise ValueError(f"{self.yoes.dtype = }. Need int16.")
+        if (
+            self.tes.dtype != np.float32
+            or self.mxihs.dtype != np.float32
+            or self.miihs.dtype != np.float32
+            or self.lats.dtype != np.float32
+            or self.lons.dtype != np.float32
+        ):
+            raise ValueError(
+                f"{self.tes.dtype = }, "
+                + f"{self.mxihs.dtype = }, "
+                + f"{self.miihs.dtype = }, "
+                + f"{self.lats.dtype = }"
+                + f"{self.lons.dtype = }. All must be float32."
+            )
+
+    def make_dataset(self) -> None:
+        """Make a xarray Dataset object where all variables are stored."""
+        self.my_frc = xr.Dataset(
+            data_vars=dict(
+                Eruption=(["Eruption_Number"], self.eruptions),
+                VEI=(["Eruption_Number"], self.veis),
+                Year_of_Emission=(["Eruption_Number"], self.yoes),
+                Month_of_Emission=(["Eruption_Number"], self.moes),
+                Day_of_Emission=(["Eruption_Number"], self.does),
+                Latitude=(["Eruption_Number"], self.lats),
+                Longitude=(["Eruption_Number"], self.lons),
+                Total_Emission=(["Eruption_Number"], self.tes),
+                Maximum_Injection_Height=(["Eruption_Number"], self.mxihs),
+                Minimum_Injection_Height=(["Eruption_Number"], self.miihs),
+            ),
+            # Global attributes
+            attrs=dict(
+                Creator="Eirik R. Enger",
+                DOI="#####",
+                Citation="#####",
+                Notes="All emissions are created from a filtered Poisson process (FPP).",
+            ),
+        )
+
+        size = len(self.yoes)
+        # Names are unimportant. The real data set would list the name of the volcano here,
+        # e.g. Mt. Pinatubo.
+        names = ""
+        for _ in range(size):
+            names += "N, "
+        names = names[:-2]  # Removing the last comma and whitespace
+        self.my_frc.Longitude.encoding["_FillValue"] = False
+        self.my_frc["Eruption"] = self.my_frc.Eruption.assign_attrs(
+            # The volcano number is a reference to the geographical location of the
+            # eruption.  The volcano name is its name and the note/reference is where in
+            # the literature you can find the values related to the eruption. All this is
+            # unimportant given that this is just made up data.
+            Volcano_Number=np.ones(size) * 123456,
+            Volcano_Name=names,
+            Notes_and_References=names,
+        )
+        self.my_frc["VEI"] = self.my_frc.VEI.assign_attrs(
+            Notes="Volcanic_Explosivity_Index_based_on_Global_Volcanism_Program"
+        )
+        self.my_frc["Latitude"] = self.my_frc.Latitude.assign_attrs(Units="-90_to_+90")
+        self.my_frc["Longitude"] = self.my_frc.Longitude.assign_attrs(
+            Units="Degrees_East"
+        )
+        self.my_frc["Total_Emission"] = self.my_frc.Total_Emission.assign_attrs(
+            Units="Tg_of_SO2"
+        )
+        self.my_frc[
+            "Maximum_Injection_Height"
+        ] = self.my_frc.Maximum_Injection_Height.assign_attrs(
+            Units="km_above_mean_sea_level"
+        )
+        self.my_frc[
+            "Minimum_Injection_Height"
+        ] = self.my_frc.Minimum_Injection_Height.assign_attrs(
+            Units="km_above_mean_sea_level"
+        )
+
+    def save_to_file(self) -> None:
+        """Save the xarray Dataset object to a .nc file using the netCDF4 format.
+
+        Raises
+        ------
+        ValueError
+            If the attribute my_frc has not been filled yet, ValueError is raised telling
+            the user to first call the 'make_dataset' method.
+        """
+        # if not isinstance(self.my_frc, xr.core.dataset.Dataset):
+        if self.my_frc is None:
+            raise ValueError("You must make the dataset with 'make_dataset' first.")
+        synth_dir = "data/output"
+        if not os.path.isdir(synth_dir):
+            os.makedirs(synth_dir)
+        now = datetime.datetime.now().strftime("%Y%m%d_%H%M")
+        out_file = f"{synth_dir}/synthetic_volcanoes_{now}.nc"
+        if os.path.isfile(out_file):
+            sys.exit(f"The file {out_file} already exists.")
+        # The format is important for when you give the .nc file to the .ncl script that
+        # creates the final forcing file.
+        self.my_frc.to_netcdf(out_file, "w", format="NETCDF4")
