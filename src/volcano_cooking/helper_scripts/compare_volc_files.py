@@ -5,54 +5,48 @@ CESM2 (or similar) with the values stored in the file with synthetic data. The l
 created file with synthetic data is used.
 """
 
-import os
 import pprint
-import sys
 
 import xarray as xr
 
-orig_dir = "data/originals/"
-if not os.path.isdir(orig_dir):
-    os.makedirs("data/originals/")
-original_file = "data/originals/volcan-eesm_global_2015_so2-emissions-database_v1.0.nc"
-if not os.path.isfile(original_file):
-    sys.exit(f"Can't find file {original_file}")
-synth_dir = "data/output"
-if not os.path.isdir(synth_dir):
-    os.makedirs(synth_dir)
-synth_files = [
-    f
-    for f in os.listdir(synth_dir)
-    if os.path.isfile(os.path.join(synth_dir, f)) and ".nc" in f
-]
-if len(synth_files) == 0:
-    sys.exit("No output files found.")
-synth_files.sort()
-synthetic_file = os.path.join(synth_dir, synth_files[-1])
+import volcano_cooking.helper_scripts.functions as fnc
 
-forcing = xr.open_dataset(original_file, decode_times=False)
-my_forcing = xr.open_dataset(synthetic_file, decode_times=False)
-files = [forcing, my_forcing]
 
-# Just np.arange(241), one integer for each volcano
-print("Eruption_Number")
-pprint.pprint([f["Eruption_Number"] for f in files])
-print("")
-# print(forcing)
-# print(forcing.data_vars.keys())
-var_list = [
-    "Eruption",
-    "VEI",
-    "Year_of_Emission",
-    "Month_of_Emission",
-    "Day_of_Emission",
-    "Latitude",
-    "Longitude",
-    "Total_Emission",
-    "Maximum_Injection_Height",
-    "Minimum_Injection_Height",
-]
-for v in var_list:
-    print(v)
-    pprint.pprint([f.variables[v].data for f in files])
+def compare_nc_files() -> None:
+    original_file = fnc.find_original()
+    synthetic_file = fnc.find_last_output("nc")
+
+    forcing = xr.open_dataset(original_file, decode_times=False)
+    my_forcing = xr.open_dataset(synthetic_file, decode_times=False)
+    files = [forcing, my_forcing]
+
+    # Just np.arange(241), one integer for each volcano
+    print("Eruption_Number")
+    pprint.pprint([f["Eruption_Number"] for f in files])
     print("")
+    # print(forcing)
+    # print(forcing.data_vars.keys())
+    var_list = [
+        "Eruption",
+        "VEI",
+        "Year_of_Emission",
+        "Month_of_Emission",
+        "Day_of_Emission",
+        "Latitude",
+        "Longitude",
+        "Total_Emission",
+        "Maximum_Injection_Height",
+        "Minimum_Injection_Height",
+    ]
+    for v in var_list:
+        print(v)
+        pprint.pprint([f.variables[v].data for f in files])
+        print("")
+
+
+def main():
+    compare_nc_files()
+
+
+if __name__ == "__main__":
+    main()

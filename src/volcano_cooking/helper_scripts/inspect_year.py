@@ -1,54 +1,54 @@
-import os
-import sys
+"""Print out the data from all ten variables in a table, starting at any given year."""
 
 import xarray as xr
 
-year = 1865
+import volcano_cooking.helper_scripts.functions as fnc
 
-synth_dir = "data/output"
-if not os.path.isdir(synth_dir):
-    os.makedirs(synth_dir)
-synth_files = [
-    f
-    for f in os.listdir(synth_dir)
-    if os.path.isfile(os.path.join(synth_dir, f)) and ".nc" in f
-]
-if len(synth_files) == 0:
-    sys.exit("No output files found.")
-synth_files.sort()
-file = os.path.join(synth_dir, synth_files[-1])
-print(file)
 
-f = xr.open_dataset(file, decode_times=False)
+def inspect_year() -> None:
+    year = 1865
 
-var_list = [
-    "Eruption",
-    "VEI",
-    "Year_of_Emission",
-    "Month_of_Emission",
-    "Day_of_Emission",
-    "Latitude",
-    "Longitude",
-    "Total_Emission",
-    "Maximum_Injection_Height",
-    "Minimum_Injection_Height",
-]
-var_list_short = [
-    "Eru",
-    "VEI",
-    "YoE",
-    "MoE",
-    "DoE",
-    "Lat",
-    "Lon",
-    "TE",
-    "MaxIH",
-    "MinIH",
-]
+    file = fnc.find_last_output("nc")
+    print(file)
 
-col_width = 12
-print("".join(element.ljust(col_width) for element in var_list_short))
-for i, y in enumerate(f.variables["Year_of_Emission"].data):
-    if y <= year:
-        p_list = [str(f.variables[var_list[j]].data[i])[:10] for j in range(10)]
-        print("".join(element.ljust(col_width) for element in p_list))
+    f = xr.open_dataset(file, decode_times=False)
+
+    var_list = [
+        "Eruption",
+        "VEI",
+        "Year_of_Emission",
+        "Month_of_Emission",
+        "Day_of_Emission",
+        "Latitude",
+        "Longitude",
+        "Total_Emission",
+        "Maximum_Injection_Height",
+        "Minimum_Injection_Height",
+    ]
+    var_list_short = [
+        "Eru",
+        "VEI",
+        "YoE",
+        "MoE",
+        "DoE",
+        "Lat",
+        "Lon",
+        "TE",
+        "MaxIH",
+        "MinIH",
+    ]
+
+    col_width = 12
+    print("".join(element.ljust(col_width) for element in var_list_short))
+    for i, y in enumerate(f.variables["Year_of_Emission"].data):
+        if y <= year:
+            p_list = [str(f.variables[var_list[j]].data[i])[:10] for j in range(10)]
+            print("".join(element.ljust(col_width) for element in p_list))
+
+
+def main():
+    inspect_year()
+
+
+if __name__ == "__main__":
+    main()
