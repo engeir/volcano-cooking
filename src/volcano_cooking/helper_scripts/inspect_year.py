@@ -9,7 +9,9 @@ synth_dir = "data/output"
 if not os.path.isdir(synth_dir):
     os.makedirs(synth_dir)
 synth_files = [
-    f for f in os.listdir(synth_dir) if os.path.isfile(os.path.join(synth_dir, f))
+    f
+    for f in os.listdir(synth_dir)
+    if os.path.isfile(os.path.join(synth_dir, f)) and ".nc" in f
 ]
 if len(synth_files) == 0:
     sys.exit("No output files found.")
