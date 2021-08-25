@@ -46,6 +46,8 @@ def create_volcanoes(size: int = 251, init_year: int = 1850) -> None:
     init_year: int
         Change the first year an eruption can happen
     """
+    # CREATE DATA ---------------------------------------------------------------------- #
+
     # This only (in the real data set) store a number for each volcanic event, increasing
     # as new events occur. If a volcanic eruption have several emissions listed in the
     # forcing file the number is repeated, giving a list similar to [1, 2, 3, 4, 4, 4, 5,
@@ -70,6 +72,8 @@ def create_volcanoes(size: int = 251, init_year: int = 1850) -> None:
     tes = convert.vei_to_totalemission(veis)
 
     miihs, mxihs = convert.vei_to_injectionheights(veis)
+
+    # CREATE NETCDF FILE AND SAVE ------------------------------------------------------ #
 
     frc_cls = create.Data(
         eruptions=eruptions,
