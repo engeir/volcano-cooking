@@ -162,6 +162,16 @@ class Data:
         )
 
     def save_to_file(self) -> None:
+        """Save the xarray Dataset object to a .nc file using the netCDF4 format."""
+        self.__save_to_nc_file()
+        self.__save_to_npz_file()
+
+    def __save_to_npz_file(self) -> None:
+        """Save the original forcing data to a npz file."""
+        out_file = self.__check_dir("npz")
+        np.savez(out_file, yoes=self.yoes, moes=self.moes, does=self.does, tes=self.tes)
+
+    def __save_to_nc_file(self) -> None:
         """Save the xarray Dataset object to a .nc file using the netCDF4 format.
 
         Raises
@@ -170,16 +180,34 @@ class Data:
             If the attribute my_frc has not been filled yet, ValueError is raised telling
             the user to first call the 'make_dataset' method.
         """
-        # if not isinstance(self.my_frc, xr.core.dataset.Dataset):
         if self.my_frc is None:
             raise ValueError("You must make the dataset with 'make_dataset' first.")
-        synth_dir = "data/output"
-        if not os.path.isdir(synth_dir):
-            os.makedirs(synth_dir)
-        now = datetime.datetime.now().strftime("%Y%m%d_%H%M")
-        out_file = f"{synth_dir}/synthetic_volcanoes_{now}.nc"
-        if os.path.isfile(out_file):
-            sys.exit(f"The file {out_file} already exists.")
+        out_file = self.__check_dir("nc")
         # The format is important for when you give the .nc file to the .ncl script that
         # creates the final forcing file.
         self.my_frc.to_netcdf(out_file, "w", format="NETCDF4")
+
+    @staticmethod
+    def __check_dir(ext: str) -> str:
+        """Check if the directory exist and there is no other file with the same name.
+
+        Parameters
+        ----------
+        ext: str
+            The file ending
+
+        Returns
+        -------
+        str
+            The path and name of the file that can be created
+        """
+        if ext[0] == ".":
+            ext = ext[1:]
+        d = "data/output"
+        if not os.path.isdir(d):
+            os.makedirs(d)
+        now = datetime.datetime.now().strftime("%Y%m%d_%H%M")
+        out_file = f"{d}/synthetic_volcanoes_{now}.{ext}"
+        if os.path.isfile(out_file):
+            sys.exit(f"The file {out_file} already exists.")
+        return out_file
