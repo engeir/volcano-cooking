@@ -68,8 +68,26 @@ class Data:
         ------
         ValueError
             If any of the ten numpy arrays contain data of wrong type a ValueError is
-            raised.
+            raised. ValueError is also raised if they do not have the same shape.
         """
+        stack = [
+            self.eruptions.shape,
+            self.yoes.shape,
+            self.moes.shape,
+            self.does.shape,
+            self.lats.shape,
+            self.lons.shape,
+            self.tes.shape,
+            self.veis.shape,
+            self.miihs.shape,
+            self.mxihs.shape,
+        ]
+        try:
+            _ = (np.diff(np.vstack(stack).reshape(len(stack), -1), axis=0) == 0).all()
+        except ValueError as e:
+            raise e
+        finally:
+            del stack
         if (
             self.eruptions.dtype != np.int8
             or self.veis.dtype != np.int8
@@ -162,12 +180,16 @@ class Data:
         )
 
     def save_to_file(self) -> None:
-        """Save the xarray Dataset object to a .nc file using the netCDF4 format."""
+        """Save the xarray Dataset object to a .nc file using the netCDF4 format.
+
+        For easier access to the forcing data, dates and total emissions are also saved to
+        a .npz file.
+        """
         self.__save_to_nc_file()
         self.__save_to_npz_file()
 
     def __save_to_npz_file(self) -> None:
-        """Save the original forcing data to a npz file."""
+        """Save the original forcing data to a .npz file."""
         out_file = self.__check_dir("npz")
         np.savez(out_file, yoes=self.yoes, moes=self.moes, does=self.does, tes=self.tes)
 

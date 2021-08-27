@@ -54,8 +54,17 @@ def find_last_output(ext: str) -> str:
     -------
     str
         The path and name of the last saved .nc file
+
+    Raises
+    ------
+    ValueError
+        If the extension provided is not recognised
     """
-    if ext[0] != ".":
+    if ext[0] != "." and "." in ext:
+        raise ValueError(
+            f"{ext} is not a valid extension. Use '.npz', 'npz', '.nc' or 'nc'."
+        )
+    elif ext[0] != ".":
         ext = f".{ext}"
     synth_dir = "data/output"
     if not os.path.isdir(synth_dir):
@@ -71,3 +80,29 @@ def find_last_output(ext: str) -> str:
     file = os.path.join(synth_dir, synth_files[-1])
 
     return file
+
+
+def find_file(file: str) -> str:
+    """Check if the file is found.
+
+    Parameters
+    ----------
+    file: str
+        Full path (absolute or relative to where the function i called) and file name of a
+        custom file to be used.
+
+    Returns
+    -------
+    str
+        The same str that was sent in
+
+    Raises
+    ------
+    ValueError
+        If the file cannot be found in the path where the python interpreter is run a
+        ValueError is raised.
+    """
+    if os.path.isfile(file):
+        return file
+    else:
+        raise ValueError(f"Cannot find {file = } in path {os.getcwd()}]")

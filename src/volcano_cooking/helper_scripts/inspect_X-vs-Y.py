@@ -37,8 +37,8 @@ def x_vs_y() -> None:
 
     plt.figure(figsize=(12, 9))
     plt.semilogy()
-    plt.scatter(x1, y1, label=l1)
-    plt.scatter(x2, y2, label=l2)
+    plt.scatter(x1 - 0.05, y1, marker="d", label=l1)
+    plt.scatter(x2 + 0.05, y2, marker="x", label=l2)
     plt.xlabel(var_list[x_ax])
     plt.ylabel(var_list[y_ax])
     plt.legend()

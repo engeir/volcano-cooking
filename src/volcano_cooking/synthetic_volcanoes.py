@@ -1,4 +1,6 @@
-"""This script creates a .nc file consisting of volcanic eruptions and the
+"""Create synthetic volcanic eruptions.
+
+This script creates a .nc file consisting of volcanic eruptions and the
 corresponding time of arrival down to the nearest day and the magnitude of the
 eruption.
 
@@ -42,34 +44,39 @@ def create_volcanoes(size: int = 251, init_year: int = 1850) -> None:
     Parameters
     ----------
     size: int
-        The total number of eruptsions
+        The total number of eruptions
     init_year: int
         Change the first year an eruption can happen
     """
+    # TODO: abstract the data creation away, one for random (normal) version, another for
+    # FPP version
     # CREATE DATA ---------------------------------------------------------------------- #
+
+    # Create dates
+    # yoes, moes, does = create.random_dates(size, init_year)
+    yoes, moes, does, tes = create.fpp_dates_and_emissions(size, init_year)
+
+    # We don't want eruptions that have a VEI greater than 6.
+    # veis = np.random.normal(4, 1, size=size).round().astype(np.int8) % 7
+
+    # This part is probably important. I need to make sure the ratio between sum of
+    # emission and the column emission for a given volcano is smaller than 1e-6.
+    # tes = convert.vei_to_totalemission(veis)
+    veis = convert.totalemission_to_vei(tes)
+
+    # The below is dependent on the above ...
 
     # This only (in the real data set) store a number for each volcanic event, increasing
     # as new events occur. If a volcanic eruption have several emissions listed in the
     # forcing file the number is repeated, giving a list similar to [1, 2, 3, 4, 4, 4, 5,
     # 5, 6, 7, ...].  Here, the fourth and fifth eruptions lasted long enough and to get
-    # more samples in the forcing file. Anyways, its most likely not important, so I just
+    # more samples in the forcing file. Anyway, its most likely not important, so I just
     # put gibberish in it.
     eruptions = np.random.randint(1, high=20, size=size, dtype=np.int8)
 
-    # Create dates
-    yoes, moes, does = create.random_dates(size, init_year)
     # Place all volcanoes at equator
     lats = np.zeros(size, dtype=np.float32)  # Equator
     lons = np.ones(size, dtype=np.float32)
-
-    # We don't want eruptions that have a VEI greater than 7.
-    # NOTE: should this be created from an FPP?
-    veis = np.random.normal(4, 1, size=size).round().astype(np.int8) % 7
-
-    # This part is probably important. I need to make sure the ratio between sum of
-    # emission and the column emission for a given volcano is smaller than 1e-6.
-    # NOTE: should this be created from an FPP?
-    tes = convert.vei_to_totalemission(veis)
 
     miihs, mxihs = convert.vei_to_injectionheights(veis)
 

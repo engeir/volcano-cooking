@@ -3,7 +3,10 @@
 
 # TODO: create the dates from an FPP.
 
+import datetime as dt
+
 import numpy as np
+import uit_scripts.shotnoise.gen_shot_noise as gsn
 
 
 def random_dates(
@@ -57,23 +60,69 @@ def random_dates(
     return yoes, moes, does
 
 
-# def fpp_dates(size: int, init_year: int) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-#     """Create random dates and place them in order.
+def fpp_dates_and_emissions(
+    size: int, init_year: int
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Create random ordered dates and total emissions.
 
-#     These dates are created from an FPP process.
+    Data is created from an FPP process, specifically the arrival time and amplitude is
+    used to set dates and total emissions.
 
-#     Args:
-#         size: int
-#             The total number of dates that should be made.
-#         init_year: int
-#             The first year dates should appear in
+    Parameters
+    ----------
+    size: int
+        The total number of dates that should be made.
+    init_year: int
+        The first year dates should appear in
 
-#     Returns:
-#         yoes: np.ndarray
-#             Array of length 'size' with the year of a date
-#         moes: np.ndarray
-#             Array of length 'size' with the month of a date
-#         does: np.ndarray
-#             Array of length 'size' with the day of a date
-#     """
-#     raise NotImplementedError
+    Returns
+    -------
+    yoes: np.ndarray
+        Array of length 'size' with the year of a date
+    moes: np.ndarray
+        Array of length 'size' with the month of a date
+    does: np.ndarray
+        Array of length 'size' with the day of a date
+    tes:
+        Array of length 'size' with the Total_Emission as a 1D numpy array
+
+    Raises
+    ------
+    ValueError
+        If two eruptions fall on the same day. This happens now and again, just try again
+        if it fails. Might be good to implement a loop while re-generates until the check
+        passes.
+    """
+    # TODO: figure out which gamma and other parameters are apropriate
+    ins = gsn.make_signal(1, size, 0.1, ampta=True)
+    amp, ta = ins[2], ins[3]
+    dates: list[dt.date] = []
+    dates_ap = dates.append
+    yoes_l: list[int] = []
+    yoes_ap = yoes_l.append
+    moes_l: list[int] = []
+    moes_ap = moes_l.append
+    does_l: list[int] = []
+    does_ap = does_l.append
+    for n in ta:
+        result = (
+            dt.datetime(int(n) + init_year, 1, 1) + dt.timedelta(days=(n % 1) * 365)
+        ).date()
+        dates_ap(result)
+    if any(np.diff(dates) == dt.timedelta(days=0)):
+        raise ValueError(
+            "Found two dates that are equal. This is rare so just try again."
+        )
+    else:
+        for d in dates:
+            yoes_ap(d.year)
+            moes_ap(d.month)
+            does_ap(d.day)
+        yoes = np.array(yoes_l, dtype=np.int16)
+        moes = np.array(moes_l, dtype=np.int8)
+        does = np.array(does_l, dtype=np.int8)
+        del yoes_l
+        del moes_l
+        del does_l
+    tes = np.array(amp, dtype=np.float32)
+    return yoes, moes, does, tes

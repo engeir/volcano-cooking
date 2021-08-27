@@ -23,6 +23,10 @@ atmosphere model.
 
 ## Todo
 
+-   Fix FPP generation (find good values for gamma, etc.)
+-   Create class or similar for generating data in different ways (random normal, FPP,
+    etc.)
+
 ### FPP
 
 In the long run, this project should be able to produce volcanic forcing files where the

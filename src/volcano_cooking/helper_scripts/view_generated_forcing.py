@@ -1,9 +1,14 @@
-"""This script will create a plot of the forcing, i.e. total emission vs time.
+"""Load and view the generated forcing.
 
-The last saved file is used.
+This script will create a plot of the forcing, i.e. total emission vs time.  The last
+saved file is used unless a file is specified explicitly.
+
+Providing a custom file means you can view any forcing so long as it is saved in the same
+format that the synthetically created files are.
 """
 
 import datetime
+from typing import Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,20 +17,23 @@ import xarray as xr
 import volcano_cooking.helper_scripts.functions as fnc
 
 
-def view_forcing(ext: str):
+def view_forcing(ext: str, in_file: Optional[str] = None):
     """View the forcing found in the generated total emission against time.
 
     Parameters
     ----------
     ext: str
         Extension of the file type used. Valid values are 'npz' and 'nc'.
+    in_file: str (optional)
+        Full path (absolute or relative to where the function i called) and file name of a
+        custom file to be used.
 
     Raises
     ------
     ValueError
         If the date created fails to be formatted from ints to string and datetime objects
     """
-    yoes, moes, does, tes = load_forcing(ext)
+    yoes, moes, does, tes = load_forcing(ext, in_file=in_file)
 
     dates: list[datetime.datetime] = []
     d_app = dates.append
@@ -44,7 +52,9 @@ def view_forcing(ext: str):
     plt.show()
 
 
-def load_forcing(ext: str) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+def load_forcing(
+    ext: str, in_file: Optional[str] = None
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Load variables from the last saved file of given extension.
 
     Data about the date and total emission found in either the last npz or nc file.
@@ -53,6 +63,9 @@ def load_forcing(ext: str) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarr
     ----------
     ext: str
         Extension of the file that should be used
+    in_file: str (optional)
+        Full path (absolute or relative to where the function i called) and file name of a
+        custom file to be used.
 
     Returns
     -------
@@ -66,7 +79,10 @@ def load_forcing(ext: str) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarr
         If the extension is not either 'npz' or 'nc', no files can be found and the
         variables 'yoes', 'moes', 'does' and 'tes' cannot be found.
     """
-    file = fnc.find_last_output(ext)
+    if in_file is None:
+        file = fnc.find_last_output(ext)
+    else:
+        file = fnc.find_file(in_file)
     if "npz" in ext:
         with np.load(file, "r", allow_pickle=True) as f:
             yoes = f["yoes"]
