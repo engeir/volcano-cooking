@@ -1,7 +1,7 @@
 """Load and view the generated forcing.
 
-This script will create a plot of the forcing, i.e. total emission vs time.  The last
-saved file is used unless a file is specified explicitly.
+This script will create a plot of the forcing, i.e. total emission vs time. The last saved
+file is used unless a file is specified explicitly.
 
 Providing a custom file means you can view any forcing so long as it is saved in the same
 format that the synthetically created files are.
@@ -63,15 +63,15 @@ def load_forcing(
     ----------
     ext: str
         Extension of the file that should be used
-    in_file: str (optional)
+    in_file: str, optional
         Full path (absolute or relative to where the function i called) and file name of a
         custom file to be used.
 
     Returns
     -------
-    tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
-        Dates and forcing in the form of total emissions is returnd in the order
-        yoes, moes, does, tes
+    np.ndarray, np.ndarray, np.ndarray, np.ndarray
+        Dates and forcing (total emissions) is returnd in the order years, months, days,
+        total emission
 
     Raises
     ------
