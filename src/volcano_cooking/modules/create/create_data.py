@@ -3,10 +3,14 @@
 import datetime
 import os
 import sys
+from abc import ABC, abstractmethod
 from typing import Optional
 
 import numpy as np
 import xarray as xr
+
+import volcano_cooking.modules.convert as convert
+import volcano_cooking.modules.create as create
 
 
 class Data:
@@ -22,30 +26,30 @@ class Data:
         veis: np.ndarray,
         miihs: np.ndarray,
         mxihs: np.ndarray,
-    ):
+    ) -> None:
         """Initialise object by giving all variables that should be put in the .nc file.
 
         Parameters
         ----------
         eruptions: np.ndarray
             Eruption number
-        yoes : np.ndarray
+        yoes: np.ndarray
             Years (four digit number) that the volcanoes occurred
-        moes : np.ndarray
+        moes: np.ndarray
             Months (two digit number) that the volcanoes occurred
-        does : np.ndarray
+        does: np.ndarray
             Days (two digit number) that the volcanoes occurred
-        lats : np.ndarray
+        lats: np.ndarray
             Latitudinal coordinate
-        lons : np.ndarray
+        lons: np.ndarray
             Longitudinal coordinate
-        tes : np.ndarray
+        tes: np.ndarray
             Total emission from a volcano at corresponding date
-        veis : np.ndarray
+        veis: np.ndarray
             VEI (Volcanic Explosivity Index) of a volcano at corresponding date
-        miihs : np.ndarray
+        miihs: np.ndarray
             Minimum injection height
-        mxihs : np.ndarray
+        mxihs: np.ndarray
             Maximum injection height
         """
         self.eruptions = eruptions
@@ -61,7 +65,7 @@ class Data:
         self.run_check()
         self.my_frc: Optional[xr.Dataset] = None
 
-    def run_check(self):
+    def run_check(self) -> None:
         """Check the data type of each numpy array.
 
         Raises
@@ -151,7 +155,7 @@ class Data:
         self.my_frc.Longitude.encoding["_FillValue"] = False
         self.my_frc["Eruption"] = self.my_frc.Eruption.assign_attrs(
             # The volcano number is a reference to the geographical location of the
-            # eruption.  The volcano name is its name and the note/reference is where in
+            # eruption. The volcano name is its name and the note/reference is where in
             # the literature you can find the values related to the eruption. All this is
             # unimportant given that this is just made up data.
             Volcano_Number=np.ones(size) * 123456,
@@ -233,3 +237,111 @@ class Data:
         if os.path.isfile(out_file):
             sys.exit(f"The file {out_file} already exists.")
         return out_file
+
+
+class Generate(ABC):
+    """ABC for generating data with different properties."""
+
+    def __init__(self, size: int, init_year: int) -> None:
+        """Initialise object by giving all variables that should be put in the .nc file.
+
+        Parameters
+        ----------
+        size: int
+            The total number of volcanoes
+        init_year: int
+            The first possible year for a volcanic eruption
+        """
+        self.eruptions: Optional[np.ndarray] = None
+        self.yoes: Optional[np.ndarray] = None
+        self.moes: Optional[np.ndarray] = None
+        self.does: Optional[np.ndarray] = None
+        self.lats: Optional[np.ndarray] = None
+        self.lons: Optional[np.ndarray] = None
+        self.tes: Optional[np.ndarray] = None
+        self.veis: Optional[np.ndarray] = None
+        self.miihs: Optional[np.ndarray] = None
+        self.mxihs: Optional[np.ndarray] = None
+        self.size = size
+        self.init_year = init_year
+
+    @abstractmethod
+    def gen_dates_totalemission_vei(self) -> None:
+        """Generate dates."""
+
+    def __gen_rest(self) -> None:
+        """Generate the rest with defualt settings."""
+        # This only (in the real data set) store a number for each volcanic event, increasing
+        # as new events occur. If a volcanic eruption have several emissions listed in the
+        # forcing file the number is repeated, giving a list similar to [1, 2, 3, 4, 4, 4, 5,
+        # 5, 6, 7, ...].  Here, the fourth and fifth eruptions lasted long enough and to get
+        # more samples in the forcing file. Anyway, its most likely not important, so I just
+        # put gibberish in it.
+        self.eruptions = np.random.randint(1, high=20, size=self.size, dtype=np.int8)
+
+        # Place all volcanoes at equator
+        self.lats = np.zeros(self.size, dtype=np.float32)  # Equator
+        self.lons = np.ones(self.size, dtype=np.float32)
+
+        self.miihs, self.mxihs = convert.vei_to_injectionheights(self.veis)
+
+    def generate(self) -> None:
+        self.gen_dates_totalemission_vei()
+        self.__gen_rest()
+
+    def get_arrays(self) -> list:
+        """Return all generated data.
+
+        Returns
+        -------
+        list
+            A list of all arrays. Order is the same as the input to the Data class
+
+        Raises
+        ------
+        ValueError
+            If any one array has not been set, i.e. is still a 'type' object
+        """
+        arrs = [
+            self.eruptions,
+            self.yoes,
+            self.moes,
+            self.does,
+            self.lats,
+            self.lons,
+            self.tes,
+            self.veis,
+            self.miihs,
+            self.mxihs,
+        ]
+        if any([a is None for a in arrs]):
+            # if any([isinstance(a, type) for a in arrs]):
+            raise ValueError("Need to set all arrays first. Run the 'generate' method.")
+        return arrs
+
+
+class GenerateRandomNormal(Generate):
+    def gen_dates_totalemission_vei(self):
+        self.yoes, self.moes, self.does = create.random_dates(self.size, self.init_year)
+        # We don't want eruptions that have a VEI greater than 6.
+        self.veis = np.random.normal(4, 1, size=self.size).round().astype(np.int8) % 7
+        self.tes = convert.vei_to_totalemission(self.veis)
+
+
+class GenerateFPP(Generate):
+    def gen_dates_totalemission_vei(self):
+        self.yoes, self.moes, self.does, self.tes = create.fpp_dates_and_emissions(
+            self.size, self.init_year
+        )
+        self.veis = convert.totalemission_to_vei(self.tes)
+
+
+def main():
+    g = GenerateFPP(200, 1850)
+    # g = GenerateRandomNormal(200, 1850)
+    g.generate()
+    _ = g.get_arrays()
+
+
+if __name__ == "__main__":
+    main()
