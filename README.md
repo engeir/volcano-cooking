@@ -8,8 +8,29 @@
 git clone https://github.com/engeir/volcano-cooking.git
 cd volcano-cooking
 poetry install
-poetry run volcano-cooking
 ```
+
+## Usage
+
+There are two packages coming with this project. The main package is the `volcano-cooking`
+program, which will create a `.nc` and `.npz` file in the `data/output` directory. With
+the `view_frc` program you can quickly view the content of the created files in a plot.
+
+Run from within this repository/directory:
+```sh
+poetry run volcano-cooking
+poetry run view-frc <file.nc>
+```
+
+or run as standalone programs:
+
+```sh
+volcano-cooking
+view-frc <file.nc>
+```
+
+In either case a `data/output` directory will be created at the root of the project (first
+case) or inside the current directory (second case).
 
 ## Data
 
