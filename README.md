@@ -38,6 +38,11 @@ To be able to compare the newly created synthetic file with one that is already 
 CESM2, check out the [data_source_files](https://svn.code.sf.net/p/codescripts/code/trunk/ncl/emission)
 directory.
 
+A similar file to those that are created is needed to be able to use some of the scripts
+in the `helper_scripts` directory. By default it assumes the file is named
+`volcan-eesm_global_2015_so2-emissions-database_v1.0.nc` and that it is placed inside the
+`data/originals` directory. You can find this file [here](http://catalogue.ceda.ac.uk/uuid/bfbd5ec825fa422f9a858b14ae7b2a0d).
+
 Coordinate files are located [here](https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/coords/).
 For example `fv_1.9x2.5_L30.nc` which can be used with two degrees resolution in the
 atmosphere model.
