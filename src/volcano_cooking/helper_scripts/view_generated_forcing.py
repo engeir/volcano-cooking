@@ -8,6 +8,8 @@ format that the synthetically created files are.
 """
 
 import datetime
+import os
+import sys
 from typing import Optional
 
 import matplotlib.pyplot as plt
@@ -17,16 +19,18 @@ import xarray as xr
 import volcano_cooking.helper_scripts.functions as fnc
 
 
-def view_forcing(ext: str, in_file: Optional[str] = None):
+def view_forcing(ext: str, in_file: Optional[str] = None, save=False):
     """View the forcing found in the generated total emission against time.
 
     Parameters
     ----------
     ext: str
         Extension of the file type used. Valid values are 'npz' and 'nc'.
-    in_file: str (optional)
+    in_file: str, optional
         Full path (absolute or relative to where the function i called) and file name of a
         custom file to be used.
+    save: bool, deafault=False
+        Save the plot
 
     Raises
     ------
@@ -48,8 +52,39 @@ def view_forcing(ext: str, in_file: Optional[str] = None):
             )
         d_app(datetime.datetime.strptime(f"{y}{m}{d}", "%Y%m%d"))
 
+    plt.figure(figsize=(18, 9))
     plt.plot(dates, tes)
+    plt.xlabel("Time")
+    plt.ylabel("Total Emission")
+    if save:
+        filename = check_dir(".png")
+        plt.savefig(filename, format="png")
     plt.show()
+
+
+def check_dir(ext: str) -> str:
+    """Check if the directory exist and there is no other file with the same name.
+
+    Parameters
+    ----------
+    ext: str
+        The file ending
+
+    Returns
+    -------
+    str
+        The path and name of the file that can be created
+    """
+    if ext[0] == ".":
+        ext = ext[1:]
+    d = "data/output"
+    if not os.path.isdir(d):
+        os.makedirs(d)
+    now = datetime.datetime.now().strftime("%Y%m%d_%H%M")
+    out_file = f"{d}/synthetic_volcanoes_{now}.{ext}"
+    if os.path.isfile(out_file):
+        sys.exit(f"The file {out_file} already exists.")
+    return out_file
 
 
 def load_forcing(

@@ -29,8 +29,11 @@ volcano-cooking
 view-frc <file.nc>
 ```
 
+An optional flag can be sent to the `view-frc` program that will save the plot: `view-frc
+-s <file.nc>`.
+
 In either case a `data/output` directory will be created at the root of the project (first
-case) or inside the current directory (second case).
+case) or inside the current directory (second case) when something is saved.
 
 ## Data
 

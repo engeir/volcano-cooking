@@ -252,31 +252,31 @@ class Generate(ABC):
         init_year: int
             The first possible year for a volcanic eruption
         """
-        self.eruptions: Optional[np.ndarray] = None
-        self.yoes: Optional[np.ndarray] = None
-        self.moes: Optional[np.ndarray] = None
-        self.does: Optional[np.ndarray] = None
-        self.lats: Optional[np.ndarray] = None
-        self.lons: Optional[np.ndarray] = None
-        self.tes: Optional[np.ndarray] = None
-        self.veis: Optional[np.ndarray] = None
-        self.miihs: Optional[np.ndarray] = None
-        self.mxihs: Optional[np.ndarray] = None
+        self.eruptions: np.ndarray = np.array([])
+        self.yoes: np.ndarray = np.array([])
+        self.moes: np.ndarray = np.array([])
+        self.does: np.ndarray = np.array([])
+        self.lats: np.ndarray = np.array([])
+        self.lons: np.ndarray = np.array([])
+        self.tes: np.ndarray = np.array([])
+        self.veis: np.ndarray = np.array([])
+        self.miihs: np.ndarray = np.array([])
+        self.mxihs: np.ndarray = np.array([])
         self.size = size
         self.init_year = init_year
 
     @abstractmethod
     def gen_dates_totalemission_vei(self) -> None:
-        """Generate dates."""
+        """Generate dates, total emission and VEI."""
 
     def __gen_rest(self) -> None:
         """Generate the rest with defualt settings."""
-        # This only (in the real data set) store a number for each volcanic event, increasing
-        # as new events occur. If a volcanic eruption have several emissions listed in the
-        # forcing file the number is repeated, giving a list similar to [1, 2, 3, 4, 4, 4, 5,
-        # 5, 6, 7, ...].  Here, the fourth and fifth eruptions lasted long enough and to get
-        # more samples in the forcing file. Anyway, its most likely not important, so I just
-        # put gibberish in it.
+        # This only (in the real data set) store a number for each volcanic event,
+        # increasing as new events occur. If a volcanic eruption have several emissions
+        # listed in the forcing file the number is repeated, giving a list similar to [1,
+        # 2, 3, 4, 4, 4, 5, 5, 6, 7, ...].  Here, the fourth and fifth eruptions lasted
+        # long enough and to get more samples in the forcing file. Anyway, its most likely
+        # not important, so I just put gibberish in it.
         self.eruptions = np.random.randint(1, high=20, size=self.size, dtype=np.int8)
 
         # Place all volcanoes at equator
@@ -289,7 +289,7 @@ class Generate(ABC):
         self.gen_dates_totalemission_vei()
         self.__gen_rest()
 
-    def get_arrays(self) -> list:
+    def get_arrays(self) -> list[np.ndarray]:
         """Return all generated data.
 
         Returns
@@ -314,7 +314,7 @@ class Generate(ABC):
             self.miihs,
             self.mxihs,
         ]
-        if any([a is None for a in arrs]):
+        if any([len(a) == 0 for a in arrs]):
             # if any([isinstance(a, type) for a in arrs]):
             raise ValueError("Need to set all arrays first. Run the 'generate' method.")
         return arrs
@@ -337,8 +337,8 @@ class GenerateFPP(Generate):
 
 
 def main():
-    g = GenerateFPP(200, 1850)
-    # g = GenerateRandomNormal(200, 1850)
+    # g = GenerateFPP(200, 1850)
+    g = GenerateRandomNormal(200, 1850)
     g.generate()
     _ = g.get_arrays()
 

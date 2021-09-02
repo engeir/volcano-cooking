@@ -28,17 +28,18 @@ def x_vs_y() -> None:
         "Minimum_Injection_Height",
     ]
 
-    x_ax = 1
-    y_ax = 7
+    x_ax = 7
+    y_ax = 8
     x1 = f1.variables[var_list[x_ax]].data
     y1 = f1.variables[var_list[y_ax]].data
     x2 = f2.variables[var_list[x_ax]].data
     y2 = abs(f2.variables[var_list[y_ax]].data)
 
     plt.figure(figsize=(12, 9))
-    plt.semilogy()
-    plt.scatter(x1 - 0.05, y1, marker="d", label=l1)
-    plt.scatter(x2 + 0.05, y2, marker="x", label=l2)
+    plt.loglog()
+    shift = 0.05 if x_ax == 1 else 0
+    plt.scatter(x1 - shift, y1, marker="d", label=l1)
+    plt.scatter(x2 + shift, y2, marker="x", label=l2)
     plt.xlabel(var_list[x_ax])
     plt.ylabel(var_list[y_ax])
     plt.legend()

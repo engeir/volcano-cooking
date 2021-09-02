@@ -55,7 +55,7 @@ def totalemission_to_vei(tes: np.ndarray) -> np.ndarray:
     """
     base = 4
     veis = np.log(tes) / np.log(base)
-    veis -= np.min(veis) - 0.8
+    veis -= np.min(veis) + 0.2
     veis = veis.astype(np.int8) % 7
 
     if veis.dtype != np.int8:
