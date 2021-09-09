@@ -38,8 +38,12 @@ case) or inside the current directory (second case) when something is saved.
 ## Data
 
 To be able to compare the newly created synthetic file with one that is already used by
-CESM2, check out the [data_source_files](https://svn.code.sf.net/p/codescripts/code/trunk/ncl/emission)
-directory.
+CESM2, check out the
+[data_source_files](https://svn.code.sf.net/p/codescripts/code/trunk/ncl/emission)
+directory. This holds creation files that uses the forcing file this project creates to
+make a new, full forcing file that CESM2 accepts. For example,
+`createVolcEruptV3.1piControl.ncl`. This need a `common.ncl` file, found
+[here](http://svn.code.sf.net/p/codescripts/code/trunk/ncl/lib/common.ncl).
 
 A similar file to those that are created is needed to be able to use some of the scripts
 in the `helper_scripts` directory. By default it assumes the file is named

@@ -47,8 +47,8 @@ def create_volcanoes(size: int = 251, init_year: int = 1850) -> None:
     """
     # CREATE DATA ---------------------------------------------------------------------- #
 
-    g = create.GenerateFPP(size, init_year)
-    # g = create.GenerateRandomNormal(size, init_year)
+    # g = create.GenerateFPP(size, init_year)
+    g = create.GenerateRandomNormal(size, init_year)
     g.generate()
     all_arrs = g.get_arrays()
 
@@ -60,7 +60,7 @@ def create_volcanoes(size: int = 251, init_year: int = 1850) -> None:
 
 
 def main():
-    create_volcanoes(size=3000)
+    create_volcanoes(size=300)
 
 
 if __name__ == "__main__":
