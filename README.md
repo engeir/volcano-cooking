@@ -37,28 +37,34 @@ case) or inside the current directory (second case) when something is saved.
 
 ## Data
 
+### Create forcing file for CESM2
+
 To be able to compare the newly created synthetic file with one that is already used by
 CESM2, check out the
 [data_source_files](https://svn.code.sf.net/p/codescripts/code/trunk/ncl/emission)
 directory. This holds creation files that uses the forcing file this project creates to
 make a new, full forcing file that CESM2 accepts. For example,
 `createVolcEruptV3.1piControl.ncl`. This need a `common.ncl` file, found
-[here](http://svn.code.sf.net/p/codescripts/code/trunk/ncl/lib/common.ncl).
+[here](http://svn.code.sf.net/p/codescripts/code/trunk/ncl/lib/common.ncl), in addition to
+other standard `ncl` libraries. Make sure to edit `createVolcEruptV3.1piControl.ncl` to
+read the created file and that the first and last year cover those used in the created
+file.
+
+Coordinate files are located
+[here](https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/coords/). For
+example `fv_1.9x2.5_L30.nc` which can be used with two degrees resolution in the
+atmosphere model.
+
+### Compare created file with a similar used in a default CESM2 experiment
 
 A similar file to those that are created is needed to be able to use some of the scripts
 in the `helper_scripts` directory. By default it assumes the file is named
 `volcan-eesm_global_2015_so2-emissions-database_v1.0.nc` and that it is placed inside the
 `data/originals` directory. You can find this file [here](http://catalogue.ceda.ac.uk/uuid/bfbd5ec825fa422f9a858b14ae7b2a0d).
 
-Coordinate files are located [here](https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/coords/).
-For example `fv_1.9x2.5_L30.nc` which can be used with two degrees resolution in the
-atmosphere model.
-
 ## Todo
 
 -   Fix FPP generation (find good values for gamma, etc.)
--   Create class or similar for generating data in different ways (random normal, FPP,
-    etc.)
 
 ### FPP
 
