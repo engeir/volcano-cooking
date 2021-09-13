@@ -39,8 +39,8 @@ case) or inside the current directory (second case) when something is saved.
 
 ### Create forcing file for CESM2
 
-To be able to compare the newly created synthetic file with one that is already used by
-CESM2, check out the
+To be able to create forcing files used by the CESM2 from the newly created synthetic
+file, check out the
 [data_source_files](https://svn.code.sf.net/p/codescripts/code/trunk/ncl/emission)
 directory. This holds creation files that uses the forcing file this project creates to
 make a new, full forcing file that CESM2 accepts. For example,
