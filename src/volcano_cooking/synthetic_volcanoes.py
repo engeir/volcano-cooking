@@ -60,7 +60,7 @@ def create_volcanoes(size: int = 251, init_year: int = 1850) -> None:
 
 
 def main():
-    create_volcanoes(size=300)
+    create_volcanoes(size=300, init_year=1)
 
 
 if __name__ == "__main__":

@@ -15,6 +15,8 @@ from typing import Optional
 import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
+from astropy.time import Time
+from astropy.visualization import time_support
 
 import volcano_cooking.helper_scripts.functions as fnc
 
@@ -40,7 +42,9 @@ def view_forcing(ext: str, in_file: Optional[str] = None, save=False):
     yoes, moes, does, tes = load_forcing(ext, in_file=in_file)
 
     dates: list[datetime.datetime] = []
+    dates_ap: list[str] = []
     d_app = dates.append
+    d_ap_app = dates_ap.append
     for y, m, d in zip(yoes, moes, does):
         y = str("0" * (4 - len(str(y)))) + f"{y}"
         m = str("0" * (2 - len(str(m)))) + f"{m}"
@@ -51,9 +55,27 @@ def view_forcing(ext: str, in_file: Optional[str] = None, save=False):
                 + f"{len(y) = }, {len(m) = }, {len(d) = }, need 4, 2, 2."
             )
         d_app(datetime.datetime.strptime(f"{y}{m}{d}", "%Y%m%d"))
+        d_ap_app(f"{y}-{m}-{d}")
 
-    plt.figure(figsize=(18, 9))
-    plt.plot(dates, tes)
+    fig, ax = plt.subplots(figsize=(18, 9), constrained_layout=True)
+    # Tests against a timestamp found with trial and error. Anything later should map to
+    # sane values (according to matplotlib), around 1800 and later.
+    if dates[0].timestamp() > -3834124180:
+        ax.plot(dates, tes)
+    else:
+        with time_support(format="mjd", scale="utc"):
+            t = Time(dates_ap)
+            # t.format = "iso"
+            ax.plot(t, tes)
+            ax.locator_params(nbins=30)
+            fig.canvas.draw()
+            labels = [item.get_text() for item in ax.get_xticklabels()]
+            for i, l in enumerate(labels):
+                # Converting to float doesn't work properly due to the hyphen/minus sign
+                # inserted by matplotlib. This approach is hacky and error prone...
+                labels[i] = Time(-float(l[1:]), format="mjd").iso.split()[0]
+            ax.set_xticklabels(labels)
+            plt.xticks(rotation=30)
     plt.xlabel("Time")
     plt.ylabel("Total Emission")
     if save:
