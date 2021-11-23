@@ -86,7 +86,7 @@ def fpp_dates_and_emissions(
     tes:
         Array of length 'size' with the Total_Emission as a 1D numpy array
     """
-    # TODO: figure out which gamma and other parameters are apropriate
+    # TODO: figure out which gamma and other parameters are appropriate
     mean_amp = 1.0
     gamma = 0.52  # Value from proj5 work, instrumental data set analysis
     while True:
