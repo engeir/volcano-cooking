@@ -2,6 +2,8 @@
 
 > Let's make some volcanoes erupt!
 
+[![codecov](https://codecov.io/gh/engeir/volcano-cooking/branch/main/graph/badge.svg?token=8I5VE7LYA4)](https://codecov.io/gh/engeir/volcano-cooking)
+
 ## Install
 
 ```sh
