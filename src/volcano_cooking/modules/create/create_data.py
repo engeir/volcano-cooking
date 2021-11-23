@@ -14,6 +14,18 @@ import volcano_cooking.modules.create as create
 
 
 class Data:
+    """Create data for a volcanic forcing file.
+
+    Attributes
+    ----------
+    make_dataset: method
+        Create the xarray data set with the numpy arrays provided to the class on
+        initialisation.
+    save_to_file: method
+        Save the generated xarray data set as a netCDF4 file, and the defining numpy
+        arrays to a .npz file.
+    """
+
     def __init__(
         self,
         eruptions: np.ndarray,
@@ -62,11 +74,14 @@ class Data:
         self.veis = veis
         self.miihs = miihs
         self.mxihs = mxihs
-        self.run_check()
+        self.__run_check()
         self.my_frc: Optional[xr.Dataset] = None
 
-    def run_check(self) -> None:
+    def __run_check(self) -> None:
         """Check the data type of each numpy array.
+
+        The original netCDF file that is re-produced has specific data types on all data
+        arrays. This method checks to see if the types are set correctly.
 
         Raises
         ------
@@ -270,7 +285,12 @@ class Generate(ABC):
         """Generate dates, total emission and VEI."""
 
     def __gen_rest(self) -> None:
-        """Generate the rest with defualt settings."""
+        """Generate the rest with defualt settings.
+
+        The rest refer to `eruptions`, the eruption number, `lats`, `lons` and `miihs` and
+        `mxihs`, the minimum and maximum heights of injection which are both assumed
+        functions of `veis`, the Volcanic Explosivity Index.
+        """
         # This only (in the real data set) store a number for each volcanic event,
         # increasing as new events occur. If a volcanic eruption have several emissions
         # listed in the forcing file the number is repeated, giving a list similar to [1,
@@ -299,7 +319,7 @@ class Generate(ABC):
 
         Raises
         ------
-        ValueError
+        AttributeError
             If any one array has not been set, i.e. is still a 'type' object
         """
         arrs = [
@@ -315,8 +335,9 @@ class Generate(ABC):
             self.mxihs,
         ]
         if any([len(a) == 0 for a in arrs]):
-            # if any([isinstance(a, type) for a in arrs]):
-            raise ValueError("Need to set all arrays first. Run the 'generate' method.")
+            raise AttributeError(
+                "Attribute(s) do not exist. Run the 'generate' method."
+            )
         return arrs
 
 
