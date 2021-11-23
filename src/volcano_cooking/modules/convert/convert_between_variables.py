@@ -52,7 +52,13 @@ def totalemission_to_vei(tes: np.ndarray) -> np.ndarray:
     ------
     ValueError
         If the output is not an array of int8.
+    ZeroDivisionError
+        If `tes` has non-positive values.
     """
+    if any(tes <= 0):
+        raise ZeroDivisionError(
+            "Don't use total emission with zeros. We're doing a log."
+        )
     base = 4
     veis = np.log(tes) / np.log(base)
     veis -= np.min(veis) + 0.2
@@ -64,7 +70,7 @@ def totalemission_to_vei(tes: np.ndarray) -> np.ndarray:
     return veis
 
 
-def vei_to_injectionheights(veis) -> tuple[np.ndarray, np.ndarray]:
+def vei_to_injectionheights(veis: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     """Convert VEI to minimum and maximum injection heights.
 
     When we set the minimum and maximum injection heights we should make sure the minimum
