@@ -23,13 +23,13 @@ def vei_to_totalemission(veis: np.ndarray) -> np.ndarray:
     Raises
     ------
     ValueError
-        If the output is not an array of float32.
+        If the input is not an array of float32.
     """
+    if veis.dtype != np.float32:
+        raise ValueError(f"{veis.dtype = }. Need float32.")
     tes = 1e-2 * 3 ** (
         np.random.normal(0.1, 1.0, size=len(veis)).astype(np.float32) + veis
     )
-    if tes.dtype != np.float32:
-        raise ValueError(f"{tes.dtype = }. Need float32.")
     return tes
 
 
@@ -50,8 +50,6 @@ def totalemission_to_vei(tes: np.ndarray) -> np.ndarray:
 
     Raises
     ------
-    ValueError
-        If the output is not an array of int8.
     ZeroDivisionError
         If `tes` has non-positive values.
     """
@@ -63,9 +61,6 @@ def totalemission_to_vei(tes: np.ndarray) -> np.ndarray:
     veis = np.log(tes) / np.log(base)
     veis -= np.min(veis) + 0.2
     veis = veis.astype(np.int8) % 7
-
-    if veis.dtype != np.int8:
-        raise ValueError(f"{veis.dtype = }. Need int8.")
 
     return veis
 
@@ -88,11 +83,6 @@ def vei_to_injectionheights(veis: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     tuple[np.ndarray, np.ndarray]
         The resulting minimum and maximum injection heights as a 1D numpy arrays.
         The first element is the lower bound, second is upper bound.
-
-    Raises
-    ------
-    ValueError
-        If the output arrays are not arrays of float32.
     """
     scale_max = np.array([80 if v > 3 else 10 for v in veis])
     scale_min = np.array([20 if v > 3 else 1 for v in veis])
@@ -107,6 +97,4 @@ def vei_to_injectionheights(veis: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         mxihs[idx] = max(i, j)
     mxihs = mxihs.astype(np.float32)
     miihs = miihs.astype(np.float32)
-    if mxihs.dtype != np.float32 or miihs.dtype != np.float32:
-        raise ValueError(f"{mxihs.dtype = }, {miihs.dtype = }. Need float32, float32.")
     return miihs, mxihs

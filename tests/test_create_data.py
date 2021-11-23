@@ -1,3 +1,4 @@
+"""Test cases for the create_data module."""
 import inspect
 
 import volcano_cooking.modules.create.create_data as cr
@@ -9,7 +10,3 @@ def test_generate_classes() -> None:
             if n != "Data" and n != "Generate":
                 c(20, 20)
                 assert issubclass(c, cr.Generate)
-
-
-if __name__ == "__main__":
-    test_generate_classes()
