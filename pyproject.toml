@@ -10,7 +10,7 @@ volcano-cooking = "volcano_cooking.__main__:main"
 view-frc = "volcano_cooking.view_force:main"
 
 [tool.poetry.dependencies]
-python = ">3.9,<3.10"
+python = ">=3.7,<3.11"
 numpy = "^1.21.1"
 xarray = "^0.19.0"
 scipy = "^1.7.1"
