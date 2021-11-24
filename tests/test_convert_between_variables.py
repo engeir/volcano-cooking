@@ -8,7 +8,7 @@ from volcano_cooking.modules import convert
 def test_vei_to_totalemission() -> None:
     a = np.arange(100)
     b = [1, 2, 3, 4]
-    c = np.arange(10, dtype=np.float32)
+    c = np.arange(10, dtype=np.int8)
     with pytest.raises(ValueError):
         convert.vei_to_totalemission(a)
         convert.vei_to_totalemission(b)

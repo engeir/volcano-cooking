@@ -25,8 +25,8 @@ def vei_to_totalemission(veis: np.ndarray) -> np.ndarray:
     ValueError
         If the input is not an array of float32.
     """
-    if veis.dtype != np.float32:
-        raise ValueError(f"{veis.dtype = }. Need float32.")
+    if veis.dtype != np.int8:
+        raise ValueError(f"{veis.dtype = }. Need int8.")
     tes = 1e-2 * 3 ** (
         np.random.normal(0.1, 1.0, size=len(veis)).astype(np.float32) + veis
     )

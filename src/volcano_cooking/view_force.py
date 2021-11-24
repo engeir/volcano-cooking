@@ -10,7 +10,7 @@ import volcano_cooking.helper_scripts.view_generated_forcing as v
 
 
 @click.command()
-@click.argument("filename")
+@click.argument("filename", type=click.Path(exists=True), required=False)
 @click.option(
     "--save/--no-save",
     "-s/-S",
