@@ -311,6 +311,18 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "netcdf4"
+version = "1.5.8"
+description = "Provides an object-oriented python interface to the netCDF version 4 library."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+cftime = "*"
+numpy = ">=1.9"
+
+[[package]]
 name = "nodeenv"
 version = "1.6.0"
 description = "Node.js virtual environment builder"
@@ -756,7 +768,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<3.11"
-content-hash = "41ebc75743eda267325df647ee615e5fd76dbcead0b9c71e165e4bff0699ce56"
+content-hash = "6770ece0557f1bf750fdc1d22c08707deeff5b19e98c6abb4d2b2c7cea3c498a"
 
 [metadata.files]
 atomicwrites = [
@@ -1022,6 +1034,28 @@ mypy = [
 mypy-extensions = [
     {file = "mypy_extensions-0.4.3-py2.py3-none-any.whl", hash = "sha256:090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d"},
     {file = "mypy_extensions-0.4.3.tar.gz", hash = "sha256:2d82818f5bb3e369420cb3c4060a7970edba416647068eb4c5343488a6c604a8"},
+]
+netcdf4 = [
+    {file = "netCDF4-1.5.8-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:fd501ccb28ebae6770112968c750a14feb39cb495d788aa67c28360f7c1f2324"},
+    {file = "netCDF4-1.5.8-cp310-cp310-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:8b4fac95819b0c17ca5fc1a4e8bb31116b6b808cceca0aa8b475bb50abab1063"},
+    {file = "netCDF4-1.5.8-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e118bfccda464a381187b1f9c771bf9581c83c566faab309a8ec3f781668da4e"},
+    {file = "netCDF4-1.5.8-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:804d312a10e6fb196df16bf0d811624d885a51b7ebb3bc648278faa62ffece26"},
+    {file = "netCDF4-1.5.8-cp36-cp36m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:1442048c93ac668d61d1675a0b0f3aea3a73efa2969636af0cb95a52d119acec"},
+    {file = "netCDF4-1.5.8-cp36-cp36m-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:f5e9e1ca99aca1f6d40054ef42b97cf6d00c59d8a438f580cf9dfc309a8eb870"},
+    {file = "netCDF4-1.5.8-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:7519c1e8ad8d3d72636a0aedb5d79bb90556037a59d83811e2057f09ca272b52"},
+    {file = "netCDF4-1.5.8-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:0774309a8b684654c0bbd4d55bcccaa399ffa6870b5dc2e35dbe919ec637a51f"},
+    {file = "netCDF4-1.5.8-cp37-cp37m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:a9ba575047ba1be7cf5f1b712c987ce329b4d092582d92c2e268296a06bfa639"},
+    {file = "netCDF4-1.5.8-cp37-cp37m-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:b2b0f370cda5cc5f46239e0a219bf8d4cf442c7d49dbd1c89abb39e71e266c60"},
+    {file = "netCDF4-1.5.8-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:29426faabdc017e89572ff1d7835dab426aae4c22ad1a12d1877b932e969b6ac"},
+    {file = "netCDF4-1.5.8-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:f92b92f758dfc903af2a8a287fd68a531f73ffd3e5be72b5ad1eb3f083e7aaa2"},
+    {file = "netCDF4-1.5.8-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:7326afa46fd0c1b50d30db9764a1eefbcff576fcffa8e48bef403094590563b8"},
+    {file = "netCDF4-1.5.8-cp38-cp38-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:916434a13ea317934cf248fb70dd5476c498f1def71041fc7e3fd23882ef2cda"},
+    {file = "netCDF4-1.5.8-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:75ecf1ef2c841aace539f3326d101efda7c99f6c3283c48a444370aba48525af"},
+    {file = "netCDF4-1.5.8-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:0f570b5b4cc0434ef8a2a648fdebfa017de695ea7c836b24ae7b216ede4e3345"},
+    {file = "netCDF4-1.5.8-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:5c883a02c55fd1e5b61ad4f83dd7f11f90b894e14d120ba678d9c33d9e4b3a77"},
+    {file = "netCDF4-1.5.8-cp39-cp39-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:d784d6cf5baa90909f385bf60ead91138f13ff7f870467e458fb3650ef71b48d"},
+    {file = "netCDF4-1.5.8-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:49a44c7382e5e1da39d8bab5d8e406ad30d46fda9386e85a3e69491e6caaca93"},
+    {file = "netCDF4-1.5.8.tar.gz", hash = "sha256:ca3d468f4812c0999df86e3f428851fb0c17ac34ce0827115c246b0b690e4e84"},
 ]
 nodeenv = [
     {file = "nodeenv-1.6.0-py2.py3-none-any.whl", hash = "sha256:621e6b7076565ddcacd2db0294c0381e01fd28945ab36bcf00f41c5daf63bef7"},
