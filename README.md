@@ -69,6 +69,7 @@ in the `helper_scripts` directory. By default it assumes the file is named
 ## Todo
 
 -   Fix FPP generation (find good values for gamma, etc.)
+-   Move to use only `fppy` package, remove `uit_scripts` dependency.
 
 ### FPP
 
