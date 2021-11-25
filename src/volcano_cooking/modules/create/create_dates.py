@@ -1,13 +1,12 @@
 """Script to put any function that creates correctly formatted dates."""
 
 
-# TODO: create the dates from an FPP.
-
 import datetime as dt
 from typing import Union
 
 import numpy as np
-import uit_scripts.shotnoise.gen_shot_noise as gsn
+
+from volcano_cooking.modules import create
 
 
 def random_dates(
@@ -84,12 +83,9 @@ def fpp_dates_and_emissions(
     tes:
         Array of length 'size' with the Total_Emission as a 1D numpy array
     """
-    # TODO: figure out which gamma and other parameters are appropriate
-    mean_amp = 1.0
-    gamma = 0.52  # Value from proj5 work, instrumental data set analysis
+    f = create.StdFrc(fs=12, total_pulses=size)
     while True:
-        ins = gsn.make_signal(gamma, size, 0.1, ampta=True, mA=mean_amp)
-        amp, ta = np.asarray(ins[2]), np.asarray(ins[3])
+        ta, amp = f.get_frc()
         dates: list[dt.date] = []
         dates_ap = dates.append
         for n in ta:

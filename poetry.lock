@@ -190,11 +190,11 @@ woff = ["zopfli (>=0.1.4)", "brotlicffi (>=0.8.0)", "brotli (>=1.0.1)"]
 [[package]]
 name = "fppy"
 version = "1.0"
-description = ""
+description = "Python scripts used by the fusion energy group at UiT The Arctic University of Norway."
 category = "main"
 optional = false
 python-versions = ">=3.0"
-develop = false
+develop = true
 
 [package.dependencies]
 matplotlib = ">=3.2.0"
@@ -203,10 +203,8 @@ scipy = ">=1.4.0"
 tqdm = ">=4.50.2"
 
 [package.source]
-type = "git"
-url = "https://github.com/uit-cosmo/fppy.git"
-reference = "master"
-resolved_reference = "2d681b9a6a09dcfa3095f5917bf062697540fb49"
+type = "directory"
+url = "../../../../programs/fppy"
 
 [[package]]
 name = "identify"
@@ -789,7 +787,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<3.11"
-content-hash = "3d595b42188f1b0174e3088db618927b370961a43cfda10b880751c8a99a5d1b"
+content-hash = "94f35057fd7ba7637cda97a5a68032eb4c11085e2a50d3027cb9b01839eafdf6"
 
 [metadata.files]
 atomicwrites = [

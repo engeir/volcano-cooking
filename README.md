@@ -70,6 +70,7 @@ in the `helper_scripts` directory. By default it assumes the file is named
 
 -   Fix FPP generation (find good values for gamma, etc.)
 -   Move to use only `fppy` package, remove `uit_scripts` dependency.
+-   Fix date creation. Stop at year 9999, not possible beyond this.
 
 ### FPP
 
