@@ -32,7 +32,10 @@ import volcano_cooking.modules.create as create
 # ====================================================================================== #
 
 
-def create_volcanoes(size: int = 251, init_year: int = 1850) -> None:
+__GENERATORS__ = {0: create.GenerateRandomNormal, 1: create.GenerateFPP}
+
+
+def create_volcanoes(size: int = 251, init_year: int = 1850, version: int = 0) -> None:
     """Create volcanoes starting at the year 1850.
 
     This will re-create the same data as can be found in forcing files used within the
@@ -44,11 +47,12 @@ def create_volcanoes(size: int = 251, init_year: int = 1850) -> None:
         The total number of eruptions
     init_year: int
         Change the first year an eruption can happen
+    version: int
+        Choose one of the versions from the '__GENERATORS__' dictionary.
     """
     # CREATE DATA ---------------------------------------------------------------------- #
 
-    # g = create.GenerateFPP(size, init_year)
-    g = create.GenerateRandomNormal(size, init_year)
+    g = __GENERATORS__[version](size, init_year)
     g.generate()
     all_arrs = g.get_arrays()
 

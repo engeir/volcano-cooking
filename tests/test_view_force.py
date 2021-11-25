@@ -32,8 +32,10 @@ def test_main_succeeds(mock_fig: MagicMock, runner: CliRunner) -> None:
     runner: CliRunner
         Runner for creating isolated file systems.
     """
-    with runner.isolated_filesystem():
-        synthetic_volcanoes.create_volcanoes()
-        result = runner.invoke(view_force.main)
-        mock_fig.assert_called()
-        assert result.exit_code == 0
+    r = len(synthetic_volcanoes.__GENERATORS__)
+    for v in range(r):
+        with runner.isolated_filesystem():
+            synthetic_volcanoes.create_volcanoes(version=v)
+            result = runner.invoke(view_force.main)
+            mock_fig.assert_called()
+            assert result.exit_code == 0
