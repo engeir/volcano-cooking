@@ -1,4 +1,4 @@
-"""Sricpt to put any function that creates correctly formatted dates."""
+"""Script to put any function that creates correctly formatted dates."""
 
 
 # TODO: create the dates from an FPP.
