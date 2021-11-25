@@ -66,12 +66,6 @@ in the `helper_scripts` directory. By default it assumes the file is named
 `volcan-eesm_global_2015_so2-emissions-database_v1.0.nc` and that it is placed inside the
 `data/originals` directory. You can find this file [here](http://catalogue.ceda.ac.uk/uuid/bfbd5ec825fa422f9a858b14ae7b2a0d).
 
-## Todo
-
--   Fix FPP generation (find good values for gamma, etc.)
--   Move to use only `fppy` package, remove `uit_scripts` dependency.
--   Fix date creation. Stop at year 9999, not possible beyond this.
-
 ### FPP
 
 In the long run, this project should be able to produce volcanic forcing files where the
