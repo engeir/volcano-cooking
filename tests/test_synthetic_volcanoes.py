@@ -30,10 +30,14 @@ def test_create_volcaoes(runner: CliRunner) -> None:
         Runner for creating isolated file  system.
     """
     with runner.isolated_filesystem():
-        d = "data/output"
-        now = datetime.datetime.now().strftime("%Y%m%d_%H%M")
-        out_npz = f"{d}/synthetic_volcanoes_{now}.npz"
-        out_nc = f"{d}/synthetic_volcanoes_{now}.npz"
-        synthetic_volcanoes.create_volcanoes()
-        assert os.path.isfile(out_nc)
-        assert os.path.isfile(out_npz)
+        r = len(synthetic_volcanoes.__GENERATORS__)
+        for v in range(r):
+            d = os.path.join("data", "output")
+            now = datetime.datetime.now().strftime("%Y%m%d_%H%M")
+            out_npz = os.path.join(d, f"synthetic_volcanoes_{now}.npz")
+            out_nc = os.path.join(d, f"synthetic_volcanoes_{now}.nc")
+            synthetic_volcanoes.create_volcanoes(version=v)
+            assert os.path.isfile(out_nc)
+            assert os.path.isfile(out_npz)
+            os.remove(out_nc)
+            os.remove(out_npz)
