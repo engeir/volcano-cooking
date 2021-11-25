@@ -33,7 +33,7 @@ def test_fpp_dates_and_emissions() -> None:
     s1 = -1
     s2 = 0
     s3 = "1"
-    s4 = 100
+    s4 = 10000
     with pytest.raises(ValueError):
         create_dates.fpp_dates_and_emissions(s1, s1)
         create_dates.fpp_dates_and_emissions(s2, s2)

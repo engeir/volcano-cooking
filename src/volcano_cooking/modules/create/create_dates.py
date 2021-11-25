@@ -86,6 +86,17 @@ def fpp_dates_and_emissions(
     f = create.StdFrc(fs=12, total_pulses=size)
     while True:
         ta, amp = f.get_frc()
+        # Can't have years beyond 9999
+        if int(ta[-1]) + init_year > 9999:
+            mask = np.argwhere(ta + init_year < 9999)
+            ta = ta[mask].flatten()
+            amp = amp[mask].flatten()
+            size = len(amp)
+            print(
+                "Can't create dates for years beyond 9999. Keep this in mind when "
+                + f"setting `init_year` and `size`. New {size = }"
+            )
+        # Go from float to YYYY-MM-DD
         dates: list[dt.date] = []
         dates_ap = dates.append
         for n in ta:

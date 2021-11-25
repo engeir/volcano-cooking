@@ -101,11 +101,9 @@ class Data:
             self.miihs.shape,
             self.mxihs.shape,
         ]
-        try:
-            _ = (np.diff(np.vstack(stack).reshape(len(stack), -1), axis=0) == 0).all()
-        except ValueError as e:
-            raise e
-        finally:
+        if not (np.diff(np.vstack(stack).reshape(len(stack), -1), axis=0) == 0).all():
+            raise ValueError(f"The arrays have different shapes:\n{stack}")
+        else:
             del stack
         if (
             self.eruptions.dtype != np.int8
@@ -307,6 +305,8 @@ class Generate(ABC):
 
     def generate(self) -> None:
         self.gen_dates_totalemission_vei()
+        if len(self.veis) != self.size:
+            self.size = len(self.veis)
         self.__gen_rest()
 
     def get_arrays(self) -> list[np.ndarray]:
