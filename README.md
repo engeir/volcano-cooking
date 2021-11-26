@@ -6,6 +6,10 @@
 
 > Let's make some volcanoes erupt!
 
+## TODO
+
+-   Fix possible tests failure if date is created on Feb 29.
+
 ## Install
 
 ```sh
