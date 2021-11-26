@@ -20,7 +20,7 @@ import xarray as xr
 import volcano_cooking.helper_scripts.functions as fnc
 
 
-def view_forcing(ext: str, in_file: Optional[str] = None, save=False):
+def view_forcing(ext: Optional[str] = None, in_file: Optional[str] = None, save=False):
     """View the forcing found in the generated total emission against time.
 
     Parameters
@@ -38,7 +38,15 @@ def view_forcing(ext: str, in_file: Optional[str] = None, save=False):
     ValueError
         If the date created fails to be formatted from ints to string and datetime objects
     """
-    yoes, moes, does, tes = load_forcing(ext, in_file=in_file)
+    if ext is None and in_file is None:
+        yoes, moes, does, tes = load_forcing(".nc", in_file=in_file)
+    elif isinstance(ext, str):
+        yoes, moes, does, tes = load_forcing(ext, in_file=in_file)
+    elif isinstance(in_file, str) and in_file.endswith((".nc", ".npz")):
+        ext = in_file.split(".")[-1]
+        yoes, moes, does, tes = load_forcing(ext, in_file=in_file)
+    else:
+        raise ValueError(f"This file cannot be viewed: {in_file = }")
 
     dates: list[datetime.datetime] = []
     dates_ap: list[str] = []
@@ -65,7 +73,7 @@ def view_forcing(ext: str, in_file: Optional[str] = None, save=False):
         + float(shift) * 365
     ) / 365
     _, ax = plt.subplots(figsize=(18, 9), constrained_layout=True)
-    ax.plot(t, tes)
+    ax.plot(t, tes, "+-")
     plt.xlabel("Time")
     plt.ylabel("Total Emission")
     if save:

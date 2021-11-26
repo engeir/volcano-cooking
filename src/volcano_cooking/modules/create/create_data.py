@@ -26,6 +26,7 @@ class Data:
         arrays to a .npz file.
     """
 
+    # TODO: re-write to use composition; send in Generator class.
     def __init__(
         self,
         eruptions: np.ndarray,
@@ -216,8 +217,8 @@ class Data:
         Raises
         ------
         ValueError
-            If the attribute my_frc has not been filled yet, ValueError is raised telling
-            the user to first call the 'make_dataset' method.
+            If the attribute `my_frc` has not been filled yet, `ValueError` is raised
+            telling the user to first call the `make_dataset` method.
         """
         if self.my_frc is None:
             raise ValueError("You must make the dataset with 'make_dataset' first.")
@@ -283,7 +284,7 @@ class Generate(ABC):
         """Generate dates, total emission and VEI."""
 
     def __gen_rest(self) -> None:
-        """Generate the rest with defualt settings.
+        """Generate the rest with default settings.
 
         The rest refer to `eruptions`, the eruption number, `lats`, `lons` and `miihs` and
         `mxihs`, the minimum and maximum heights of injection which are both assumed
@@ -304,6 +305,12 @@ class Generate(ABC):
         self.miihs, self.mxihs = convert.vei_to_injectionheights(self.veis)
 
     def generate(self) -> None:
+        """Generate all data arrays needed in the volcanic forcing netCDF file.
+
+        Ten arrays of equal shape are created; eruption number, year-month-day,
+        latitude-longitude, total emission, volcanic explosivity index and minimum &
+        maximum injection heights.
+        """
         self.gen_dates_totalemission_vei()
         if len(self.veis) != self.size:
             self.size = len(self.veis)
@@ -355,6 +362,14 @@ class GenerateFPP(Generate):
             self.size, self.init_year
         )
         self.veis = convert.totalemission_to_vei(self.tes)
+
+
+class GenerateSingleVolcano(Generate):
+    def gen_dates_totalemission_vei(self) -> None:
+        self.yoes, self.moes, self.does, self.veis = create.single_date_and_emission(
+            self.init_year
+        )
+        self.tes = convert.vei_to_totalemission(self.veis)
 
 
 def main():

@@ -4,9 +4,38 @@
 import datetime as dt
 from typing import Union
 
+import cftime
 import numpy as np
 
 from volcano_cooking.modules import create
+
+
+def single_date_and_emission(
+    init_year: int,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Create a single volcano three years after `init_year`.
+
+    Parameters
+    ----------
+    init_year: int
+        The first year dates should appear in
+
+    Returns
+    -------
+    yoes: np.ndarray
+        Array of length 'size' with the year of a date
+    moes: np.ndarray
+        Array of length 'size' with the month of a date
+    does: np.ndarray
+        Array of length 'size' with the day of a date
+    veis: np.ndarray
+        Array of length 'size' with the Total_Emission as a 1D numpy array
+    """
+    yoes = np.array([init_year + 3], dtype=np.int16)
+    moes = np.array([1], dtype=np.int8)
+    does = np.array([1], dtype=np.int8)
+    veis = np.array([10], dtype=np.int8)
+    return yoes, moes, does, veis
 
 
 def random_dates(
@@ -97,12 +126,12 @@ def fpp_dates_and_emissions(
                 + f"setting `init_year` and `size`. New {size = }"
             )
         # Go from float to YYYY-MM-DD
-        dates: list[dt.date] = []
+        dates: list[cftime.datetime] = []
         dates_ap = dates.append
         for n in ta:
-            result = (
-                dt.datetime(int(n) + init_year, 1, 1) + dt.timedelta(days=(n % 1) * 365)
-            ).date()
+            result = cftime.datetime(
+                int(n) + init_year, 1, 1, calendar="noleap"
+            ) + dt.timedelta(days=(n % 1) * 365)
             dates_ap(result)
         # Dates should be unique
         if not any(np.diff(dates) == dt.timedelta(days=0)):
