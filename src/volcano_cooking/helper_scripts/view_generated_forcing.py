@@ -73,7 +73,7 @@ def view_forcing(ext: Optional[str] = None, in_file: Optional[str] = None, save=
         + float(shift) * 365
     ) / 365
     _, ax = plt.subplots(figsize=(18, 9), constrained_layout=True)
-    ax.plot(t, tes)
+    ax.plot(t, tes, "+-")
     plt.xlabel("Time")
     plt.ylabel("Total Emission")
     if save:
