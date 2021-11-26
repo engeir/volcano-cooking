@@ -364,6 +364,14 @@ class GenerateFPP(Generate):
         self.veis = convert.totalemission_to_vei(self.tes)
 
 
+class GenerateSingleVolcano(Generate):
+    def gen_dates_totalemission_vei(self) -> None:
+        self.yoes, self.moes, self.does, self.veis = create.single_date_and_emission(
+            self.init_year
+        )
+        self.tes = convert.vei_to_totalemission(self.veis)
+
+
 def main():
     # g = GenerateFPP(200, 1850)
     g = GenerateRandomNormal(200, 1850)

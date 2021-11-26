@@ -9,6 +9,34 @@ import numpy as np
 from volcano_cooking.modules import create
 
 
+def single_date_and_emission(
+    init_year: int,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Create a single volcano three years after `init_year`.
+
+    Parameters
+    ----------
+    init_year: int
+        The first year dates should appear in
+
+    Returns
+    -------
+    yoes: np.ndarray
+        Array of length 'size' with the year of a date
+    moes: np.ndarray
+        Array of length 'size' with the month of a date
+    does: np.ndarray
+        Array of length 'size' with the day of a date
+    veis: np.ndarray
+        Array of length 'size' with the Total_Emission as a 1D numpy array
+    """
+    yoes = np.array([init_year + 3], dtype=np.int16)
+    moes = np.array([1], dtype=np.int8)
+    does = np.array([1], dtype=np.int8)
+    veis = np.array([6], dtype=np.int8)
+    return yoes, moes, does, veis
+
+
 def random_dates(
     size: int, init_year: Union[float, str]
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
