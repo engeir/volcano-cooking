@@ -29,4 +29,4 @@ def main(filename: str, save: bool):
     save: bool
         Save the plot. Defaults to False
     """
-    v.view_forcing(".nc", in_file=filename, save=save)
+    v.view_forcing(in_file=filename, save=save)
