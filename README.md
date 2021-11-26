@@ -8,7 +8,6 @@
 
 ## TODO
 
--   Fix possible tests failure if date is created on Feb 29.
 -   Add forcing generator: single volcano at third year for easier testing.
 
 ## Install
