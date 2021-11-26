@@ -4,6 +4,7 @@
 import datetime as dt
 from typing import Union
 
+import cftime
 import numpy as np
 
 from volcano_cooking.modules import create
@@ -125,12 +126,12 @@ def fpp_dates_and_emissions(
                 + f"setting `init_year` and `size`. New {size = }"
             )
         # Go from float to YYYY-MM-DD
-        dates: list[dt.date] = []
+        dates: list[cftime.datetime] = []
         dates_ap = dates.append
         for n in ta:
-            result = (
-                dt.datetime(int(n) + init_year, 1, 1) + dt.timedelta(days=(n % 1) * 365)
-            ).date()
+            result = cftime.datetime(
+                int(n) + init_year, 1, 1, calendar="noleap"
+            ) + dt.timedelta(days=(n % 1) * 365)
             dates_ap(result)
         # Dates should be unique
         if not any(np.diff(dates) == dt.timedelta(days=0)):
