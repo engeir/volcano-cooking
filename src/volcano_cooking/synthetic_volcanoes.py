@@ -32,7 +32,11 @@ import volcano_cooking.modules.create as create
 # ====================================================================================== #
 
 
-__GENERATORS__ = {0: create.GenerateRandomNormal, 1: create.GenerateFPP}
+__GENERATORS__ = {
+    0: create.GenerateRandomNormal,
+    1: create.GenerateFPP,
+    2: create.GenerateSingleVolcano,
+}
 
 
 def create_volcanoes(size: int = 251, init_year: int = 1850, version: int = 0) -> None:

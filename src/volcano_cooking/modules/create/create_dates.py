@@ -33,7 +33,7 @@ def single_date_and_emission(
     yoes = np.array([init_year + 3], dtype=np.int16)
     moes = np.array([1], dtype=np.int8)
     does = np.array([1], dtype=np.int8)
-    veis = np.array([6], dtype=np.int8)
+    veis = np.array([10], dtype=np.int8)
     return yoes, moes, does, veis
 
 
