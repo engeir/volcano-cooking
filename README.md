@@ -101,39 +101,39 @@ sh _script/create_cesm_frc.sh
 ```diff
 # diff data/originals/createVolcEruptV3.1piControl.ncl data/originals/createVolcEruptV3.1piControl.ncl.original
 1c1
-< load "/home/een023/programs/miniconda3/ncl/lib/common.ncl"
+< load "$CODE_PATH/ncl/lib/common.ncl"
 ---
-> load "$CODE_PATH/ncl/lib/common.ncl"
+> load "/home/een023/programs/miniconda3/ncl/lib/common.ncl"
 20,21c20,21
-<   res="2deg"
-<   print("Horizontal resolution not set; defaulting to 2deg (1.9x2.5). For 0.95x1.25: setenv resolution 1deg")
+<   res="1deg"
+<   print("Horizontal resolution not set; defaulting to 1deg (0.95x1.25). For 1.9x2.5: setenv resolution 2deg")
 ---
->   res="1deg"
->   print("Horizontal resolution not set; defaulting to 1deg (0.95x1.25). For 1.9x2.5: setenv resolution 2deg")
+>   res="2deg"
+>   print("Horizontal resolution not set; defaulting to 2deg (1.9x2.5). For 0.95x1.25: setenv resolution 1deg")
 25c25
-<   templateFilename = getenv("COORDS2DEG")
+<   templateFilename = "/glade/work/mmills/inputdata/grids/coords_1.9x2.5_L88_c150828.nc"
 ---
->   templateFilename = "/glade/work/mmills/inputdata/grids/coords_1.9x2.5_L88_c150828.nc"
+>   templateFilename = getenv("COORDS2DEG")
 28c28
-<     templateFilename = getenv("COORDS1DEG")
+<     templateFilename = "/glade/work/mmills/inputdata/grids/coords_0.95x1.25_L70_c150828.nc"
 ---
->     templateFilename = "/glade/work/mmills/inputdata/grids/coords_0.95x1.25_L70_c150828.nc"
+>     templateFilename = getenv("COORDS1DEG")
 56,57c56,57
-< filepath=getenv("SYNTH_FILE_DIR")+"/"
-< outfilepath=getenv("DATA_OUT")+"/"
+< filepath="/glade/work/mmills/data/VolcanEESM/"
+< outfilepath="/glade/p/acom/acom-climate/cesm2/inputdata/atm/cam/chem/stratvolc/"
 ---
-> filepath="/glade/work/mmills/data/VolcanEESM/"
-> outfilepath="/glade/p/acom/acom-climate/cesm2/inputdata/atm/cam/chem/stratvolc/"
+> filepath=getenv("SYNTH_FILE_DIR")+"/"
+> outfilepath=getenv("DATA_OUT")+"/"
 59,60c59,60
-< infilename = getenv("SYNTH_BASE")
-< infiletype = getenv("SYNTH_EXT")
+< infilename   ="volcan-eesm_global_2015_so2-emissions-database_v3.1_c180414"
+< infiletype = "nc"
 ---
-> infilename   ="volcan-eesm_global_2015_so2-emissions-database_v3.1_c180414"
-> infiletype = "nc"
+> infilename = getenv("SYNTH_BASE")
+> infiletype = getenv("SYNTH_EXT")
 62c62
-< outfilename="VolcanEESMvEnger_piControl_SO2_"+firstYear+"-"+lastYear+"average"
+< outfilename="VolcanEESMv3.10_piControl_SO2_"+firstYear+"-"+lastYear+"average"
 ---
-> outfilename="VolcanEESMv3.10_piControl_SO2_"+firstYear+"-"+lastYear+"average"
+> outfilename="VolcanEESMvEnger_piControl_SO2_"+firstYear+"-"+lastYear+"average"
 ```
 
 </ul></details>
