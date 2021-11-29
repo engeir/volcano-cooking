@@ -19,11 +19,12 @@ poetry install
 ```
 
 <details><summary><i><b>Installation notes</b></i></summary><br><ul>
-The package `fppy` will not be installed properly since it is specified with a path to
-a local copy of the package repository. To install `fppy`, clone the
-[repo](https://github.com/uit-cosmo/fppy) and edit `pyproject.toml` by changing the
-relative path to where you cloned `fppy`. Alternatively, you can clone and install `fppy`
-into the virtual environment from the root of the `fppy` repository with
+The package <code>fppy</code> will not be installed properly since it is specified with
+a path to a local copy of the package repository. To install <code>fppy</code>, clone the
+<a href="https://github.com/uit-cosmo/fppy">repo</a> and edit <code>pyproject.toml</code>
+by changing the relative path to where you cloned <code>fppy</code>. Alternatively, you
+can clone and install <code>fppy</code> into the virtual environment from the root of the
+<code>fppy</code> repository with
 
 ```sh
 pip install -e .
