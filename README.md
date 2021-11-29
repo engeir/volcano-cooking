@@ -85,6 +85,8 @@ sh _script/create_cesm_frc.sh
 ├── poetry.lock
 ├── pyproject.toml
 ├── README.md
+├── _script
+│   └── create_cesm_frc.sh
 ├── setup.cfg
 ├── src
 │   └── ...
