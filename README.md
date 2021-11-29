@@ -96,9 +96,10 @@ sh _script/create_cesm_frc.sh
 
 </ul></details>
 
-<details><summary><i><b>Diff between `ncl` script and original</b></i></summary><br><ul>
+<details><summary><i><b>Diff between edited ncl script and original</b></i></summary><br><ul>
 
 ```
+# diff data/originals/createVolcEruptV3.1piControl.ncl data/originals/createVolcEruptV3.1piControl.ncl.original
 1c1
 < load "/home/een023/programs/miniconda3/ncl/lib/common.ncl"
 ---
