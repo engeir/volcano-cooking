@@ -99,7 +99,7 @@ sh _script/create_cesm_frc.sh
 <details><summary><i><b>Diff between edited ncl script and original</b></i></summary><br><ul>
 
 ```diff
-# diff data/originals/createVolcEruptV3.1piControl.ncl data/originals/createVolcEruptV3.1piControl.ncl.original
+# diff data/originals/createVolcEruptV3.1piControl.ncl.original data/originals/createVolcEruptV3.1piControl.ncl
 1c1
 < load "$CODE_PATH/ncl/lib/common.ncl"
 ---
