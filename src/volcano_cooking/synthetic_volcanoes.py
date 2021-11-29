@@ -53,9 +53,19 @@ def create_volcanoes(size: int = 251, init_year: int = 1850, version: int = 0) -
         Change the first year an eruption can happen
     version: int
         Choose one of the versions from the '__GENERATORS__' dictionary.
+
+    Raises
+    ------
+    IndexError
+        If `version` is not a valid index of the generator dictionary.
     """
     # CREATE DATA ---------------------------------------------------------------------- #
 
+    if version not in __GENERATORS__ or version < 0:
+        raise IndexError(
+            f"No version exists for index {version}. It must be one of {__GENERATORS__.keys()}."
+        )
+    print(f"Generating with '{__GENERATORS__[version].__name__}'...")
     g = __GENERATORS__[version](size, init_year)
     g.generate()
     all_arrs = g.get_arrays()
