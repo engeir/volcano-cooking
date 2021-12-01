@@ -32,6 +32,37 @@ def view_forcing(ext: Optional[str] = None, in_file: Optional[str] = None, save=
         custom file to be used.
     save: bool, deafault=False
         Save the plot
+    """
+    t, tes = frc_datetime2float(ext, in_file)
+    _, ax = plt.subplots(figsize=(18, 9), constrained_layout=True)
+    ax.plot(t, tes, "+-")
+    plt.xlabel("Time")
+    plt.ylabel("Total Emission")
+    if save:
+        filename = check_dir(".png")
+        plt.savefig(filename, format="png")
+    plt.show()
+
+
+def frc_datetime2float(
+    ext: Optional[str] = None, in_file: Optional[str] = None
+) -> tuple[np.ndarray, np.ndarray]:
+    """Convert time axis from datetime to float.
+
+    Parameters
+    ----------
+    ext: str
+        Extension of the file type used. Valid values are 'npz' and 'nc'.
+    in_file: str, optional
+        Full path (absolute or relative to where the function i called) and file name of a
+        custom file to be used.
+
+    Returns
+    -------
+    np.ndarray:
+        Time axis of the input file
+    np.ndarray:
+        Values of the input file
 
     Raises
     ------
@@ -72,14 +103,7 @@ def view_forcing(ext: Optional[str] = None, in_file: Optional[str] = None, save=
         )
         + float(shift) * 365
     ) / 365
-    _, ax = plt.subplots(figsize=(18, 9), constrained_layout=True)
-    ax.plot(t, tes, "+-")
-    plt.xlabel("Time")
-    plt.ylabel("Total Emission")
-    if save:
-        filename = check_dir(".png")
-        plt.savefig(filename, format="png")
-    plt.show()
+    return t, tes
 
 
 def check_dir(ext: str) -> str:

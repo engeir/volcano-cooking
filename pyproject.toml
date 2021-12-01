@@ -8,6 +8,7 @@ license = "GPL-3.0"
 [tool.poetry.scripts]
 volcano-cooking = "volcano_cooking.__main__:main"
 view-frc = "volcano_cooking.view_force:main"
+sfrc-sparse2lin = "volcano_cooking.sparse_to_lin:main"
 
 [tool.poetry.dependencies]
 python = ">=3.7,<3.11"
