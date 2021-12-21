@@ -66,7 +66,7 @@ To be able to create forcing files used by the CESM2 from the newly created synt
 file, check out the [data_source_files] directory. This holds creation files that uses the
 forcing file this project creates to make a new, full forcing file that CESM2 accepts. For
 example, `createVolcEruptV3.1piControl.ncl`. This need a `common.ncl` file, found
-[here](common-nlc), in addition to other standard `ncl` libraries. Make sure to edit
+[here][common-nlc], in addition to other standard `ncl` libraries. Make sure to edit
 `createVolcEruptV3.1piControl.ncl` to read the created file and that the first and last
 year cover those used in the created file.
 
