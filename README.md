@@ -66,11 +66,11 @@ To be able to create forcing files used by the CESM2 from the newly created synt
 file, check out the [data_source_files] directory. This holds creation files that uses the
 forcing file this project creates to make a new, full forcing file that CESM2 accepts. For
 example, `createVolcEruptV3.1piControl.ncl`. This need a `common.ncl` file, found
-[here](common-ncl), in addition to other standard `ncl` libraries. Make sure to edit
+[here][common-ncl], in addition to other standard `ncl` libraries. Make sure to edit
 `createVolcEruptV3.1piControl.ncl` to read the created file and that the first and last
 year cover those used in the created file.
 
-Coordinate files are located [here](coord-file). For example `fv_1.9x2.5_L30.nc` which can
+Coordinate files are located [here][coord-file]. For example `fv_1.9x2.5_L30.nc` which can
 be used with two degrees resolution in the atmosphere model.
 
 Assuming a directory tree as below and with the above mentioned changes and downloads of
@@ -157,7 +157,7 @@ sh _script/create_cesm_frc.sh
 A similar file to those that are created is needed to be able to use some of the scripts
 in the `helper_scripts` directory. By default it assumes the file is named
 `volcan-eesm_global_2015_so2-emissions-database_v1.0.nc` and that it is placed inside the
-`data/originals` directory. You can find this file [here](volc-frc).
+`data/originals` directory. You can find this file [here][volc-frc].
 
 ### FPP
 
