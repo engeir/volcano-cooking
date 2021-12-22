@@ -131,6 +131,8 @@ dmypy.json
 # MY ADDITIONS
 *.nc
 data/*
+!data/originals/
+data/originals/*
 !data/originals/createVolcEruptV3.ncl
 !data/originals/createVolcEruptV3-2.ncl
 !data/originals/createVolcEruptV3.1piControl.ncl
