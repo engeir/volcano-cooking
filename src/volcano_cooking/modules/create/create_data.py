@@ -226,6 +226,7 @@ class Data:
         # The format is important for when you give the .nc file to the .ncl script that
         # creates the final forcing file.
         self.my_frc.to_netcdf(out_file, "w", format="NETCDF4")
+        # self.my_frc.to_netcdf(out_file, "w", format="NETCDF4_CLASSIC")
 
     @staticmethod
     def __check_dir(ext: str) -> str:

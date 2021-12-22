@@ -4,7 +4,8 @@ export DATA_ORIG="data/originals"
 export DATA_SYNTH="data/output"
 export DATA_OUT="data/cesm"
 mkdir -p $DATA_OUT
-export NCL_SCRIPT="createVolcEruptV3.1piControl.ncl"
+# export NCL_SCRIPT="createVolcEruptV3.1piControl.ncl"
+export NCL_SCRIPT="createVolcEruptV3-2.ncl"
 export COORDS1DEG="$DATA_ORIG/fv_0.9x1.25_L30.nc"
 export COORDS2DEG="$DATA_ORIG/fv_1.9x2.5_L30.nc"
 SYNTH_FILE=$(find "$DATA_SYNTH" -name "*.nc" -type f -printf '%T@ %p\n' | sort -n | tail -1 | cut -f2- -d" ")
@@ -16,6 +17,7 @@ SYNTH_EXT="${SYNTH_FILE_BASE##*.}"
 SYNTH_BASE="${SYNTH_FILE_BASE%.*}"
 export SYNTH_BASE
 export SYNTH_EXT
+export res="2deg"
 
 if [ -z "$SYNTH_FILE" ]; then
     echo "Cannot find synthetic volcano forcing file. Generate with 'volcano-cooking'."
