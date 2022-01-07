@@ -69,4 +69,10 @@ Running NCL script...
 " > "$DATA_OUT"/logs/"$current_day".log
 
 ncl "$DATA_ORIG/$NCL_SCRIPT" 2>&1 | tee -a "$DATA_OUT"/logs/"$current_day".log
+# The file need to be in NetCDF3 format. Could specify this in the ncl script, but the
+# nccopy command seems to support more formats, so perhaps it is better to use that(?).
+new_file="$(cat "$DATA_OUT"/logs/"$current_day".log | tail -n1 | awk '{print $5}')"
+mv $new_file $new_file.old
+nccopy -k cdf5 $new_file.old $new_file
+rm $new_file.old
 exit 0
