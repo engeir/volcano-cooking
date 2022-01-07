@@ -1,6 +1,6 @@
 """CLI for the view_generated_forcing module.
 
-This implements a wrapper for a function to be able to use it as a standalone program. It
+This implements a wrapper for a function to be able to use it as a stand-alone program. It
 takes a filename as a mandatory input parameter.
 """
 

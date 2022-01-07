@@ -1,13 +1,18 @@
 #!/bin/sh
 
+# Set variables
+
 export DATA_ORIG="data/originals"
 export DATA_SYNTH="data/output"
 export DATA_OUT="data/cesm"
 mkdir -p $DATA_OUT
 # export NCL_SCRIPT="createVolcEruptV3.1piControl.ncl"
-export NCL_SCRIPT="createVolcEruptV3-2.ncl"
+export NCL_SCRIPT="createVolcEruptV3.ncl"
 export COORDS1DEG="$DATA_ORIG/fv_0.9x1.25_L30.nc"
-export COORDS2DEG="$DATA_ORIG/fv_1.9x2.5_L30.nc"
+# export COORDS2DEG="$DATA_ORIG/fv_1.9x2.5_L30.nc"
+export COORDS2DEG="$DATA_ORIG/fv_1.9x2.5_L26.nc"
+# export COORDS2DEG="$DATA_ORIG/fv_1.9x2.5.nc"
+# export COORDS2DEG="$DATA_ORIG/fv_1.9x2.5_nc3000_Nsw084_Nrs016_Co120_Fi001_ZR_GRNL_031819.nc"
 SYNTH_FILE=$(find "$DATA_SYNTH" -name "*.nc" -type f -printf '%T@ %p\n' | sort -n | tail -1 | cut -f2- -d" ")
 export SYNTH_FILE
 SYNTH_FILE_DIR=$(dirname "$SYNTH_FILE")
@@ -18,6 +23,8 @@ SYNTH_BASE="${SYNTH_FILE_BASE%.*}"
 export SYNTH_BASE
 export SYNTH_EXT
 export res="2deg"
+
+# Check availability
 
 if [ -z "$SYNTH_FILE" ]; then
     echo "Cannot find synthetic volcano forcing file. Generate with 'volcano-cooking'."
@@ -40,5 +47,26 @@ if ! type "ncl" > /dev/null; then
     exit 1
 fi
 
-ncl "$DATA_ORIG/$NCL_SCRIPT"
+# Write a log file
+
+current_day="$(date +%Y%m%d)"
+mkdir -p "$DATA_OUT"/logs
+echo "Creating file with variables:
+
+DATA_ORIG=$DATA_ORIG
+DATA_SYNTH=$DATA_SYNTH
+DATA_OUT=$DATA_OUT
+NCL_SCRIPT=$NCL_SCRIPT
+COORDS1DEG=$COORDS1DEG
+COORDS2DEG=$COORDS2DEG
+SYNTH_FILE=$SYNTH_FILE
+SYNTH_FILE_DIR=$SYNTH_FILE_DIR
+SYNTH_BASE=$SYNTH_BASE
+SYNTH_EXT=$SYNTH_EXT
+res=$res
+
+Running NCL script...
+" > "$DATA_OUT"/logs/"$current_day".log
+
+ncl "$DATA_ORIG/$NCL_SCRIPT" 2>&1 | tee -a "$DATA_OUT"/logs/"$current_day".log
 exit 0
