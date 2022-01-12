@@ -8,7 +8,7 @@
 
 ## TODO
 
--   Empty...
+- Empty...
 
 ## Install
 
@@ -29,8 +29,8 @@ clone and install <code>fppy</code> into the virtual environment from the root o
 ```sh
 pip install -e .
 ```
-</ul></details>
 
+</ul></details>
 
 ## Usage
 
@@ -39,12 +39,13 @@ program, which will create a `.nc` and `.npz` file in the `data/output` director
 the `view_frc` program you can quickly view the content of the created files in a plot.
 
 Run from within this repository/directory:
+
 ```sh
 poetry run volcano-cooking
 poetry run view-frc <file.nc>
 ```
 
-or run as standalone programs:
+or run as stand-alone programs:
 
 ```sh
 volcano-cooking
@@ -90,7 +91,7 @@ nccopy -k cdf5 <in-file.nc> <out-file.nc>
 
 <details><summary><i><b>Directory tree</b></i></summary><br><ul>
 
-```
+```code
 .
 ├── data
 │   ├── originals
@@ -186,5 +187,6 @@ that all have correct properties.
 [data_source_files]: https://svn.code.sf.net/p/codescripts/code/trunk/ncl/emission
 [common-ncl]: http://svn.code.sf.net/p/codescripts/code/trunk/ncl/lib/common.ncl
 [coord-file]: https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/coords/
+[coords-repo]: https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/share/scripgrids/
 [volc-frc]: http://catalogue.ceda.ac.uk/uuid/bfbd5ec825fa422f9a858b14ae7b2a0d
 [volc-frc-complete]: https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/chem/stratvolc/
