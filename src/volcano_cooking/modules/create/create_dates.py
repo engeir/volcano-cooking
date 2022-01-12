@@ -2,7 +2,7 @@
 
 
 import datetime as dt
-from typing import Union
+from typing import List, Tuple, Union
 
 import cftime
 import numpy as np
@@ -12,7 +12,7 @@ from volcano_cooking.modules import create
 
 def single_date_and_emission(
     init_year: int,
-) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Create a single volcano three years after `init_year`.
 
     Parameters
@@ -40,7 +40,7 @@ def single_date_and_emission(
 
 def random_dates(
     size: int, init_year: Union[float, str]
-) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Create random dates and place them in order.
 
     The randomness do not follow a specific model. This is the simplest case where we just
@@ -68,7 +68,7 @@ def random_dates(
         If `size` is non-positive.
     """
     if size < 1:
-        raise ValueError(f"{size = }, but must be > 0.")
+        raise ValueError(f"{size} = , but must be > 0.")
     yoes = np.cumsum(np.random.randint(0, high=2, size=size)).astype(np.int16) + int(
         init_year
     )
@@ -88,7 +88,7 @@ def random_dates(
 
 def fpp_dates_and_emissions(
     size: int, init_year: int
-) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Create random ordered dates and total emissions.
 
     Data is created from an FPP process, specifically the arrival time and amplitude is
@@ -123,10 +123,10 @@ def fpp_dates_and_emissions(
             size = len(amp)
             print(
                 "Can't create dates for years beyond 9999. Keep this in mind when "
-                + f"setting `init_year` and `size`. New {size = }"
+                + f"setting `init_year` and `size`. New {size} = "
             )
         # Go from float to YYYY-MM-DD
-        dates: list[cftime.datetime] = []
+        dates: List[cftime.datetime] = []
         dates_ap = dates.append
         for n in ta:
             result = cftime.datetime(
@@ -136,11 +136,11 @@ def fpp_dates_and_emissions(
         # Dates should be unique
         if not any(np.diff(dates) == dt.timedelta(days=0)):
             break
-    yoes_l: list[int] = []
+    yoes_l: List[int] = []
     yoes_ap = yoes_l.append
-    moes_l: list[int] = []
+    moes_l: List[int] = []
     moes_ap = moes_l.append
-    does_l: list[int] = []
+    does_l: List[int] = []
     does_ap = does_l.append
     for d in dates:
         yoes_ap(d.year)

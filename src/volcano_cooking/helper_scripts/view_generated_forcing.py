@@ -10,7 +10,7 @@ format that the synthetically created files are.
 import datetime
 import os
 import sys
-from typing import Optional
+from typing import List, Optional, Tuple
 
 import cftime
 import matplotlib.pyplot as plt
@@ -46,7 +46,7 @@ def view_forcing(ext: Optional[str] = None, in_file: Optional[str] = None, save=
 
 def frc_datetime2float(
     ext: Optional[str] = None, in_file: Optional[str] = None
-) -> tuple[np.ndarray, np.ndarray]:
+) -> Tuple[np.ndarray, np.ndarray]:
     """Convert time axis from datetime to float.
 
     Parameters
@@ -77,10 +77,10 @@ def frc_datetime2float(
         ext = in_file.split(".")[-1]
         yoes, moes, does, tes = load_forcing(ext, in_file=in_file)
     else:
-        raise ValueError(f"This file cannot be viewed: {in_file = }")
+        raise ValueError(f"This file cannot be viewed: {in_file} = ")
 
-    dates: list[datetime.datetime] = []
-    dates_ap: list[str] = []
+    dates: List[datetime.datetime] = []
+    dates_ap: List[str] = []
     d_app = dates.append
     d_ap_app = dates_ap.append
     for y, m, d in zip(yoes, moes, does):
@@ -90,7 +90,7 @@ def frc_datetime2float(
         if len(y) != 4 or len(m) != len(d) != 2:
             raise ValueError(
                 "Year, month and/or day is not formatted properly. "
-                + f"{len(y) = }, {len(m) = }, {len(d) = }, need 4, 2, 2."
+                + f"{len(y)} = , {len(m)} = , {len(d)} = , need 4, 2, 2."
             )
         d_app(datetime.datetime.strptime(f"{y}{m}{d}", "%Y%m%d"))
         d_ap_app(f"{y}-{m}-{d}")
@@ -133,7 +133,7 @@ def check_dir(ext: str) -> str:
 
 def load_forcing(
     ext: str, in_file: Optional[str] = None
-) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Load variables from the last saved file of given extension.
 
     Data about the date and total emission found in either the last npz or nc file.
@@ -178,7 +178,7 @@ def load_forcing(
     else:
         raise NameError(
             "Names 'yoes', 'moes', 'does' and 'tes' are not found. "
-            + f"Extension was {ext = }, but shuld be 'npz' or 'nc'."
+            + f"Extension was {ext} = , but shuld be 'npz' or 'nc'."
         )
 
     return yoes, moes, does, tes

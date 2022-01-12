@@ -4,7 +4,7 @@ It takes a filename as a mandatory input parameter.
 """
 
 import os
-from typing import Optional
+from typing import List, Optional, Tuple
 
 import click
 import numpy as np
@@ -14,7 +14,7 @@ import volcano_cooking.helper_scripts as hs
 
 def sparse_to_lin(
     t: np.ndarray, sy: Optional[int] = None, ey: Optional[int] = None, remove: int = 1
-) -> tuple[np.ndarray, list, list]:
+) -> Tuple[np.ndarray, List, List]:
     """Re-sample an uneven time axis to one with linear spacing.
 
     The function returns the new linearly spaced time axis, as well as two masks, one for
@@ -67,9 +67,9 @@ def sparse_to_lin(
     # Now we find the indices of t that we want to keep. c works as the index of the first
     # item in each array inside mask_sections
     c = 0
-    t_mask: list[int] = []
+    t_mask: List[int] = []
     t_mask_app = t_mask.append
-    ti_mask: list[int] = []
+    ti_mask: List[int] = []
     ti_mask_app = ti_mask.append
     for arr in mask_sections:
         # Find index of t (arr) that is closest to t_i[arr]
@@ -147,7 +147,7 @@ def main(filename: str, save: bool, show: bool, sy: int, ey: int, lm: str):
     }
     # fmt: on
     if lm not in months:
-        print(f"{lm = } is not a valid month. Using 'Dec'...")
+        print(f"{lm} =  is not a valid month. Using 'Dec'...")
         last_month = 1
     else:
         last_month = 13 - months[lm]

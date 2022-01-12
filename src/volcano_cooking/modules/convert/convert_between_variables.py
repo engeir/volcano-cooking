@@ -4,6 +4,8 @@ The converting functions are made through trial and error by matching the synthe
 created variables with one real data set used in CESM2.
 """
 
+from typing import Tuple
+
 import numpy as np
 
 
@@ -26,7 +28,7 @@ def vei_to_totalemission(veis: np.ndarray) -> np.ndarray:
         If the input is not an array of float32.
     """
     if veis.dtype != np.int8:
-        raise ValueError(f"{veis.dtype = }. Need int8.")
+        raise ValueError(f"{veis.dtype} = . Need int8.")
     tes = 1e-2 * 3 ** (
         np.random.normal(0.1, 1.0, size=len(veis)).astype(np.float32) + veis
     )
@@ -65,7 +67,7 @@ def totalemission_to_vei(tes: np.ndarray) -> np.ndarray:
     return veis
 
 
-def vei_to_injectionheights(veis: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+def vei_to_injectionheights(veis: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     """Convert VEI to minimum and maximum injection heights.
 
     When we set the minimum and maximum injection heights we should make sure the minimum

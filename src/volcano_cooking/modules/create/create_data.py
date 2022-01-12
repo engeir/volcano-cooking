@@ -4,7 +4,7 @@ import datetime
 import os
 import sys
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import List, Optional
 
 import numpy as np
 import xarray as xr
@@ -113,13 +113,13 @@ class Data:
             or self.does.dtype != np.int8
         ):
             raise ValueError(
-                f"{self.eruptions.dtype = }, "
-                + f"{self.veis.dtype = }, "
-                + f"{self.moes.dtype = }, "
-                + f"{self.does.dtype = }. All must be int8."
+                f"{self.eruptions.dtype} = , "
+                + f"{self.veis.dtype} = , "
+                + f"{self.moes.dtype} = , "
+                + f"{self.does.dtype} = . All must be int8."
             )
         if self.yoes.dtype != np.int16:
-            raise ValueError(f"{self.yoes.dtype = }. Need int16.")
+            raise ValueError(f"{self.yoes.dtype} = . Need int16.")
         if (
             self.tes.dtype != np.float32
             or self.mxihs.dtype != np.float32
@@ -128,11 +128,11 @@ class Data:
             or self.lons.dtype != np.float32
         ):
             raise ValueError(
-                f"{self.tes.dtype = }, "
-                + f"{self.mxihs.dtype = }, "
-                + f"{self.miihs.dtype = }, "
-                + f"{self.lats.dtype = }"
-                + f"{self.lons.dtype = }. All must be float32."
+                f"{self.tes.dtype} = , "
+                + f"{self.mxihs.dtype} = , "
+                + f"{self.miihs.dtype} = , "
+                + f"{self.lats.dtype} = "
+                + f"{self.lons.dtype} = . All must be float32."
             )
 
     def make_dataset(self) -> None:
@@ -317,7 +317,7 @@ class Generate(ABC):
             self.size = len(self.veis)
         self.__gen_rest()
 
-    def get_arrays(self) -> list[np.ndarray]:
+    def get_arrays(self) -> List[np.ndarray]:
         """Return all generated data.
 
         Returns

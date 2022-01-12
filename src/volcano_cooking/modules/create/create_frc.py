@@ -18,7 +18,7 @@ class FrcGenerator(ABC):
 class StdFrc(FrcGenerator):
     def __init__(self, fs: float = 12, total_pulses: int = 300) -> None:
         if total_pulses < 1:
-            raise ValueError(f"Can't create empty arrays, {total_pulses = }.")
+            raise ValueError(f"Can't create empty arrays, {total_pulses} = .")
         self.gamma = 0.1
         self.my_frc = model.StandardForcingGenerator()
         self.my_frc.set_amplitude_distribution(lambda k: self.__lomax_amp(k, 1.8))

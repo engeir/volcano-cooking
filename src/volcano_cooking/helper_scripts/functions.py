@@ -105,4 +105,4 @@ def find_file(file: str) -> str:
     if os.path.isfile(file):
         return file
     else:
-        raise ValueError(f"Cannot find {file = } in path {os.getcwd()}]")
+        raise ValueError(f"Cannot find {file} =  in path {os.getcwd()}]")
