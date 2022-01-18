@@ -3,9 +3,11 @@
 import click
 
 import volcano_cooking.synthetic_volcanoes as sv
+from volcano_cooking import __version__
 
 
 @click.command()
+@click.version_option(version=__version__)
 @click.option(
     "frc",
     "-f",

@@ -85,6 +85,10 @@ echo "$GREEN${BOLD}Log file created at ""$DATA_OUT/logs/""$current_day.log$NORM"
 # nccopy command seems to support more formats, so perhaps it is better to use that(?).
 new_file="$(tail <"$DATA_OUT"/logs/"$current_day".log -n1 | awk '{print $5}')"
 [ -z "$new_file" ] && echo "$RED${BOLD}No file was created. ${NORM}See the log file for details." && exit 1
+if ! echo "$new_file" | grep -q ".*.nc$"; then
+    echo "This ($new_file) is not a netCDF file."
+    exit 1
+fi
 mv "$new_file" "$new_file".old
 nccopy -k cdf5 "$new_file".old "$new_file"
 rm "$new_file".old
