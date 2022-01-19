@@ -12,8 +12,6 @@ __NOTE:__ The created dates MUST start before the model start. Running CESM2 fro
 
 ## TODO
 
-- Right now it **DOES NOT** support python3.7 and below. Consider changing the f-strings
-  to be compatible with python3.7.
 - Combine paths with `os.join` instead of hard coded `/`
 
 ## Install

@@ -39,7 +39,9 @@ __GENERATORS__ = {
 }
 
 
-def create_volcanoes(size: int = 251, init_year: int = 1850, version: int = 0) -> None:
+def create_volcanoes(
+    size: int = 251, init_year: int = 1850, version: int = 0, option: int = 0
+) -> None:
     """Create volcanoes starting at the year 1850.
 
     This will re-create the same data as can be found in forcing files used within the
@@ -50,9 +52,11 @@ def create_volcanoes(size: int = 251, init_year: int = 1850, version: int = 0) -
     size: int
         The total number of eruptions
     init_year: int
-        Change the first year an eruption can happen
+        First year in the climate model
     version: int
-        Choose one of the versions from the '__GENERATORS__' dictionary.
+        Choose one of the versions from the '__GENERATORS__' dictionary
+    option: int
+        Choose which option to use when generating forcing
 
     Raises
     ------
@@ -63,7 +67,8 @@ def create_volcanoes(size: int = 251, init_year: int = 1850, version: int = 0) -
 
     if version not in __GENERATORS__ or version < 0:
         raise IndexError(
-            f"No version exists for index {version}. It must be one of {__GENERATORS__.keys()}."
+            f"No version exists for index {version}. "
+            + "It must be one of {__GENERATORS__.keys()}."
         )
     print(f"Generating with '{__GENERATORS__[version].__name__}'...")
     g = __GENERATORS__[version](size, init_year)
@@ -72,7 +77,10 @@ def create_volcanoes(size: int = 251, init_year: int = 1850, version: int = 0) -
 
     # CREATE NETCDF FILE AND SAVE ------------------------------------------------------ #
 
-    frc_cls = create.Data(*all_arrs)
+    if option == 1:
+        frc_cls = create.ReWrite(*all_arrs)
+    else:
+        frc_cls = create.Data(*all_arrs)
     frc_cls.make_dataset()
     frc_cls.save_to_file()
 
