@@ -55,12 +55,15 @@ class ReWrite(Data):
         # FIXME: which altitudes should we choose? Use bound from min and max injection
         # height, and the same emission on all altitudes. The emission at a given time
         # changes for altitude, but is generally of the same magnitude. Probably okay.
-        alt_range = f_orig.altitude.where(
-            (f_orig.altitude <= self.mxihs) & (f_orig.altitude >= self.miihs), drop=True
-        ).astype(int)
         zero_lat = np.abs(f_orig.lat.data).argmin()  # Find index closest to lat = 0
         zero_lon = np.abs(f_orig.lon.data).argmin()  # Find index closest to lon = 0
-        new_eruptions[:, alt_range, zero_lat, zero_lon] = self.tes
+        # Loops over time to set all spatial dimensions
+        for i, emission in enumerate(self.tes):
+            alt_range = f_orig.altitude.where(
+                (f_orig.altitude <= self.mxihs[i]) & (f_orig.altitude >= self.miihs[i]),
+                drop=True,
+            ).astype(int)
+            new_eruptions[i, alt_range, zero_lat, zero_lon] = emission
         new_dates = 10000 * self.yoes + 100 * self.moes + self.does
         new_datesecs = np.array([43200.0 for _ in range(size)])  # Noon
 
