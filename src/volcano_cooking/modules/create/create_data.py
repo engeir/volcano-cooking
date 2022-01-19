@@ -208,7 +208,7 @@ class Data:
 
     def __save_to_npz_file(self) -> None:
         """Save the original forcing data to a .npz file."""
-        out_file = self.__check_dir("npz")
+        out_file = self.check_dir("npz")
         np.savez(out_file, yoes=self.yoes, moes=self.moes, does=self.does, tes=self.tes)
 
     def __save_to_nc_file(self) -> None:
@@ -222,14 +222,14 @@ class Data:
         """
         if self.my_frc is None:
             raise ValueError("You must make the dataset with 'make_dataset' first.")
-        out_file = self.__check_dir("nc")
+        out_file = self.check_dir("nc")
         # The format is important for when you give the .nc file to the .ncl script that
         # creates the final forcing file.
         self.my_frc.to_netcdf(out_file, "w", format="NETCDF4")
         # self.my_frc.to_netcdf(out_file, "w", format="NETCDF4_CLASSIC")
 
     @staticmethod
-    def __check_dir(ext: str, name: str = "synthetic_volcanoes") -> str:
+    def check_dir(ext: str, name: str = "synthetic_volcanoes") -> str:
         """Check if the directory exist and there is no other file with the same name.
 
         Parameters

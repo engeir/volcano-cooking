@@ -90,5 +90,5 @@ class ReWrite(Data):
         if self.my_frc is None:
             raise ValueError("You must make the dataset with 'make_dataset' first.")
         file = "VolcanEESMv3.11_SO2_850-2016_Mscale_Zreduc_2deg_c191125_edit"
-        out_file = self.__check_dir("nc", name=file)
+        out_file = self.check_dir("nc", name=file)
         self.my_frc.to_netcdf(out_file, "w", format="NETCDF3_64BIT")
