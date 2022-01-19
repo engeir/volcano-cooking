@@ -136,7 +136,7 @@ class Data:
             )
 
     def make_dataset(self) -> None:
-        """Make a xarray Dataset object where all variables are stored."""
+        """Make an xarray Dataset object where all variables are stored."""
         self.my_frc = xr.Dataset(
             data_vars=dict(
                 Eruption=(["Eruption_Number"], self.eruptions),
@@ -160,8 +160,8 @@ class Data:
         )
 
         size = len(self.yoes)
-        # Names are unimportant. The real data set would list the name of the volcano here,
-        # e.g. Mt. Pinatubo.
+        # Names are unimportant. The real data set would list the name of the volcano
+        # here, e.g. Mt. Pinatubo.
         names = ""
         for _ in range(size):
             names += "N, "
@@ -229,13 +229,15 @@ class Data:
         # self.my_frc.to_netcdf(out_file, "w", format="NETCDF4_CLASSIC")
 
     @staticmethod
-    def __check_dir(ext: str) -> str:
+    def __check_dir(ext: str, name: str = "synthetic_volcanoes") -> str:
         """Check if the directory exist and there is no other file with the same name.
 
         Parameters
         ----------
         ext: str
             The file ending
+        name: str
+            The file name. Defaults to 'synthetic_volcanoes'.
 
         Returns
         -------
@@ -244,11 +246,11 @@ class Data:
         """
         if ext[0] == ".":
             ext = ext[1:]
-        d = "data/output"
+        d = os.path.join("data", "output")
         if not os.path.isdir(d):
             os.makedirs(d)
         now = datetime.datetime.now().strftime("%Y%m%d_%H%M")
-        out_file = f"{d}/synthetic_volcanoes_{now}.{ext}"
+        out_file = os.path.join(d, f"{name}_{now}.{ext}")
         if os.path.isfile(out_file):
             sys.exit(f"The file {out_file} already exists.")
         return out_file
