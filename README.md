@@ -15,6 +15,8 @@ __NOTE:__ The created dates MUST start before the model start. Running CESM2 fro
 - Right now it **DOES NOT** support python3.7 and below. Consider changing the f-strings
   to be compatible with python3.7.
 - Combine paths with `os.join` instead of hard coded `/`
+- Make the `init` parameter represent the first year of the climate model, and adjust the
+  created dates so that the first come in the year prior to `init`.
 
 ## Install
 
