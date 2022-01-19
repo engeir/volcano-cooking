@@ -41,7 +41,7 @@ class ReWrite(Data):
             raise IndexError("Could not find all needed dimensions in forcing file.")
         if "stratvolc" not in f_orig.data_vars:
             raise IndexError("Could not find 'stratvolc' variable.")
-        if f_orig["stratvolc"] != ("time", "altitude", "lat", "lon"):
+        if f_orig["stratvolc"].dims != ("time", "altitude", "lat", "lon"):
             raise IndexError(
                 "'stratvolc' variable do not contain all needed dimensions."
             )
