@@ -82,8 +82,6 @@ class ReWrite(Data):
                 self.my_frc[v].data = new_dates
             elif v == "datesec":
                 self.my_frc[v].data = new_datesecs
-            if v != "stratvolc":
-                print(f"{v} is {self.my_frc[v].data}")
 
     def save_to_file(self) -> None:
         """Save the re-written forcing file with the date at the end.
