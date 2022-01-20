@@ -46,12 +46,12 @@ class ReWrite(Data):
                 "'stratvolc' variable do not contain all needed dimensions."
             )
         size = len(self.yoes)
+        _, d_alt, d_lat, d_lon = f_orig["stratvolc"].shape
+        new_eruptions = np.zeros((size, d_alt, d_lat, d_lon), dtype=np.float32)
         # We keep all spatial dimensions the same, but delete and re-sets the temporal
         # dimension.
         self.my_frc = f_orig.drop_dims("time")
         self.my_frc = self.my_frc.expand_dims({"time": np.arange(size)})
-        _, d_alt, d_lat, d_lon = f_orig["stratvolc"].shape
-        new_eruptions = np.zeros((size, d_alt, d_lat, d_lon), dtype=np.float32)
         # FIXME: which altitudes should we choose? Use bound from min and max injection
         # height, and the same emission on all altitudes. The emission at a given time
         # changes for altitude, but is generally of the same magnitude. Probably okay.
@@ -64,8 +64,11 @@ class ReWrite(Data):
                 drop=True,
             ).astype(int)
             new_eruptions[i, alt_range, zero_lat, zero_lon] = emission
-        print(self.yoes, self.moes, self.does)
-        new_dates = 10000 * self.yoes + 100 * self.moes + self.does
+        new_dates = (
+            10000 * self.yoes.astype(np.float32)
+            + 100 * self.moes.astype(np.float32)
+            + self.does.astype(np.float32)
+        )
         new_datesecs = np.array([43200.0 for _ in range(size)])  # Noon
 
         for v in f_orig.data_vars:
