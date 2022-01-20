@@ -13,6 +13,7 @@ __NOTE:__ The created dates MUST start before the model start. Running CESM2 fro
 ## TODO
 
 - Combine paths with `os.join` instead of hard coded `/`
+- Fix global attributes of the re-written file
 
 ## Install
 
