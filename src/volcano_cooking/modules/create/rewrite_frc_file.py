@@ -64,6 +64,7 @@ class ReWrite(Data):
                 drop=True,
             ).astype(int)
             new_eruptions[i, alt_range, zero_lat, zero_lon] = emission
+        print(self.yoes, self.moes, self.does)
         new_dates = 10000 * self.yoes + 100 * self.moes + self.does
         new_datesecs = np.array([43200.0 for _ in range(size)])  # Noon
 
@@ -78,6 +79,8 @@ class ReWrite(Data):
                 self.my_frc[v].data = new_dates
             elif v == "datesec":
                 self.my_frc[v].data = new_datesecs
+            if v != "stratvolc":
+                print(f"{v} is {self.my_frc[v].data}")
 
     def save_to_file(self) -> None:
         """Save the re-written forcing file with the date at the end.
