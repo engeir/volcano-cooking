@@ -16,7 +16,6 @@ their frequency.
 ## TODO
 
 - Combine paths with `os.join` instead of hard coded `/`
-- Fix global attributes of the re-written file
 
 ## Install
 
