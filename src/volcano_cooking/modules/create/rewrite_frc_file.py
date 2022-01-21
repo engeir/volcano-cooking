@@ -60,6 +60,7 @@ class ReWrite(Data):
         zero_lat = np.abs(f_orig.lat.data).argmin()  # Find index closest to lat = 0
         zero_lon = np.abs(f_orig.lon.data).argmin()  # Find index closest to lon = 0
         # Loops over time to set all spatial dimensions
+        self.tes *= 1e11
         for i, emission in enumerate(self.tes):
             alt_range = f_orig.altitude.where(
                 (f_orig.altitude <= self.mxihs[i]) & (f_orig.altitude >= self.miihs[i]),
