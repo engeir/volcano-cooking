@@ -14,6 +14,7 @@ and find a suitable altitude (perhaps from `volcano-cooking`). Then the values a
 using the implementations from `volcano-cooking`.
 """
 import os
+from datetime import datetime
 
 import numpy as np
 import xarray as xr
@@ -108,6 +109,64 @@ class ReWrite(Data):
             # FIXME: when the previous FIXME is implemented/fixed, uncomment the below
             # self.my_frc[v].assign_attrs(**f_orig[v].attrs)
 
+    def __set_global_attrs(self, file) -> None:
+        for a in self.my_frc.attrs:
+            if a == "filename":
+                self.my_frc.attrs[a] = file
+            elif a == "title":
+                start = f"{self.yoes[0]}.{self.moes[0]}.{self.does[0]}"
+                end = f"{self.yoes[-1]}.{self.moes[-1]}.{self.does[-1]}"
+                self.my_frc.attrs[a] = (
+                    "SO2 emissions from synthetic stratospheric "
+                    + f"volcanoes, {start}-{end}"
+                )
+            elif a == "data_creator":
+                self.my_frc.attrs[
+                    a
+                ] = "Eirik Rolland Enger, University of Tromsø, eirik.r.enger@uit.no"
+            elif a == "data_doi":
+                self.my_frc.attrs[a] = "No doi yet"
+            elif a == "data_source_url":
+                self.my_frc.attrs[a] = "https://github.com/engeir/volcano-cooking"
+            elif a == "data_reference":
+                self.my_frc.attrs[a] = "No reference yet"
+            elif a == "data_source_files":
+                self.my_frc.attrs[a] = "https://github.com/engeir/volcano-cooking"
+            elif a == "creation_date":
+                if datetime.today().strftime("%Z"):
+                    this_day = datetime.today().strftime("%a %b %d %X %Z %Y")
+                else:
+                    this_day = datetime.today().strftime("%a %b %d %X %Y")
+                self.my_frc.attrs[a] = this_day
+            elif a == "cesm_contact":
+                self.my_frc.attrs[a] = "None"
+            elif a == "data_script":
+                self.my_frc.attrs[
+                    a
+                ] = "Generated with the 'volcano-cooking' CLI with the re-write option."
+            elif a == "data_summary":
+                nd = (
+                    10000 * self.yoes.astype(np.float32)
+                    + 100 * self.moes.astype(np.float32)
+                    + self.does.astype(np.float32)
+                )
+                tot_width = 40
+                w_1, w_23, w_4, w_5 = 8, 7, 3, 11
+                summary = "\nThis file is for the following volcanoes:\n"
+                summary += "=" * tot_width + "\n"
+                summary += "YYYYMMDD AltMin  AltMax  VEI Em(cm-3s-1)\n"
+                for d, amin, amax, v, e in zip(
+                    nd, self.miihs, self.mxihs, self.veis, self.tes
+                ):
+                    d_ = "0" * (w_1 - len(str(int(d)))) + str(int(d)) + " "
+                    amin_ = f"{amin:.3f}".rjust(w_23) + " "
+                    amax_ = f"{amax:.3f}".rjust(w_23) + " "
+                    v_ = str(v).center(w_4) + " "
+                    e_ = f"{e:.5e}".rjust(w_5)
+                    nl = d_ + amin_ + amax_ + v_ + e_ + "\n"
+                    summary += nl
+                self.my_frc.attrs[a] = summary
+
     def save_to_file(self) -> None:
         """Save the re-written forcing file with the date at the end.
 
@@ -120,4 +179,5 @@ class ReWrite(Data):
             raise ValueError("You must make the dataset with 'make_dataset' first.")
         file = "VolcanEESMv3.11_SO2_850-2016_Mscale_Zreduc_2deg_c191125_edit"
         out_file = self.check_dir("nc", name=file)
+        self.__set_global_attrs(file=out_file)
         self.my_frc.to_netcdf(out_file, "w", format="NETCDF3_64BIT")
