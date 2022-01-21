@@ -175,7 +175,7 @@ class ReWrite(Data):
         ValueError
             If a dataset have not yet been created.
         """
-        if self.my_frc is None:
+        if not hasattr(self, "my_frc"):
             raise ValueError("You must make the dataset with 'make_dataset' first.")
         file = "VolcanEESMv3.11_SO2_850-2016_Mscale_Zreduc_2deg_c191125_edit"
         out_file = self.check_dir("nc", name=file)

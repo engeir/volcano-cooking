@@ -4,7 +4,7 @@ import datetime
 import os
 import sys
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import List
 
 import numpy as np
 import xarray as xr
@@ -76,7 +76,7 @@ class Data:
         self.miihs = miihs
         self.mxihs = mxihs
         self.__run_check()
-        self.my_frc: Optional[xr.Dataset] = None
+        self.my_frc: xr.Dataset
 
     def __run_check(self) -> None:
         """Check the data type of each numpy array.
@@ -220,7 +220,7 @@ class Data:
             If the attribute `my_frc` has not been filled yet, `ValueError` is raised
             telling the user to first call the `make_dataset` method.
         """
-        if self.my_frc is None:
+        if not hasattr(self, "my_frc"):
             raise ValueError("You must make the dataset with 'make_dataset' first.")
         out_file = self.check_dir("nc")
         # The format is important for when you give the .nc file to the .ncl script that

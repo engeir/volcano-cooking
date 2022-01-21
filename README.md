@@ -17,7 +17,6 @@ their frequency.
 
 - Combine paths with `os.join` instead of hard coded `/`
 - Fix global attributes of the re-written file
-- Re-write `Data` class. Don't set `self.my_frc = None`, instead set it's type
 
 ## Install
 
