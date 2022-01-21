@@ -16,6 +16,10 @@ their frequency.
 ## TODO
 
 - Combine paths with `os.join` instead of hard coded `/`
+- Create a template file so need to download original is removed
+- Recreate variables with their attributes instead of re-using old. When the new file
+  contain more events than the original, we get an `IndexError` since we try to slice more
+  indices than we have.
 
 ## Install
 
