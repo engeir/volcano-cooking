@@ -7,8 +7,11 @@
 > Let's make some volcanoes erupt!
 
 __NOTE:__ The created dates MUST start before the model start. Running CESM2 from year
-1850 with the first eruption in 1850 will make it crash. Setting the first eruption in
-1849, however, will make it run.
+1850 with the first eruption in 1850 will make it crash. Setting the first eruption to
+1849, however, will make it run. The same goes for the end, the model must stop prior to
+the last event, otherwise it will crash. This project will make sure one event is placed
+ahead of the `init` year, but the end will vary depending on number of events created and
+their frequency.
 
 ## TODO
 
