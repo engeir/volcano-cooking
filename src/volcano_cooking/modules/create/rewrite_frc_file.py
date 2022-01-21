@@ -43,7 +43,8 @@ class ReWrite(Data):
             raise IndexError("Could not find 'stratvolc' variable.")
         if f_orig["stratvolc"].dims != ("time", "altitude", "lat", "lon"):
             raise IndexError(
-                "'stratvolc' variable do not contain all needed dimensions."
+                "'stratvolc' variable do not contain all needed dimensions, "
+                + "or they are in incorrect order."
             )
         size = len(self.yoes)
         _, d_alt, d_lat, d_lon = f_orig["stratvolc"].shape
@@ -75,13 +76,37 @@ class ReWrite(Data):
             # Place variables in the new Dataset that are taken from the original. This
             # way, all meta data is also used in the new Dataset as in the old, which is
             # needed.
+            # FIXME: if `size` is greater than the size of the original file, we are in
+            # trouble. Should rather set values then re-assign the attributes on the
+            # variables.
             self.my_frc = self.my_frc.assign({v: f_orig[v][:size, ...]})
             if v == "stratvolc":
+                # input = xr.DataArray(
+                #     new_eruptions,
+                #     dims=["time", "altitude", "lat", "lon"],
+                #     coords={
+                #         "time": np.arange(size),
+                #         "altitude": f_orig.altitude,
+                #         "lat": f_orig.lat,
+                #         "lon": f_orig.lon,
+                #     },
+                # )
+                # self.my_frc = self.my_frc.assign(input)
                 self.my_frc[v].data = new_eruptions
             elif v == "date":
+                # input = xr.DataArray(
+                #     new_dates, dims="time", coords={"time": np.arange(size)}
+                # )
+                # self.my_frc = self.my_frc.assign(input)
                 self.my_frc[v].data = new_dates
             elif v == "datesec":
+                # input = xr.DataArray(
+                #     new_datesecs, dims="time", coords={"time": np.arange(size)}
+                # )
+                # self.my_frc = self.my_frc.assign(input)
                 self.my_frc[v].data = new_datesecs
+            # FIXME: when the previous FIXME is implemented/fixed, uncomment the below
+            # self.my_frc[v].assign_attrs(**f_orig[v].attrs)
 
     def save_to_file(self) -> None:
         """Save the re-written forcing file with the date at the end.
