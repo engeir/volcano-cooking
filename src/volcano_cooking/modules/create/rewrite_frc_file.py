@@ -60,7 +60,10 @@ class ReWrite(Data):
         zero_lon = np.abs(f_orig.lon.data).argmin()  # Find index closest to lon = 0
         # Loops over time to set all spatial dimensions
         self.tes *= 1e11  # FIXME: should not need to be corrected
+        ai_dim = "altitude_int"
+        self.my_frc = self.my_frc.expand_dims(**{ai_dim: f_orig[ai_dim]})
         self.my_frc = self.my_frc.assign_attrs(**f_orig.attrs)
+        self.my_frc[ai_dim] = self.my_frc[ai_dim].assign_attrs(**f_orig[ai_dim].attrs)
         self.my_frc.attrs["data_summary"] = ""
         reset = False
         for i, emission in enumerate(self.tes):
@@ -79,7 +82,7 @@ class ReWrite(Data):
                     + 100 * self.moes[i].astype(np.float32)
                     + self.does[i].astype(np.float32)
                 )
-                d = "0" * (8 - len(str(int(nd)))) + str(int(nd)) + " "
+                d = "0" * (8 - len(str(int(nd)))) + str(int(nd))
                 amin_0 = f"{self.miihs[i]:.3f}"
                 amax_0 = f"{self.mxihs[i]:.3f}"
                 amin_1 = f"{alt_range[0].data}"
@@ -111,9 +114,9 @@ class ReWrite(Data):
                     },
                 )
             elif v == "date":
-                input = xr.DataArray(new_dates, dims="time")
+                input = xr.DataArray(new_dates.astype(np.int32), dims="time")
             elif v == "datesec":
-                input = xr.DataArray(new_datesecs, dims="time")
+                input = xr.DataArray(new_datesecs.astype(np.int32), dims="time")
             else:
                 raise IndexError(
                     f"'{v}' is an unknown variable that I do not have an implementation for."
@@ -192,4 +195,13 @@ class ReWrite(Data):
         file = "VolcanEESMv3.11_SO2_850-2016_Mscale_Zreduc_2deg_c191125_edit"
         out_file = self.check_dir("nc", name=file)
         self.__set_global_attrs(file=out_file)
-        self.my_frc.to_netcdf(out_file, "w", format="NETCDF3_64BIT")
+        encoding = {
+            "lat": {"_FillValue": None},
+            "lon": {"_FillValue": None},
+            "altitude": {"_FillValue": None},
+            "altitude_int": {"_FillValue": None},
+            "stratvolc": {"_FillValue": 9.96921e36},
+            "date": {"_FillValue": -2147483647},
+            "datesec": {"_FillValue": -2147483647},
+        }
+        self.my_frc.to_netcdf(out_file, "w", format="NETCDF3_64BIT", encoding=encoding)
