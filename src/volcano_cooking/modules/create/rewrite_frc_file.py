@@ -2,7 +2,7 @@
 
 Need to reset the time dimension, and the variables date, datesec and stratvolc.
 
-`time` is easy, just counting events from 0 to N-1.
+`time` is easy, doesn't even contain any coordinates
 - Set to `np.arange(N)`
 `date` are ints and formatted in YYYYMMDD
 - Choose using implementation from `volcano-cooking`
@@ -52,20 +52,42 @@ class ReWrite(Data):
         new_eruptions = np.zeros((size, d_alt, d_lat, d_lon), dtype=np.float32)
         # We keep all spatial dimensions the same, but delete and re-sets the temporal
         # dimension.
-        self.my_frc = f_orig.drop_dims("time")
-        self.my_frc = self.my_frc.expand_dims({"time": np.arange(size)})
-        # FIXME: which altitudes should we choose? Use bound from min and max injection
+        self.my_frc = xr.Dataset()
+        # NOTE: which altitudes should we choose? Use bound from min and max injection
         # height, and the same emission on all altitudes. The emission at a given time
         # changes for altitude, but is generally of the same magnitude. Probably okay.
         zero_lat = np.abs(f_orig.lat.data).argmin()  # Find index closest to lat = 0
         zero_lon = np.abs(f_orig.lon.data).argmin()  # Find index closest to lon = 0
         # Loops over time to set all spatial dimensions
-        self.tes *= 1e11
+        self.tes *= 1e11  # FIXME: should not need to be corrected
+        self.my_frc = self.my_frc.assign_attrs(**f_orig.attrs)
+        self.my_frc.attrs["data_summary"] = ""
+        reset = False
         for i, emission in enumerate(self.tes):
             alt_range = f_orig.altitude.where(
                 (f_orig.altitude <= self.mxihs[i]) & (f_orig.altitude >= self.miihs[i]),
                 drop=True,
             ).astype(int)
+            if not any(alt_range.data):
+                if not reset:
+                    txt_0 = "Re-setting alt. range for eruption at time:\n"
+                    self.my_frc.attrs["data_summary"] += txt_0
+                    reset = True
+                alt_range = f_orig.altitude[-10:].astype(int)
+                nd = (
+                    10000 * self.yoes[i].astype(np.float32)
+                    + 100 * self.moes[i].astype(np.float32)
+                    + self.does[i].astype(np.float32)
+                )
+                d = "0" * (8 - len(str(int(nd)))) + str(int(nd)) + " "
+                amin_0 = f"{self.miihs[i]:.3f}"
+                amax_0 = f"{self.mxihs[i]:.3f}"
+                amin_1 = f"{alt_range[0].data}"
+                amax_1 = f"{alt_range[-1].data}"
+                txt = f"{d}: ({amin_0}, {amax_0}) -> ({amin_1}, {amax_1})\n"
+                self.my_frc.attrs["data_summary"] += txt
+                self.mxihs[i] = alt_range[-1]
+                self.miihs[i] = alt_range[0]
             new_eruptions[i, alt_range, zero_lat, zero_lon] = emission
         new_dates = (
             10000 * self.yoes.astype(np.float32)
@@ -78,37 +100,26 @@ class ReWrite(Data):
             # Place variables in the new Dataset that are taken from the original. This
             # way, all meta data is also used in the new Dataset as in the old, which is
             # needed.
-            # FIXME: if `size` is greater than the size of the original file, we are in
-            # trouble. Should rather set values then re-assign the attributes on the
-            # variables.
-            self.my_frc = self.my_frc.assign({v: f_orig[v][:size, ...]})
             if v == "stratvolc":
-                # input = xr.DataArray(
-                #     new_eruptions,
-                #     dims=["time", "altitude", "lat", "lon"],
-                #     coords={
-                #         "time": np.arange(size),
-                #         "altitude": f_orig.altitude,
-                #         "lat": f_orig.lat,
-                #         "lon": f_orig.lon,
-                #     },
-                # )
-                # self.my_frc = self.my_frc.assign(input)
-                self.my_frc[v].data = new_eruptions
+                input = xr.DataArray(
+                    new_eruptions,
+                    dims=["time", "altitude", "lat", "lon"],
+                    coords={
+                        "altitude": f_orig.altitude,
+                        "lat": f_orig.lat,
+                        "lon": f_orig.lon,
+                    },
+                )
             elif v == "date":
-                # input = xr.DataArray(
-                #     new_dates, dims="time", coords={"time": np.arange(size)}
-                # )
-                # self.my_frc = self.my_frc.assign(input)
-                self.my_frc[v].data = new_dates
+                input = xr.DataArray(new_dates, dims="time")
             elif v == "datesec":
-                # input = xr.DataArray(
-                #     new_datesecs, dims="time", coords={"time": np.arange(size)}
-                # )
-                # self.my_frc = self.my_frc.assign(input)
-                self.my_frc[v].data = new_datesecs
-            # FIXME: when the previous FIXME is implemented/fixed, uncomment the below
-            # self.my_frc[v].assign_attrs(**f_orig[v].attrs)
+                input = xr.DataArray(new_datesecs, dims="time")
+            else:
+                raise IndexError(
+                    f"'{v}' is an unknown variable that I do not have an implementation for."
+                )
+            input = input.assign_attrs(**f_orig[v].attrs)
+            self.my_frc = self.my_frc.assign({v: input})
 
     def __set_global_attrs(self, file) -> None:
         for a in self.my_frc.attrs:
@@ -166,7 +177,7 @@ class ReWrite(Data):
                     e_ = f"{e:.5e}".rjust(w_5)
                     nl = d_ + amin_ + amax_ + v_ + e_ + "\n"
                     summary += nl
-                self.my_frc.attrs[a] = summary
+                self.my_frc.attrs[a] += summary
 
     def save_to_file(self) -> None:
         """Save the re-written forcing file with the date at the end.
