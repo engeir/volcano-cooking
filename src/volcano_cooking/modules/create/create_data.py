@@ -162,9 +162,7 @@ class Data:
         size = len(self.yoes)
         # Names are unimportant. The real data set would list the name of the volcano
         # here, e.g. Mt. Pinatubo.
-        names = ""
-        for _ in range(size):
-            names += "N, "
+        names = "".join("N, " for _ in range(size))
         names = names[:-2]  # Removing the last comma and whitespace
         self.my_frc.Longitude.encoding["_FillValue"] = False
         self.my_frc["Eruption"] = self.my_frc.Eruption.assign_attrs(
@@ -345,7 +343,7 @@ class Generate(ABC):
             self.miihs,
             self.mxihs,
         ]
-        if any([len(a) == 0 for a in arrs]):
+        if any(len(a) == 0 for a in arrs):
             raise AttributeError(
                 "Attribute(s) do not exist. Run the 'generate' method."
             )

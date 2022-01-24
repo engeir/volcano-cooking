@@ -38,7 +38,7 @@ class ReWrite(Data):
         )
         f_orig = xr.open_dataset(file + ".nc", decode_times=False)
         # Check that the file contain crucial data.
-        if not all([d in f_orig.dims for d in ["time", "altitude", "lat", "lon"]]):
+        if any(d not in f_orig.dims for d in ["time", "altitude", "lat", "lon"]):
             raise IndexError("Could not find all needed dimensions in forcing file.")
         if "stratvolc" not in f_orig.data_vars:
             raise IndexError("Could not find 'stratvolc' variable.")
