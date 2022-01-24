@@ -77,10 +77,7 @@ def create_volcanoes(
 
     # CREATE NETCDF FILE AND SAVE ------------------------------------------------------ #
 
-    if option == 1:
-        frc_cls = create.ReWrite(*all_arrs)
-    else:
-        frc_cls = create.Data(*all_arrs)
+    frc_cls = create.ReWrite(*all_arrs) if option == 1 else create.Data(*all_arrs)
     frc_cls.make_dataset()
     frc_cls.save_to_file()
 
