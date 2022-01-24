@@ -4,7 +4,7 @@ import datetime
 import os
 import sys
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import List
 
 import numpy as np
 import xarray as xr
@@ -76,7 +76,7 @@ class Data:
         self.miihs = miihs
         self.mxihs = mxihs
         self.__run_check()
-        self.my_frc: Optional[xr.Dataset] = None
+        self.my_frc: xr.Dataset
 
     def __run_check(self) -> None:
         """Check the data type of each numpy array.
@@ -113,10 +113,10 @@ class Data:
             or self.does.dtype != np.int8
         ):
             raise ValueError(
-                f"{self.eruptions.dtype} = , "
-                + f"{self.veis.dtype} = , "
-                + f"{self.moes.dtype} = , "
-                + f"{self.does.dtype} = . All must be int8."
+                f"self.eruptions.dtype = {self.eruptions.dtype}, "
+                + f"self.veis.dtype = {self.veis.dtype}, "
+                + f"self.moes.dtype = {self.moes.dtype}, "
+                + f"self.does.dtype = {self.does.dtype}. All must be int8."
             )
         if self.yoes.dtype != np.int16:
             raise ValueError(f"{self.yoes.dtype} = . Need int16.")
@@ -128,15 +128,15 @@ class Data:
             or self.lons.dtype != np.float32
         ):
             raise ValueError(
-                f"{self.tes.dtype} = , "
-                + f"{self.mxihs.dtype} = , "
-                + f"{self.miihs.dtype} = , "
-                + f"{self.lats.dtype} = "
-                + f"{self.lons.dtype} = . All must be float32."
+                f"self.tes.dtype = {self.tes.dtype}, "
+                + f"self.mxihs.dtype = {self.mxihs.dtype}, "
+                + f"self.miihs.dtype = {self.miihs.dtype}, "
+                + f"self.lats.dtype = {self.lats.dtype}"
+                + f"self.lons.dtype = {self.lons.dtype}. All must be float32."
             )
 
     def make_dataset(self) -> None:
-        """Make a xarray Dataset object where all variables are stored."""
+        """Make an xarray Dataset object where all variables are stored."""
         self.my_frc = xr.Dataset(
             data_vars=dict(
                 Eruption=(["Eruption_Number"], self.eruptions),
@@ -160,11 +160,9 @@ class Data:
         )
 
         size = len(self.yoes)
-        # Names are unimportant. The real data set would list the name of the volcano here,
-        # e.g. Mt. Pinatubo.
-        names = ""
-        for _ in range(size):
-            names += "N, "
+        # Names are unimportant. The real data set would list the name of the volcano
+        # here, e.g. Mt. Pinatubo.
+        names = "".join("N, " for _ in range(size))
         names = names[:-2]  # Removing the last comma and whitespace
         self.my_frc.Longitude.encoding["_FillValue"] = False
         self.my_frc["Eruption"] = self.my_frc.Eruption.assign_attrs(
@@ -208,7 +206,7 @@ class Data:
 
     def __save_to_npz_file(self) -> None:
         """Save the original forcing data to a .npz file."""
-        out_file = self.__check_dir("npz")
+        out_file = self.check_dir("npz")
         np.savez(out_file, yoes=self.yoes, moes=self.moes, does=self.does, tes=self.tes)
 
     def __save_to_nc_file(self) -> None:
@@ -220,22 +218,24 @@ class Data:
             If the attribute `my_frc` has not been filled yet, `ValueError` is raised
             telling the user to first call the `make_dataset` method.
         """
-        if self.my_frc is None:
+        if not hasattr(self, "my_frc"):
             raise ValueError("You must make the dataset with 'make_dataset' first.")
-        out_file = self.__check_dir("nc")
+        out_file = self.check_dir("nc")
         # The format is important for when you give the .nc file to the .ncl script that
         # creates the final forcing file.
         self.my_frc.to_netcdf(out_file, "w", format="NETCDF4")
         # self.my_frc.to_netcdf(out_file, "w", format="NETCDF4_CLASSIC")
 
     @staticmethod
-    def __check_dir(ext: str) -> str:
+    def check_dir(ext: str, name: str = "synthetic_volcanoes") -> str:
         """Check if the directory exist and there is no other file with the same name.
 
         Parameters
         ----------
         ext: str
             The file ending
+        name: str
+            The file name. Defaults to 'synthetic_volcanoes'.
 
         Returns
         -------
@@ -244,11 +244,11 @@ class Data:
         """
         if ext[0] == ".":
             ext = ext[1:]
-        d = "data/output"
+        d = os.path.join("data", "output")
         if not os.path.isdir(d):
             os.makedirs(d)
         now = datetime.datetime.now().strftime("%Y%m%d_%H%M")
-        out_file = f"{d}/synthetic_volcanoes_{now}.{ext}"
+        out_file = os.path.join(d, f"{name}_{now}.{ext}")
         if os.path.isfile(out_file):
             sys.exit(f"The file {out_file} already exists.")
         return out_file
@@ -313,6 +313,7 @@ class Generate(ABC):
         maximum injection heights.
         """
         self.gen_dates_totalemission_vei()
+        self.yoes -= abs(self.init_year - self.yoes[0]) + 1
         if len(self.veis) != self.size:
             self.size = len(self.veis)
         self.__gen_rest()
@@ -342,7 +343,7 @@ class Generate(ABC):
             self.miihs,
             self.mxihs,
         ]
-        if any([len(a) == 0 for a in arrs]):
+        if any(len(a) == 0 for a in arrs):
             raise AttributeError(
                 "Attribute(s) do not exist. Run the 'generate' method."
             )

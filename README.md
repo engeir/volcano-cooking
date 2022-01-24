@@ -6,11 +6,20 @@
 
 > Let's make some volcanoes erupt!
 
+__NOTE:__ The created dates MUST start before the model start. Running CESM2 from year
+1850 with the first eruption in 1850 will make it crash. Setting the first eruption to
+1849, however, will make it run. The same goes for the end, the model must stop prior to
+the last event, otherwise it will crash. This project will make sure one event is placed
+ahead of the `init` year, but the end will vary depending on number of events created and
+their frequency.
+
 ## TODO
 
-- Right now it **DOES NOT** support python3.7 and below. Consider changing the f-strings
-  to be compatible with python3.7.
 - Combine paths with `os.join` instead of hard coded `/`
+- Create a template file so need to download original is removed
+- Recreate variables with their attributes instead of re-using old. When the new file
+  contain more events than the original, we get an `IndexError` since we try to slice more
+  indices than we have.
 
 ## Install
 
@@ -63,7 +72,28 @@ named `synthetic_volcanoes_<date>.nc`.
 
 ## Data
 
-### Create forcing file for CESM2
+### Option 1 (Directly change forcing file)
+
+#### Get forcing file
+
+This option relies on having a working forcing file at hand. We will use the forcing file
+that CESM2 places in the `stratvolc` directory of the `cam` model. Download from [this
+link][stratvolc-forcing] and place it in the `data/originals` directory, or run command:
+
+```sh
+wget --no-check-certificate https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/chem/stratvolc/VolcanEESMv3.11_SO2_850-2016_Mscale_Zreduc_2deg_c191125.nc
+```
+
+It's 2.2GB file so it will take some time.
+
+#### Run library
+
+Now the only thing we need to do is running `volcano-cooking` with the flag `-v1`, and
+choose the type of forcing we want (see `volcano-cooking --lst`).
+
+### Option 2 (using NCL-script)
+
+#### Create forcing file for CESM2
 
 To be able to create forcing files used by the CESM2 from the newly created synthetic
 file, check out the [data_source_files] directory. This holds creation files that uses the
@@ -162,7 +192,7 @@ nccopy -k cdf5 <in-file.nc> <out-file.nc>
 
 </ul></details>
 
-### Compare created file with a similar used in a default CESM2 experiment
+#### Compare created file with a similar used in a default CESM2 experiment
 
 A similar file to those that are created is needed to be able to use some of the scripts
 in the `helper_scripts` directory. By default it assumes the file is named
@@ -192,3 +222,4 @@ that all have correct properties.
 [coords-repo]: https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/share/scripgrids/
 [volc-frc]: http://catalogue.ceda.ac.uk/uuid/bfbd5ec825fa422f9a858b14ae7b2a0d
 [volc-frc-complete]: https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/chem/stratvolc/
+[stratvolc-forcing]: https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/chem/stratvolc/VolcanEESMv3.11_SO2_850-2016_Mscale_Zreduc_2deg_c191125.nc

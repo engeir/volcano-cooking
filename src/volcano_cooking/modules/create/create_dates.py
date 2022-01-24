@@ -31,10 +31,10 @@ def single_date_and_emission(
     veis: np.ndarray
         Array of length 'size' with the Total_Emission as a 1D numpy array
     """
-    yoes = np.array([init_year + 0, init_year + 8], dtype=np.int16)
-    moes = np.array([1, 1], dtype=np.int8)
-    does = np.array([15, 15], dtype=np.int8)
-    veis = np.array([4, 4], dtype=np.int8)
+    yoes = np.array([init_year - 1, init_year + 2, init_year + 8], dtype=np.int16)
+    moes = np.array([1, 1, 1], dtype=np.int8)
+    does = np.array([15, 15, 15], dtype=np.int8)
+    veis = np.array([4, 4, 4], dtype=np.int8)
     return yoes, moes, does, veis
 
 
@@ -117,13 +117,14 @@ def fpp_dates_and_emissions(
         ta, amp = f.get_frc()
         # Can't have years beyond 9999
         if int(ta[-1]) + init_year > 9999:
+            prev_size = int(ta[-1]) + init_year
             mask = np.argwhere(ta + init_year < 9999)
             ta = ta[mask].flatten()
             amp = amp[mask].flatten()
             size = len(amp)
             print(
                 "Can't create dates for years beyond 9999. Keep this in mind when "
-                + f"setting `init_year` and `size`. New {size} = "
+                + f"setting `init_year` and `size`. Size: {prev_size} -> {size}."
             )
         # Go from float to YYYY-MM-DD
         dates: List[cftime.datetime] = []
