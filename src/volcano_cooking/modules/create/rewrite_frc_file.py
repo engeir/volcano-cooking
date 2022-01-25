@@ -19,6 +19,7 @@ from datetime import datetime
 import numpy as np
 import xarray as xr
 
+from volcano_cooking.modules import convert
 from volcano_cooking.modules.create.create_data import Data
 
 
@@ -53,18 +54,30 @@ class ReWrite(Data):
         # We keep all spatial dimensions the same, but delete and re-sets the temporal
         # dimension.
         self.my_frc = xr.Dataset()
+        self.miihs: np.ndarray
+        self.mxihs: np.ndarray
+        self.tes: np.ndarray
         # NOTE: which altitudes should we choose? Use bound from min and max injection
         # height, and the same emission on all altitudes. The emission at a given time
-        # changes for altitude, but is generally of the same magnitude. Probably okay.
+        # changes with altitude, but is generally of the same magnitude. Probably okay.
         zero_lat = np.abs(f_orig.lat.data).argmin()  # Find index closest to lat = 0
         zero_lon = np.abs(f_orig.lon.data).argmin()  # Find index closest to lon = 0
-        # Loops over time to set all spatial dimensions
-        self.tes *= 1e11  # FIXME: should not need to be corrected
+        self.miihs, self.mxihs = convert.adjust_altitude_range(
+            self.miihs, self.mxihs, self.tes
+        )
+        self.tes = convert.adjust_emissions(
+            self.miihs,
+            self.mxihs,
+            self.tes,
+            np.array([zero_lon]),
+            np.array([zero_lat]),
+        )
         ai_dim = "altitude_int"
         self.my_frc = self.my_frc.expand_dims(**{ai_dim: f_orig[ai_dim]})
         self.my_frc = self.my_frc.assign_attrs(**f_orig.attrs)
         self.my_frc[ai_dim] = self.my_frc[ai_dim].assign_attrs(**f_orig[ai_dim].attrs)
         self.my_frc.attrs["data_summary"] = ""
+        # Loops over time to set all spatial dimensions
         reset = False
         for i, emission in enumerate(self.tes):
             alt_range = f_orig.altitude.where(
@@ -181,6 +194,7 @@ class ReWrite(Data):
                     nl = d_ + amin_ + amax_ + v_ + e_ + "\n"
                     summary += nl
                 self.my_frc.attrs[a] += summary
+                self.my_frc.attrs[a] = self.my_frc.attrs[a]
 
     def save_to_file(self) -> None:
         """Save the re-written forcing file with the date at the end.
