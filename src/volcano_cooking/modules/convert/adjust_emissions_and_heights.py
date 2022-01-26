@@ -42,7 +42,7 @@ def adjust_altitude_range(
     threshold = 3.5  # Tg
     idx = (tes > threshold) & (mxihs > 20)
     mxihs[idx] = 20
-    miihs[idx] = 18 if miihs[idx] > 18 else miihs[idx]
+    miihs[idx] = min(miihs[idx], 18)
     # alt_range = (20, 29)
     #
     # for i, (mi, mx) in enumerate(zip(miihs, mxihs)):
