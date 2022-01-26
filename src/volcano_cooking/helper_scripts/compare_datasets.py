@@ -39,8 +39,8 @@ def compare_datasets(*args: Union[str, xr.Dataset]) -> None:
 
     print("\nChecking coordinates...")
     for i, arr in enumerate(xr_list):
-        print(f"\tArray {i}:\t{[k for k in arr.coords]}")
-        # print(f"\tArray {i}:\t{arr.coords}")
+        print(f'\tArray {i}:\t{list(arr.coords)}')
+            # print(f"\tArray {i}:\t{arr.coords}")
 
     print("\nChecking variables...")
     for i, arr in enumerate(xr_list):
@@ -49,8 +49,8 @@ def compare_datasets(*args: Union[str, xr.Dataset]) -> None:
         )
         # print(f"\tArray {i}:\t{arr.data_vars}")
         for v in arr.data_vars:
-            print(f"\t\t{[att for att in arr[v].attrs]}")
+            print(f'\t\t{list(arr[v].attrs)}')
 
     print("\nChecking attributes...")
     for i, arr in enumerate(xr_list):
-        print(f"\tArray {i}:\t{[k for k in arr.attrs]}")
+        print(f'\tArray {i}:\t{list(arr.attrs)}')
