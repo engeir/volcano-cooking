@@ -19,6 +19,7 @@ from datetime import datetime
 import numpy as np
 import xarray as xr
 
+# from volcano_cooking import helper_scripts
 from volcano_cooking.modules import convert
 from volcano_cooking.modules.create.create_data import Data
 
@@ -136,6 +137,8 @@ class ReWrite(Data):
                 )
             input = input.assign_attrs(**f_orig[v].attrs)
             self.my_frc = self.my_frc.assign({v: input})
+
+        # helper_scripts.compare_datasets(self.my_frc, f_orig)
 
     def __set_global_attrs(self, file) -> None:
         for a in self.my_frc.attrs:
