@@ -9,6 +9,7 @@ Note
 Modified from script provided by Herman Fæhn Fuglestvedt and using
 http://svn.code.sf.net/p/codescripts/code/trunk/ncl/emission/createVolcEruptV3.ncl
 """
+import os
 from typing import Tuple
 
 import numpy as np
@@ -107,10 +108,8 @@ def adjust_emissions(
     kg2g = 1000
     m_mass, fraction = (64.06, 1.0)
 
-    grid = xr.open_dataset(
-        "data/originals/e_BWmaHIST_vanilla.cam.h6.1850-01-01-00000.nc"
-    )
-    gw = grid["gw"]  # Latitude weights
+    grid = xr.open_dataset(os.path.join("data", "originals", "fv_1.9x2.5.nc"))
+    gw = grid["gw"]  # Latitude/Gauss weights
     nLon = len(grid["lon"])
     # nLat = len(grid["lat"])
     lat_data = grid["lat"]
