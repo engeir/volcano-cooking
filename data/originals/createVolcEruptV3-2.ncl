@@ -340,7 +340,8 @@ datesec@standard_name = "datesec" ;
 date(0)=10101 ; yyyymmdd
 datesec(0) = 1800
 
-altmax=toint(max(inTop(indVolcs))+0.5)
+; altmax=toint(max(inTop(indVolcs))+0.5)
+altmax=29  ; Do we need to change this?
 altmin=toint(min(inBot(indVolcs)))
 nalts=altmax-altmin+1
 
@@ -358,20 +359,18 @@ altitude_int@standard_name = "altitude interval" ;
 
 nAlt=dimsizes(altitude)
 nAlt_int=dimsizes(altitude_int)
-stratvolc=new((/nTimes,nAlt,nLat,nLon,nAlt_int/),double)
+stratvolc=new((/nTimes,nAlt,nLat,nLon/),double)
 stratvolc@long_name = "SO2 elevated emissions from explosive volcanoes" ;
 stratvolc@units = "molecules/cm3/s" ;
 stratvolc@standard_name = "SO2 elevated emissions from explosive volcanoes" ;
-stratvolc(:,:,:,:,:)=0.0d0
+stratvolc(:,:,:,:)=0.0d0
 stratvolc!0="time"
 stratvolc!1="altitude"
 stratvolc!2="lat"
 stratvolc!3="lon"
-stratvolc!4="altitude_int"
 stratvolc&altitude=altitude
 stratvolc&lat=lat
 stratvolc&lon=lon
-stratvolc&altitude_int=altitude_int
 
 latArr=conform_dims((/nLat,nLon/),lat,0)
 lonArr=conform_dims((/nLat,nLon/),lon,1)
@@ -590,8 +589,8 @@ do t=0,nVolcTot-1
 
 ;      printVarSummary(maskArr)
 ;      printVarSummary(stratvolc(t2,k,:,:))
-      stratvolc(t2,k,:,:,k) = stratvolc(t2,k,:,:,k)+maskArr*emisRate*factor
-      stratvolc(t3,k,:,:,k) = stratvolc(t2,k,:,:,k)
+      stratvolc(t2,k,:,:) = stratvolc(t2,k,:,:)+maskArr*emisRate*factor
+      stratvolc(t3,k,:,:) = stratvolc(t2,k,:,:)
 
 ;      print(stratvolc(t2,k,{Lat},{Lon}))
 ;      print(maskArr({Lat},{Lon}))
@@ -600,7 +599,7 @@ do t=0,nVolcTot-1
     end if
   end do
 
-  sumEmis=sum(stratvolc(t2,:,{Lat},{Lon},:))*1d5 ; integrate column, vertical resolution 1 km = 1e5 cm
+  sumEmis=sum(stratvolc(t2,:,{Lat},{Lon}))*1d5 ; integrate column, vertical resolution 1 km = 1e5 cm
   ratio=sumEmis/columnEmis
   print(Name+" "+columnEmis+" "+sumEmis+" "+ratio+" "+Bot+" "+Top+" "+emisRate+" "+factor)
 
@@ -679,7 +678,9 @@ if (savefile) then
       outfilename
   fileattdef( ncid, globalAtt )
 
-  ; print("saving altitude_int")
+  print("saving altitude_int")
+  ncid!0="altitude_int"
+  ncid&altitude_int=altitude_int
   ; ncid->altitude_int=(/altitude_int/)
   print("saving date")
   ncid->date=date(0:dlast)
@@ -695,15 +696,13 @@ if (savefile) then
   stratvolcFloat!1="altitude"
   stratvolcFloat!2="lat"
   stratvolcFloat!3="lon"
-  stratvolcFloat!4="altitude_int"
   stratvolcFloat&altitude=altitude
-  stratvolcFloat&altitude_int=altitude_int
   stratvolcFloat&lat=lat
   stratvolcFloat&lon=lon
   printVarSummary(stratvolcFloat)
 
   print("saving stratvolc")
-  ncid->stratvolc=stratvolcFloat(0:dlast,:,:,:,:)
+  ncid->stratvolc=stratvolcFloat(0:dlast,:,:,:)
 
   print("File creation complete: "+outfile)
 
