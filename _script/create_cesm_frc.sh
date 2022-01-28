@@ -14,8 +14,8 @@ export DATA_SYNTH="data/output"
 export DATA_OUT="data/cesm"
 mkdir -p "$DATA_OUT"
 # export NCL_SCRIPT="createVolcEruptV3.1piControl.ncl"
-export NCL_SCRIPT="createVolcEruptV3.ncl"
-# export NCL_SCRIPT="createVolcEruptV3-2.ncl"
+# export NCL_SCRIPT="createVolcEruptV3.ncl"
+export NCL_SCRIPT="createVolcEruptV3-2.ncl"
 export COORDS1DEG="$DATA_ORIG/fv_0.9x1.25_L30.nc"
 # export COORDS2DEG="$DATA_ORIG/fv_1.9x2.5_L30.nc"
 export COORDS2DEG="$DATA_ORIG/coords_1.9x2.5_L88_c150828-copy.nc"
@@ -23,8 +23,8 @@ export COORDS2DEG="$DATA_ORIG/coords_1.9x2.5_L88_c150828-copy.nc"
 # export COORDS2DEG="$DATA_ORIG/fv_1.9x2.5_L26.nc"
 # export COORDS2DEG="$DATA_ORIG/fv_1.9x2.5.nc"
 # export COORDS2DEG="$DATA_ORIG/fv_1.9x2.5_nc3000_Nsw084_Nrs016_Co120_Fi001_ZR_GRNL_031819.nc"
-# SYNTH_FILE=$(find "$DATA_SYNTH" -name "*.nc" -type f -printf '%T@ %p\n' | sort -n | tail -1 | cut -f2- -d" ")
-SYNTH_FILE="./data/originals/volcan-eesm_global_2015_so2-emissions-database_v1.0.nc"
+SYNTH_FILE=$(find "$DATA_SYNTH" -name "*.nc" -type f -printf '%T@ %p\n' | sort -n | tail -1 | cut -f2- -d" ")
+# SYNTH_FILE="./data/originals/volcan-eesm_global_2015_so2-emissions-database_v1.0.nc"
 export SYNTH_FILE
 SYNTH_FILE_DIR=$(dirname "$SYNTH_FILE")
 export SYNTH_FILE_DIR
