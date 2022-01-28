@@ -92,4 +92,5 @@ fi
 mv "$new_file" "$new_file".old
 nccopy -k cdf5 "$new_file".old "$new_file"
 rm "$new_file".old
+echo "$new_file" | python src/volcano_cooking/modules/create/easy_fix.py
 exit 0
