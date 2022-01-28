@@ -92,6 +92,10 @@ fi
 mv "$new_file" "$new_file".old
 nccopy -k cdf5 "$new_file".old "$new_file"
 rm "$new_file".old
+
+# Final step is to add attributes to the coordinate `altitude_int`, which we do via the
+# python script `easy_fix.py`.
+echo "Fixing the attributes of the altitude_int coordinate..."
 XRMSG="\nCannot import xarray. Activate the environment where you installed the project
 and re-run, or run manually with a python containing xarray as:\n
 echo $new_file | python src/volcano_cooking/modules/create/easy_fix.py"
