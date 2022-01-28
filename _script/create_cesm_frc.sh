@@ -92,5 +92,12 @@ fi
 mv "$new_file" "$new_file".old
 nccopy -k cdf5 "$new_file".old "$new_file"
 rm "$new_file".old
+XRMSG="\nCannot import xarray. Activate the environment where you installed the project
+and re-run, or run manually with a python containing xarray as:\n
+echo $new_file | python src/volcano_cooking/modules/create/easy_fix.py"
+if ! python -c "import xarray" >/dev/null 2>&1; then
+    echo "$XRMSG"
+    exit 1
+fi
 echo "$new_file" | python src/volcano_cooking/modules/create/easy_fix.py
 exit 0
