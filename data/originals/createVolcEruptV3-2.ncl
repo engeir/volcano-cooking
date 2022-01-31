@@ -340,9 +340,10 @@ datesec@standard_name = "datesec" ;
 date(0)=10101 ; yyyymmdd
 datesec(0) = 1800
 
-altmax=toint(max(inTop(indVolcs))+0.5)
-; altmax=29  ; Do we need to change this?
-altmin=toint(min(inBot(indVolcs)))
+; altmax=toint(max(inTop(indVolcs))+0.5)
+altmax=29  ; Do we need to change this?
+; altmin=toint(min(inBot(indVolcs)))
+altmin=0
 nalts=altmax-altmin+1
 
 altitude = fspan(altmin,altmax,nalts)
