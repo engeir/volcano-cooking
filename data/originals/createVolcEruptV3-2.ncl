@@ -340,8 +340,8 @@ datesec@standard_name = "datesec" ;
 date(0)=10101 ; yyyymmdd
 datesec(0) = 1800
 
-; altmax=toint(max(inTop(indVolcs))+0.5)
-altmax=29  ; Do we need to change this?
+altmax=toint(max(inTop(indVolcs))+0.5)
+; altmax=29  ; Do we need to change this?
 altmin=toint(min(inBot(indVolcs)))
 nalts=altmax-altmin+1
 
