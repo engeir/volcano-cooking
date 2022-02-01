@@ -134,6 +134,4 @@ data/*
 !data/originals/
 data/originals/*
 !data/originals/createVolcEruptV3.ncl
-!data/originals/createVolcEruptV3-2.ncl
-!data/originals/createVolcEruptV3.1piControl.ncl
-!data/originals/createVolcEruptV3.1piControl.ncl.original
+!data/originals/createVolcEruptV3.ncl.original
