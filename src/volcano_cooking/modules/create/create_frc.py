@@ -3,7 +3,6 @@
 from abc import ABC, abstractmethod
 from typing import Tuple
 
-import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats as scp_stats
 from fppy import model
@@ -61,12 +60,3 @@ class Frc(FrcGenerator):
         ta[:] = ta[mask]
         amp[:] = amp[mask]
         return ta, amp
-
-
-if __name__ == "__main__":
-    # f = Frc()
-    f = StdFrc()
-    t, frc = f.get_frc()
-    print(frc.shape)
-    plt.plot(t, frc)
-    plt.show()

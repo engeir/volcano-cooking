@@ -373,14 +373,3 @@ class GenerateSingleVolcano(Generate):
             self.init_year
         )
         self.tes = convert.vei_to_totalemission(self.veis)
-
-
-def main():
-    # g = GenerateFPP(200, 1850)
-    g = GenerateRandomNormal(200, 1850)
-    g.generate()
-    _ = g.get_arrays()
-
-
-if __name__ == "__main__":
-    main()

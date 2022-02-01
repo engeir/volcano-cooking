@@ -17,6 +17,7 @@ import xarray as xr
 
 
 def add_attributes() -> None:
+    # Read from standard input
     data = sys.stdin.readlines()
     new_path = data[0].strip("\n")
     if not isinstance(new_path, str) or new_path[-3:] != ".nc":

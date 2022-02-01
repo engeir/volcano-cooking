@@ -1,9 +1,11 @@
 """Main file to run the program."""
 
 import os
+from typing import List
 
 import click
 
+import volcano_cooking.configurations.shift_eruption_to_date as sestd
 import volcano_cooking.synthetic_volcanoes as sv
 from volcano_cooking import __version__
 
@@ -31,9 +33,12 @@ from volcano_cooking import __version__
     "init_year",
     "-init",
     type=int,
-    default=1850,
+    default=[1850, 1, 15],
     show_default=True,
-    help="Set the first model year.",
+    multiple=True,
+    help="Set the first model year. If used with 'shift-eruption-to-date', "
+    + "this becomes the year of the eruption and three instances can be used to specify "
+    + "year, month, and day of the eruption. ",
 )
 @click.option(
     "size",
@@ -50,10 +55,33 @@ from volcano_cooking import __version__
     type=bool,
     help="Show a list of available forcing generators.",
 )
-def main(frc: int, init_year: int, size: int, lst: bool, option: int) -> None:
+@click.option(
+    "--shift-eruption-to-date",
+    "shift_eruption",
+    is_flag=False,
+    flag_value=True,
+    default=False,
+    show_default=True,
+    type=str,
+    help="Shift eruptions of provided file to 'init_year'. "
+    + "If no file is provided, the last created file is used.",
+)
+def main(
+    frc: int,
+    init_year: List[int],
+    size: int,
+    lst: bool,
+    option: int,
+    shift_eruption: str,
+) -> None:
     if lst:
         for cl in sv.__GENERATORS__:
             print(f"{cl}: {sv.__GENERATORS__[cl].__name__}")
+    elif shift_eruption != "False":
+        if shift_eruption == "True":
+            sestd.shift_eruption_to_date(tuple(init_year), None)
+        else:
+            sestd.shift_eruption_to_date(tuple(init_year), shift_eruption)
     else:
         if option == 1:
             file = os.path.join(
@@ -63,8 +91,6 @@ def main(frc: int, init_year: int, size: int, lst: bool, option: int) -> None:
             )
             if not os.path.exists(file):
                 raise FileNotFoundError(f"You need the file '{file}' for this option.")
-        sv.create_volcanoes(size=size, init_year=init_year, version=frc, option=option)
-
-
-if __name__ == "__main__":
-    main(0, False)
+        sv.create_volcanoes(
+            size=size, init_year=init_year[0], version=frc, option=option
+        )
