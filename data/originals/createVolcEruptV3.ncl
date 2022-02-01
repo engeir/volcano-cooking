@@ -11,7 +11,7 @@ res=getenv("res")
 ; Setup for CMIP6 1850-2016
 ;=========================================
 ; FirstYear=1850
-; LastYear=2016
+LastYear=2016
 ;doMassScaling = True
 massSO2thresh = 15 ; threshold (Tg) for eruptions scaled by MassFactor
 MassFactor = 1/1.8 ; scaling factor for large eruptions

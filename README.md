@@ -83,7 +83,7 @@ forcing file this project generates to make a new, full forcing file that CESM2 
 `createVolcEruptV3.ncl`. This need a `common.ncl` file, found [here][common-ncl], in
 addition to other standard `ncl` libraries. Make sure to edit `createVolcEruptV3.ncl` to
 read the created file and that the first and last year cover those used in the created
-file.
+file. See the `diff` below.
 
 Coordinate files are located [here][coord-file]. For example `fv_1.9x2.5.nc` which can be
 used with two degrees resolution in the atmosphere model.
