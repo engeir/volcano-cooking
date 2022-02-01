@@ -88,8 +88,8 @@ def find_file(file: str) -> str:
     Parameters
     ----------
     file: str
-        Full path (absolute or relative to where the function i called) and file name of a
-        custom file to be used.
+        Full path (absolute or relative to where the function is called) and file name of
+        a custom file to be used.
 
     Returns
     -------
