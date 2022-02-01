@@ -14,8 +14,7 @@ export DATA_SYNTH="data/output"
 export DATA_OUT="data/cesm"
 mkdir -p "$DATA_OUT"
 # export NCL_SCRIPT="createVolcEruptV3.1piControl.ncl"
-# export NCL_SCRIPT="createVolcEruptV3.ncl"
-export NCL_SCRIPT="createVolcEruptV3-2.ncl"
+export NCL_SCRIPT="createVolcEruptV3.ncl"
 export COORDS1DEG="$DATA_ORIG/fv_0.9x1.25_L30.nc"
 # export COORDS2DEG="$DATA_ORIG/fv_1.9x2.5_L30.nc"
 export COORDS2DEG="$DATA_ORIG/coords_1.9x2.5_L88_c150828-copy.nc"
@@ -97,7 +96,7 @@ rm "$new_file".old
 # python script `easy_fix.py`.
 echo "Fixing the attributes of the altitude_int coordinate..."
 XRMSG="\nCannot import xarray. Activate the environment where you installed the project
-and re-run, or run manually with a python containing xarray as:\n
+and re-run, or run manually with a python interpreter containing xarray as:\n
 echo $new_file | python src/volcano_cooking/modules/create/easy_fix.py"
 if ! python -c "import xarray" >/dev/null 2>&1; then
     echo "$XRMSG"
