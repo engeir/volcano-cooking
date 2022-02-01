@@ -26,7 +26,6 @@ class Data:
         arrays to a .npz file.
     """
 
-    # TODO: re-write to use composition; send in Generator class.
     def __init__(
         self,
         eruptions: np.ndarray,
