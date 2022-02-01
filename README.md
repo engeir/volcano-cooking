@@ -20,6 +20,9 @@ their frequency.
 
 ## Install
 
+This repo is currently intended to be installed in development mode only. To install all
+dependencies, clone the repo and install with [poetry](https://python-poetry.org):
+
 ```sh
 git clone https://github.com/engeir/volcano-cooking.git
 cd volcano-cooking
@@ -42,11 +45,12 @@ pip install -e .
 
 ## Usage
 
-There are two packages coming with this project. The main package is the `volcano-cooking`
-program, which will create a `.nc` and `.npz` file in the `data/output` directory. With
-the `view_frc` program you can quickly view the content of the created files in a plot.
+There are two CLI programs coming with this project. The main program is
+`volcano-cooking`, which will create a `.nc` and `.npz` file in the `data/output`
+directory. With the `view_frc` program you can quickly view the content of the created
+files in a plot.
 
-Run from within this repository/directory:
+Run from within this repository/directory via poetry:
 
 ```sh
 poetry run volcano-cooking
@@ -63,39 +67,12 @@ view-frc <file.nc>
 An optional flag can be sent to the `view-frc` program that will save the plot: `view-frc
 -s <file.nc>`.
 
-In either case a `data/output` directory will be created at the root of the project (first
-case) or inside the current directory (second case) when something is saved with a file
-named `synthetic_volcanoes_<date>.nc`.
+In either case a `data/output` directory will be created inside the current directory when
+something is saved, as a file named `synthetic_volcanoes_<date>.nc`.
 
 ## Data
 
-### Option 1 (Directly change forcing file)
-
-#### Get forcing and coordinate files
-
-This option relies on having a working forcing file at hand. We will use the forcing file
-that CESM2 places in the `stratvolc` directory of the `cam` model. Download from [this
-link][stratvolc-forcing] and place it in the `data/originals` directory, or run command:
-
-```sh
-wget --no-check-certificate https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/chem/stratvolc/VolcanEESMv3.11_SO2_850-2016_Mscale_Zreduc_2deg_c191125.nc
-```
-
-It's 2.2GB file so it will take some time.
-
-We will also need a coordinate file, specifically `fv_1.9x2.5.nc` which is found
-[here][coord-file]. This file is small and quick to download. From the command line:
-
-```sh
-wget --no-check-certificate https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/coords/fv_1.9x2.5.nc
-```
-
-#### Run library
-
-Now the only thing we need to do is running `volcano-cooking` with the flag `-v1`, and
-choose the type of forcing we want (see `volcano-cooking --lst`).
-
-### Option 2 (using NCL-script)
+### Option 0 (default, using NCL-script)
 
 #### Create forcing file for CESM2
 
@@ -202,6 +179,32 @@ A similar file to those that are created is needed to be able to use some of the
 in the `helper_scripts` directory. By default it assumes the file is named
 `volcan-eesm_global_2015_so2-emissions-database_v1.0.nc` and that it is placed inside the
 `data/originals` directory. You can find this file [here][volc-frc].
+
+### Option 1 (directly change forcing file)
+
+#### Get forcing and coordinate files
+
+This option relies on having a working forcing file at hand. We will use the forcing file
+that CESM2 places in the `stratvolc` directory of the `cam` model. Download from [this
+link][stratvolc-forcing] and place it in the `data/originals` directory, or run command:
+
+```sh
+wget --no-check-certificate https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/chem/stratvolc/VolcanEESMv3.11_SO2_850-2016_Mscale_Zreduc_2deg_c191125.nc
+```
+
+It's 2.2GB file so it will take some time.
+
+We will also need a coordinate file, specifically `fv_1.9x2.5.nc` which is found
+[here][coord-file]. This file is small and quick to download. From the command line:
+
+```sh
+wget --no-check-certificate https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/coords/fv_1.9x2.5.nc
+```
+
+#### Run library
+
+Now the only thing we need to do is running `volcano-cooking` with the flag `-o`, and
+choose the type of forcing we want (see `volcano-cooking --lst`).
 
 ### FPP
 
