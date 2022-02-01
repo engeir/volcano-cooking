@@ -94,6 +94,12 @@ def vei_to_injectionheights(veis: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     miihs = np.abs(
         np.random.normal(1, 2.0, size=len(veis)).astype(np.float32) * scale_min
     )
+    # Finally we make sure the lower bound is less than 30:
+    idx_min = miihs > 30
+    miihs[idx_min] = 18
+    idx_max = mxihs > 30
+    mxihs[idx_max] = 20
+
     for idx, (i, j) in enumerate(zip(miihs, mxihs)):
         miihs[idx] = min(i, j)
         mxihs[idx] = max(i, j)

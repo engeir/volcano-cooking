@@ -10,8 +10,7 @@ res=getenv("res")
 ;=========================================
 ; Setup for CMIP6 1850-2016
 ;=========================================
-; FirstYear=1850
-LastYear=2016
+;FirstYear=1850
 ;doMassScaling = True
 massSO2thresh = 15 ; threshold (Tg) for eruptions scaled by MassFactor
 MassFactor = 1/1.8 ; scaling factor for large eruptions
@@ -26,9 +25,8 @@ FirstYear = 850
 doMassScaling = True
 doAltReduction = True
 altSO2thresh = 3.5 ; threshold (Tg) for altitude reduction to 18-20 km
-;res="2deg"
+;res="1deg"
 
-; Possibly set this to true?
 doVEIspread=False ; spread emissions for VEI 5 & 6?
 VEI6_factor=1.0 ; mass factor for VEI6 eruptions
 VEI5_factor=1.0 ; mass factor for VEI6 eruptions
@@ -81,12 +79,10 @@ if (ismissing(res)) then
 end if
 
 if (res.eq."2deg".or.res.eq."1.9x2.5") then
-  templateFilename = getenv("COORDS2DEG")
-  print("Using 2 degree res")
+  templateFilename = "/glade/work/mmills/inputdata/grids/coords_1.9x2.5_L88_c150828.nc"
 else
   if (res.eq."1deg".or.res.eq."0.95x1.25") then
-    templateFilename = getenv("COORDS1DEG")
-    print("Using 1 degree res")
+    templateFilename = "/glade/work/mmills/inputdata/grids/coords_0.95x1.25_L70_c150828.nc"
   else
     print("Illegal value for resolution: "+res)
     exit
@@ -112,11 +108,11 @@ columnArea&lon=lon
 
 print("SAearthCm2="+SAearthCm2+"; sum(columnArea)="+sum(columnArea))
 
-filepath=getenv("SYNTH_FILE_DIR")+"/"
-outfilepath=getenv("DATA_OUT")+"/"
-infilename = getenv("SYNTH_BASE")
-infiletype = getenv("SYNTH_EXT")
-outfilename="VolcanEESMv3.11Enger_SO2_"+FirstYear+"-"+LastYear
+filepath="/glade/work/mmills/data/VolcanEESM/"
+outfilepath="/glade/p/acom/acom-climate/cesm2/inputdata/atm/cam/chem/stratvolc/"
+
+infilename   ="volcan-eesm_global_2015_so2-emissions-database_v3.1_c180414"
+infiletype="nc"
 
 if (.not.isvar("LastYear")) then
   LastYear = 2016
@@ -125,6 +121,10 @@ end if
 if (LastYear.lt.FirstYear) then
   LastYear = 2016
 end if
+
+
+;outfilename="VolcanEESMv3.10_SO2_"+FirstYear+"-"+LastYear
+outfilename="VolcanEESMv3.11_SO2_"+FirstYear+"-"+LastYear
 
 if (doMassScaling) then
   outfilename=outfilename+"_Mscale"
@@ -188,7 +188,7 @@ if (infiletype.eq."txt") then
 
 else ; netCDF
 
-  ncid = addfile(infile,"r")
+  ncid = addfile(infile,"r")  
   inSO2    = ncid->Total_Emission
   inVEI    = ncid->VEI
   inYear   = ncid->Year_of_Emission
@@ -200,17 +200,16 @@ else ; netCDF
   inBot    = ncid->Minimum_Injection_Height
   Volcano_Name =ncid->Eruption@Volcano_Name
   volcName = str_strip(str_split(Volcano_Name,","))
-
+  
 ;  printVarSummary(volcName)
 ;  printVarSummary(inSO2)
-
+  
 end if
 
 print(inYear+tab+inMonth+tab+inDay+tab+inLat+tab+inLon+tab+inSO2+tab+volcName)
 
 inDate=10000*inYear+100*inMonth+inDay
 
-; Not important, no volcanoes will be removed
 if (nRemove.gt.0) then
   do r=0,nRemove-1
     print("removing "+remove_date(r)+remove_list(r))
@@ -238,7 +237,7 @@ if (doAltReduction) then
         "Altitude range adjusted for SO2>"+altSO2thresh+"Tg if max altitude > 20 km:"
 
     do i = 0,dimsizes(AltInd)-1
-      globalAtt@data_summary = globalAtt@data_summary + nl +\
+      globalAtt@data_summary = globalAtt@data_summary + nl +\      
         "     "+inYear(AltInd(i))+"-"+inMonth(AltInd(i))+"-"+inDay(AltInd(i))+" "+volcName(AltInd(i))
     end do
 
@@ -259,7 +258,7 @@ if (doMassScaling) then
     globalAtt@data_summary = globalAtt@data_summary + nl+\
         "For eruptions with SO2>"+massSO2thresh+"Tg, mass scaled by factor "+MassFactor
     do i = 0,dimsizes(SO2Ind)-1
-      globalAtt@data_summary = globalAtt@data_summary + nl+\
+      globalAtt@data_summary = globalAtt@data_summary + nl+\      
         "     "+inYear(SO2Ind(i))+"-"+inMonth(SO2Ind(i))+"-"+inDay(SO2Ind(i))+" "+volcName(SO2Ind(i))
     end do
     inSO2(SO2Ind)=inSO2(SO2Ind)*MassFactor
@@ -272,14 +271,14 @@ end if
 ; Adjust Pinatubo latitude range?
 if (PinLat.ge.-90.or.PinMinLat.ge.-90) then
   Pind=str_match_ind(volcName,"Pinatubo")
-  print(Pind+" "+volcName(Pind)+" Lat:"+PinLat);+", "+PinBot+"-"+PinTop+" km")
+  print(Pind+" "+volcName(Pind)+" Lat:"+PinLat);+", "+PinBot+"-"+PinTop+" km")  
   if (PinLat.gt.-90) then
     inLat(Pind)=PinLat
   end if
   if (inLat(Pind).ge.0) then
     PinLatStr=str_strip(sprintf("%2.0f",inLat(Pind)))+"N"
   else
-    PinLatStr=str_strip(sprintf("%2.0f",abs(inLat(Pind))))+"S"
+    PinLatStr=str_strip(sprintf("%2.0f",abs(inLat(Pind))))+"S"  
   end if
   if (PinMinLat.ge.-90) then
     if (PinMinLat.ge.0) then
@@ -317,9 +316,9 @@ print(nVolc+" eruptions for years "+FirstYear+" to "+LastYear)
 ;  newLat=(/37.73,55.42/)
 ;  newLon=(/15.00,198.10/)
 ;  newTop=(/12,11/)
-;  newBot=(/8,6.1/)
+;  newBot=(/8,6.1/)  
 ;  nVolcTot=nVolc+dimsizes(newVolcName)
-;else
+;else 
   nVolcTot=nVolc
 ;end if
 
@@ -357,21 +356,18 @@ altitude_int@units = "km" ;
 altitude_int@standard_name = "altitude interval" ;
 
 nAlt=dimsizes(altitude)
-nAlt_int=dimsizes(altitude_int)
-stratvolc=new((/nTimes,nAlt,nLat,nLon,nAlt_int/),double)
+stratvolc=new((/nTimes,nAlt,nLat,nLon/),double)
 stratvolc@long_name = "SO2 elevated emissions from explosive volcanoes" ;
 stratvolc@units = "molecules/cm3/s" ;
 stratvolc@standard_name = "SO2 elevated emissions from explosive volcanoes" ;
-stratvolc(:,:,:,:,:)=0.0d0
+stratvolc(:,:,:,:)=0.0d0
 stratvolc!0="time"
 stratvolc!1="altitude"
 stratvolc!2="lat"
 stratvolc!3="lon"
-stratvolc!4="altitude_int"
 stratvolc&altitude=altitude
 stratvolc&lat=lat
 stratvolc&lon=lon
-stratvolc&altitude_int=altitude_int
 
 latArr=conform_dims((/nLat,nLon/),lat,0)
 lonArr=conform_dims((/nLat,nLon/),lon,1)
@@ -381,16 +377,16 @@ maskArr!1="lon"
 maskArr&lat=lat
 maskArr&lon=lon
 
-if (doVEIspread) then
+if (doVEIspread) then    
   globalAtt@data_summary = globalAtt@data_summary +nl+\
     "Emission area and initial SO2 loss depend on volcanic explosivity index (VEI) as follows:"+nl+\
     "  VEI <= 4 : 1 column, SO2 emitted = total from data_source_files"+nl+\
     "  VEI  = 5 : 1.20e6 km2 circle centered on volcano, SO2 emitted = "+VEI5_factor+" * total from data_source_files"+nl+\
     "  VEI  = 6 : 2.75e6 km2 circle centered on volcano, SO2 emitted = "+VEI6_factor+" * total from data_source_files"
-else
+else    
   if (VEI6_factor.eq.1.and.VEI5_factor.eq.1) then
     globalAtt@data_summary = globalAtt@data_summary +nl+\
-      "No SO2 loss based on volcanic explosivity index (VEI)."
+      "No SO2 loss based on volcanic explosivity index (VEI)."  
   else
     globalAtt@data_summary = globalAtt@data_summary +nl+\
       "Initial SO2 loss depends on volcanic explosivity index (VEI) as follows:"+nl+\
@@ -399,7 +395,7 @@ else
       "  VEI  = 6 : SO2 emitted = "+VEI6_factor+" * total from data_source_files"
   end if
   globalAtt@data_summary = globalAtt@data_summary +nl+\
-      "All volcanic emissions occur in 1 column (no VEI-based spreading)."
+      "All volcanic emissions occur in 1 column (no VEI-based spreading)."  
   if (PinMinLat.ge.-90) then
     globalAtt@data_summary = globalAtt@data_summary +nl+\
       "Pinatubo emissions spread: "+PinLatStr
@@ -410,14 +406,15 @@ print(globalAtt@data_summary)
 
 outstring = "This file is for the following volcanoes:"
 print((/outstring/))
-globalAtt@data_summary = globalAtt@data_summary + nl +\
+globalAtt@data_summary = globalAtt@data_summary + nl +\ 
     "======================================================================" + nl \
     + outstring
 
-if ((PinMinLat.ge.-90).or.(doVEIspread)) then
+if ((PinMinLat.ge.-90).or.(doVEIspread)) then 
   outstring = "YYYYMMDD  MinLat  Lat    Lon     AltMin AltMax SO2(Tg) VEI nCol  Area(km2) Em(cm-3s-1) Name"
 else
-  outstring = "YYYYMMDD  Lat    Lon     AltMin AltMax SO2(Tg) VEI Area(km2) Em(cm-3s-1) Name"
+;  outstring = "YYYYMMDD  Lat    Lon     AltMin AltMax SO2(Tg) VEI Area(km2) Em(cm-3s-1) Name"
+  outstring = "YYYYMMDD  Lat    Lon     AltMin AltMax  SO2(Tg) VEI Area(km2) Em(cm-3s-1) Volcano Name"
 end if
 
 print((/outstring/))
@@ -432,51 +429,51 @@ do t=0,nVolcTot-1
   t2=dt*4+2
   t3=dt*4+3
   t4=dt*4+4
-
+  
   if (t.lt.nVolc) then
     tv=indVolcs(t)
     date_volc(dt)=10000*inYear(tv)+100*inMonth(tv)+inDay(tv)
 
-    ;================================
+    ;================================    
     ; Corrections for v3.11:
     ; Change date for Askja
     if (date_volc(dt).eq.18750101) then
       print("Changed date for Askja")
       date_volc(dt)=18750329
     end if
-
+    
     ; Change date for Pelee
     if (date_volc(dt).eq.19020506) then
       print("Changed date for Pelee")
       date_volc(dt)=19020508
       tv=indVolcs(t-1)
      end if
-
+     
     if (date_volc(dt).eq.19020423) then
  ;     print("Changed date for Pelee")
  ;     date_volc(dt)=19020508
       tv=indVolcs(t+1)
       date_volc(dt)=10000*inYear(tv)+100*inMonth(tv)+inDay(tv)
     end if
-
+    
     ; Change date for Calbuco
     if (date_volc(dt).eq.19310630) then
       print("Changed date for Calbuco")
       date_volc(dt)=19320630
     end if
-
+    
     ; Change date for Bezymianny
     if (date_volc(dt).eq.19551022) then
       print("Changed date for Bezymianny")
       date_volc(dt)=19560330
     end if
-
+    
     ; Change date for Agung
     if (date_volc(dt).eq.19630218) then
       print("Changed date for Agung")
       date_volc(dt)=19630317
     end if
-    ;================================
+    ;================================    
 
     if (t.gt.0) then
       if (date_volc(dt).lt.date_volc(dt-1)) then
@@ -518,21 +515,21 @@ do t=0,nVolcTot-1
     Bot=(/newBot(t-nVolc)/)
     Name=(/newVolcName(t-nVolc)/)
   end if
-
+  
   if (VEI.eq.5) then
     SO2=SO2*VEI5_factor
   end if
-
+  
   if (VEI.eq.6) then
     SO2=SO2*VEI6_factor
   end if
-
+  
   print("date: "+date_volc(tv)+" Lat: "+Lat+" Lon: "+Lon+" Name: "+Name)
   if (Lon.ge.360.or.Lat.gt.90.or.Lat.lt.-90.or.Lon.lt.0) then
     print("FATAL: latitude or longitude out of range")
     exit
   end if
-
+  
   maskArr({Lat},{Lon})=1.0d0
   if (PinMinLat.ge.-90.and.t.eq.Pind) then
     maskArr({PinMinLat:Lat},{Lon})=1.0d0
@@ -552,18 +549,18 @@ do t=0,nVolcTot-1
     end if
     MinLat=(/Lat/)
   end if
-
+  
   nCol=toint(sum(maskArr))
 ;  print("t="+t+" tv="+tv+" nVolcTot="+nVolcTot)
   totalArea(t)=sum(columnArea*maskArr)
   totalAreaKm2 =  totalArea(t) / 1d10
-
+      
   columnEmis=SO2/totalArea(t)/6./3600. ; Tg/cm2/s for 6-hour emission
   columnEmis=columnEmis*1e9*AVOGAD/MWSO2 ; molec/cm2/s
   depth=(Top-Bot)*1e5 ; emission depth in cm
   emisRate=columnEmis/depth ; molec/cm3/s
-
-  if ((PinMinLat.ge.-90).or.(doVEIspread)) then
+  
+  if ((PinMinLat.ge.-90).or.(doVEIspread)) then 
     outstring=\
       sprinti("%8.8i",date_volc(dt))+" "+\
         sprintf("%7.3f",MinLat)+" "+sprintf("%7.3f",Lat)+" "+sprintf("%7.3f",Lon)+" "+\
@@ -571,48 +568,54 @@ do t=0,nVolcTot-1
         sprintf("%7.4f",SO2)+"  "+VEI+"   "+sprinti("%3.0i",nCol)+"  "+\
         sprintf("%7.3e",totalAreaKm2)+" "+sprintf("%9.5e",emisRate)+" "+Name
   else
+;    outstring=\
+;      sprinti("%8.8i",date_volc(dt))+" "+\
+;        sprintf("%7.3f",Lat)+" "+sprintf("%7.3f",Lon)+" "+\
+;        sprintf("%6.3f",Bot)+" "+sprintf("%6.3f",Top)+" "+\
+;        sprintf("%7.4f",SO2)+"  "+VEI+"  "+\
+;        sprintf("%7.3e",totalAreaKm2)+" "+sprintf("%9.5e",emisRate)+" "+Name
     outstring=\
       sprinti("%8.8i",date_volc(dt))+" "+\
         sprintf("%7.3f",Lat)+" "+sprintf("%7.3f",Lon)+" "+\
         sprintf("%6.3f",Bot)+" "+sprintf("%6.3f",Top)+" "+\
-        sprintf("%7.4f",SO2)+"  "+VEI+"  "+\
+        sprintf("%8.4g",SO2)+" "+sprinti("%2.1i",VEI)+"  "+\
         sprintf("%7.3e",totalAreaKm2)+" "+sprintf("%9.5e",emisRate)+" "+Name
   end if
   print((/outstring/))
   globalAtt@data_summary = globalAtt@data_summary+nl+outstring
-
+    
   do k=0,nAlt-1
 ;    print(k+" "+Bot+" "+altitude_int(k+1)+" "+Top+" "+altitude_int(k))
     if (Bot.lt.altitude_int(k+1).and.Top.ge.altitude_int(k)) then
       top=min((/Top,altitude_int(k+1)/))
       bot=max((/Bot,altitude_int(k)/))
       factor=todouble((top-bot)/(altitude_int(k+1)-altitude_int(k)))
-
+      
 ;      printVarSummary(maskArr)
 ;      printVarSummary(stratvolc(t2,k,:,:))
-      stratvolc(t2,k,:,:,k) = stratvolc(t2,k,:,:,k)+maskArr*emisRate*factor
-      stratvolc(t3,k,:,:,k) = stratvolc(t2,k,:,:,k)
-
+      stratvolc(t2,k,:,:) = stratvolc(t2,k,:,:)+maskArr*emisRate*factor
+      stratvolc(t3,k,:,:) = stratvolc(t2,k,:,:)
+      
 ;      print(stratvolc(t2,k,{Lat},{Lon}))
 ;      print(maskArr({Lat},{Lon}))
 ;      print(emisRate+" "+factor+" "+emisRate*factor)
 
     end if
   end do
-
-  sumEmis=sum(stratvolc(t2,:,{Lat},{Lon},:))*1d5 ; integrate column, vertical resolution 1 km = 1e5 cm
+  
+  sumEmis=sum(stratvolc(t2,:,{Lat},{Lon}))*1d5 ; integrate column, vertical resolution 1 km = 1e5 cm
   ratio=sumEmis/columnEmis
   print(Name+" "+columnEmis+" "+sumEmis+" "+ratio+" "+Bot+" "+Top+" "+emisRate+" "+factor)
-
+  
   if (abs(ratio-1.d0).ge.1e-6) then
     print("FATAL emission mismatch:")
     print("    "+Name+" columnEmis="+sprintf("%7.3e",columnEmis)+" sumEmis="+sprintf("%7.3e",sumEmis)+" ratio="+ratio)
     print("      Bot="+Bot+" Top="+Top+" emisRate="+emisRate)
     exit
   end if
-
+  
   dt=dt+1
-
+  
 end do
 
 dlast=t4+1
@@ -632,16 +635,16 @@ if (savefile) then
     print((/command/))
     system(command)
   end if
-
+  
   print("creating "+outfile)
-;  setfileoption("nc","Format","LargeFile")
-  setfileoption("nc","Format","NetCDF4Classic")
+;  setfileoption("nc","Format","LargeFile") 
+  setfileoption("nc","Format","NetCDF4Classic") 
   ncid=addfile(outfile,"c")
-
+  
   ;Create UNLIMITED Record Dimension
-  ;  An UNLIMITED record dimension in a netCDF file is critical if the user
-  ;  plans to ever use the netCDF operators (NCO) to concatenate the file
-  ;  along the time/record dimension.
+  ;  An UNLIMITED record dimension in a netCDF file is critical if the user 
+  ;  plans to ever use the netCDF operators (NCO) to concatenate the file 
+  ;  along the time/record dimension.  
   filedimdef(ncid,"time",-1,True)
 
   ; Define global attributes.
@@ -659,8 +662,8 @@ if (savefile) then
   globalAtt@data_reference    = nl+\
       "Mills, M. J. et al. (2016), Global volcanic aerosol properties "+nl+\
       "     derived from emissions, 1990-2014, using CESM1(WACCM), "+nl+\
-      "     J Geophys Res-Atmos, 121(5), 2332-2348, doi:10.1002/2015jd024290."+nl+\
-      "Neely III, R.R.; Schmidt, A. (2016): VolcanEESM (Volcanic Emissions"+nl+\
+      "     J Geophys Res-Atmos, 121(5), 2332-2348, doi:10.1002/2015jd024290."+nl+\      
+      "Neely III, R.R.; Schmidt, A. (2016): VolcanEESM (Volcanic Emissions"+nl+\  
       "     for Earth System Models): Volcanic sulphur dioxide (SO2) emissions"+nl+\
       "     database from 1850 to present. Centre for Environmental Data Analysis"
   globalAtt@data_source_url    = nl+\
@@ -679,13 +682,13 @@ if (savefile) then
       outfilename
   fileattdef( ncid, globalAtt )
 
-  ; print("saving altitude_int")
-  ; ncid->altitude_int=(/altitude_int/)
-  print("saving date")
+  print("saving altitude_int")  
+  ncid->altitude_int=altitude_int
+  print("saving date")  
   ncid->date=date(0:dlast)
-  print("saving datesec")
+  print("saving datesec")  
   ncid->datesec=datesec(0:dlast)
-
+  
   print("converting stratvolc to float")
   stratvolcFloat=tofloat(stratvolc)
   stratvolcFloat@long_name = "SO2 elevated emissions from explosive volcanoes" ;
@@ -695,18 +698,16 @@ if (savefile) then
   stratvolcFloat!1="altitude"
   stratvolcFloat!2="lat"
   stratvolcFloat!3="lon"
-  stratvolcFloat!4="altitude_int"
   stratvolcFloat&altitude=altitude
-  stratvolcFloat&altitude_int=altitude_int
   stratvolcFloat&lat=lat
   stratvolcFloat&lon=lon
   printVarSummary(stratvolcFloat)
-
-  print("saving stratvolc")
-  ncid->stratvolc=stratvolcFloat(0:dlast,:,:,:,:)
-
+  
+  print("saving stratvolc")  
+  ncid->stratvolc=stratvolcFloat(0:dlast,:,:,:)
+  
   print("File creation complete: "+outfile)
-
+  
   delete(ncid)
-
+  
 end if

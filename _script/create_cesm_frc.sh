@@ -15,7 +15,6 @@ export DATA_OUT="data/cesm"
 mkdir -p "$DATA_OUT"
 # export NCL_SCRIPT="createVolcEruptV3.1piControl.ncl"
 export NCL_SCRIPT="createVolcEruptV3.ncl"
-# export NCL_SCRIPT="createVolcEruptV3-2.ncl"
 export COORDS1DEG="$DATA_ORIG/fv_0.9x1.25_L30.nc"
 # export COORDS2DEG="$DATA_ORIG/fv_1.9x2.5_L30.nc"
 export COORDS2DEG="$DATA_ORIG/coords_1.9x2.5_L88_c150828-copy.nc"
@@ -23,8 +22,8 @@ export COORDS2DEG="$DATA_ORIG/coords_1.9x2.5_L88_c150828-copy.nc"
 # export COORDS2DEG="$DATA_ORIG/fv_1.9x2.5_L26.nc"
 # export COORDS2DEG="$DATA_ORIG/fv_1.9x2.5.nc"
 # export COORDS2DEG="$DATA_ORIG/fv_1.9x2.5_nc3000_Nsw084_Nrs016_Co120_Fi001_ZR_GRNL_031819.nc"
-# SYNTH_FILE=$(find "$DATA_SYNTH" -name "*.nc" -type f -printf '%T@ %p\n' | sort -n | tail -1 | cut -f2- -d" ")
-SYNTH_FILE="./data/originals/volcan-eesm_global_2015_so2-emissions-database_v1.0.nc"
+SYNTH_FILE=$(find "$DATA_SYNTH" -name "*.nc" -type f -printf '%T@ %p\n' | sort -n | tail -1 | cut -f2- -d" ")
+# SYNTH_FILE="./data/originals/volcan-eesm_global_2015_so2-emissions-database_v1.0.nc"
 export SYNTH_FILE
 SYNTH_FILE_DIR=$(dirname "$SYNTH_FILE")
 export SYNTH_FILE_DIR
@@ -89,7 +88,21 @@ if ! echo "$new_file" | grep -q ".*.nc$"; then
     echo "This ($new_file) is not a netCDF file."
     exit 1
 fi
-mv "$new_file" "$new_file".old
-nccopy -k cdf5 "$new_file".old "$new_file"
-rm "$new_file".old
+
+# Add attributes to the coordinate `altitude_int`, which we do via the python script
+# `easy_fix.py`.
+echo "Fixing the attributes of the altitude_int coordinate..."
+XRMSG="\nCannot import xarray. Activate the environment where you installed the project
+and re-run, or run manually with a python interpreter containing xarray as:\n
+echo $new_file | python src/volcano_cooking/modules/create/easy_fix.py"
+if ! python -c "import xarray" >/dev/null 2>&1; then
+    echo "$XRMSG"
+    exit 1
+fi
+echo "$new_file" | python src/volcano_cooking/modules/create/easy_fix.py
+
+# Make it a `cdf5` compatible file.
+rm "$new_file"
+nccopy -k cdf5 "${new_file%???}"_2.0.nc "$new_file"
+rm "${new_file%???}"_2.0.nc
 exit 0

@@ -340,8 +340,11 @@ datesec@standard_name = "datesec" ;
 date(0)=10101 ; yyyymmdd
 datesec(0) = 1800
 
-altmax=toint(max(inTop(indVolcs))+0.5)
-altmin=toint(min(inBot(indVolcs)))
+; Seems to be important! Model keeps crashing if altitude range is set dynamically.
+; altmax=toint(max(inTop(indVolcs))+0.5)
+altmax=29
+; altmin=toint(min(inBot(indVolcs)))
+altmin=0
 nalts=altmax-altmin+1
 
 altitude = fspan(altmin,altmax,nalts)
@@ -677,7 +680,8 @@ if (savefile) then
   fileattdef( ncid, globalAtt )
 
   print("saving altitude_int")
-  ncid->altitude_int=(/altitude_int/)
+  ncid!0="altitude_int"
+  ncid&altitude_int=altitude_int
   print("saving date")
   ncid->date=date(0:dlast)
   print("saving datesec")
