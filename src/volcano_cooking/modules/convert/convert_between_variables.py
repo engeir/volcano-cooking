@@ -29,10 +29,9 @@ def vei_to_totalemission(veis: np.ndarray) -> np.ndarray:
     """
     if veis.dtype != np.int8:
         raise ValueError(f"{veis.dtype} = . Need int8.")
-    tes = 1e-2 * 3 ** (
+    return 1e-2 * 3 ** (
         np.random.normal(0.1, 1.0, size=len(veis)).astype(np.float32) + veis
     )
-    return tes
 
 
 def totalemission_to_vei(tes: np.ndarray) -> np.ndarray:
