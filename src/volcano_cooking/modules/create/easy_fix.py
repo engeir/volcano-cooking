@@ -17,6 +17,7 @@ import xarray as xr
 
 
 def add_attributes() -> None:
+    # Read from standard input
     data = sys.stdin.readlines()
     new_path = data[0].strip("\n")
     if not isinstance(new_path, str) or new_path[-3:] != ".nc":
@@ -45,7 +46,10 @@ def add_attributes() -> None:
         "datesec": {"_FillValue": -2147483647},
     }
     f_new.to_netcdf(
-        new_path[:-3] + "_2.0.nc", "w", format="NETCDF3_64BIT", encoding=encoding
+        f'{new_path[:-3]}_2.0.nc',
+        "w",
+        format="NETCDF3_64BIT",
+        encoding=encoding,
     )
 
 

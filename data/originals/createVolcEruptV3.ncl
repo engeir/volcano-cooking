@@ -624,7 +624,7 @@ print("dates:"+dt+" eruptions:"+nVolcTot+" dlast="+dlast)
 savefile=True
 if (savefile) then
 
-  creation_date=systemfunc("date +%Y%m%d")
+  creation_date=systemfunc("date +%Y%m%d-%H%M%S")
   outfilename=outfilename+"_"+res+"_c"+creation_date+".nc"
   outfile=outfilepath+outfilename
   if (fileexists(outfile)) then

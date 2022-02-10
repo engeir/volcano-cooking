@@ -3,7 +3,6 @@
 from abc import ABC, abstractmethod
 from typing import Tuple
 
-import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats as scp_stats
 from fppy import model
@@ -46,8 +45,7 @@ class Frc(FrcGenerator):
         self.fpp.set_custom_forcing_generator(my_forcing_gen)
 
     def __lomax_amp(self, k: int, c: float) -> np.ndarray:
-        r = scp_stats.lomax.rvs(c, size=k)
-        return r
+        return scp_stats.lomax.rvs(c, size=k)
 
     def get_fpp(self) -> Tuple[np.ndarray, np.ndarray]:
         t, f = self.fpp.make_realization()
@@ -61,12 +59,3 @@ class Frc(FrcGenerator):
         ta[:] = ta[mask]
         amp[:] = amp[mask]
         return ta, amp
-
-
-if __name__ == "__main__":
-    # f = Frc()
-    f = StdFrc()
-    t, frc = f.get_frc()
-    print(frc.shape)
-    plt.plot(t, frc)
-    plt.show()

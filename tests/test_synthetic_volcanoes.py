@@ -33,7 +33,7 @@ def test_create_volcaoes(runner: CliRunner) -> None:
         r = len(synthetic_volcanoes.__GENERATORS__)
         for v in range(r):
             d = os.path.join("data", "output")
-            now = datetime.datetime.now().strftime("%Y%m%d_%H%M")
+            now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
             out_npz = os.path.join(d, f"synthetic_volcanoes_{now}.npz")
             out_nc = os.path.join(d, f"synthetic_volcanoes_{now}.nc")
             synthetic_volcanoes.create_volcanoes(version=v)

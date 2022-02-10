@@ -53,7 +53,7 @@ def test_main_succeeds(runner: CliRunner) -> None:
     """
     with runner.isolated_filesystem():
         d = os.path.join("data", "output")
-        now = datetime.datetime.now().strftime("%Y%m%d_%H%M")
+        now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         out_npz = os.path.join(d, f"synthetic_volcanoes_{now}.npz")
         v = len(synthetic_volcanoes.__GENERATORS__) - 1
         synthetic_volcanoes.create_volcanoes(version=v)

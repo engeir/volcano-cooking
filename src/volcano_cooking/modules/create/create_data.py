@@ -26,7 +26,6 @@ class Data:
         arrays to a .npz file.
     """
 
-    # TODO: re-write to use composition; send in Generator class.
     def __init__(
         self,
         eruptions: np.ndarray,
@@ -247,7 +246,7 @@ class Data:
         d = os.path.join("data", "output")
         if not os.path.isdir(d):
             os.makedirs(d)
-        now = datetime.datetime.now().strftime("%Y%m%d_%H%M")
+        now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         out_file = os.path.join(d, f"{name}_{now}.{ext}")
         if os.path.isfile(out_file):
             sys.exit(f"The file {out_file} already exists.")
@@ -373,14 +372,3 @@ class GenerateSingleVolcano(Generate):
             self.init_year
         )
         self.tes = convert.vei_to_totalemission(self.veis)
-
-
-def main():
-    # g = GenerateFPP(200, 1850)
-    g = GenerateRandomNormal(200, 1850)
-    g.generate()
-    _ = g.get_arrays()
-
-
-if __name__ == "__main__":
-    main()

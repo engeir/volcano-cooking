@@ -59,7 +59,7 @@ fi
 
 # Write a log file
 
-current_day="$(date +%Y%m%d)"
+current_day="$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$DATA_OUT"/logs
 echo "Creating file with variables:
 
