@@ -5,7 +5,7 @@ from typing import List
 
 import click
 
-import volcano_cooking.configurations.shift_eruption_to_date as sestd
+import volcano_cooking.configurations.shift_eruption_to_date as shift_eruption_to_date
 import volcano_cooking.synthetic_volcanoes as sv
 from volcano_cooking import __version__
 
@@ -77,11 +77,16 @@ def main(
     if lst:
         for cl in sv.__GENERATORS__:
             print(f"{cl}: {sv.__GENERATORS__[cl].__name__}")
-    elif shift_eruption != "False":
+        return
+    _init_year = [1850, 1, 15]
+    _init_year[: len(init_year)] = init_year
+    if shift_eruption != "False":
         if shift_eruption == "True":
-            sestd.shift_eruption_to_date(tuple(init_year), None)
+            shift_eruption_to_date.shift_eruption_to_date(tuple(_init_year), None)
         else:
-            sestd.shift_eruption_to_date(tuple(init_year), shift_eruption)
+            shift_eruption_to_date.shift_eruption_to_date(
+                tuple(_init_year), shift_eruption
+            )
     else:
         if option == 1:
             file = os.path.join(
@@ -92,5 +97,5 @@ def main(
             if not os.path.exists(file):
                 raise FileNotFoundError(f"You need the file '{file}' for this option.")
         sv.create_volcanoes(
-            size=size, init_year=init_year[0], version=frc, option=option
+            size=size, init_year=_init_year[0], version=frc, option=option
         )
