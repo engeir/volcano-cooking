@@ -246,7 +246,7 @@ class Data:
         d = os.path.join("data", "output")
         if not os.path.isdir(d):
             os.makedirs(d)
-        now = datetime.datetime.now().strftime("%Y%m%d_%H%M")
+        now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         out_file = os.path.join(d, f"{name}_{now}.{ext}")
         if os.path.isfile(out_file):
             sys.exit(f"The file {out_file} already exists.")

@@ -52,6 +52,7 @@ def sparse_to_lin(
     >>> )
     >>> t2, t_m, t2_m = sparse_to_lin(t)
     >>> assert t[t_m].shape == t2[t2_m].shape
+    True
     """
     # New time axis (stop at December)
     sy = int(t[0]) if sy is None else sy
