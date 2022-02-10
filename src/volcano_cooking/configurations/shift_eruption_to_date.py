@@ -84,27 +84,25 @@ def open_file(ext: str, in_file: Optional[str] = None) -> Tuple[np.ndarray, ...]
     """
     if in_file is None:
         file = fnc.find_last_output(ext)
+    elif in_file.split(".")[-1] == "npz":
+        file = fnc.find_file("".join(in_file.split(".")[:-1]) + ".nc")
     else:
-        if in_file.split(".")[-1] == "npz":
-            file = fnc.find_file("".join(in_file.split(".")[:-1]) + ".nc")
-        else:
-            file = fnc.find_file(in_file)
-    if "nc" in ext:
-        with xr.open_dataset(file, decode_times=False) as f:
-            yoes = f.variables["Year_of_Emission"].data
-            moes = f.variables["Month_of_Emission"].data
-            does = f.variables["Day_of_Emission"].data
-            tes = f.variables["Total_Emission"].data
-            eruptions = f.variables["Eruption"].data
-            lats = f.variables["Latitude"].data
-            lons = f.variables["Longitude"].data
-            veis = f.variables["VEI"].data
-            miihs = f.variables["Minimum_Injection_Height"].data
-            mxihs = f.variables["Maximum_Injection_Height"].data
-    else:
+        file = fnc.find_file(in_file)
+    if "nc" not in ext:
         raise NameError(
             "Data arrays cannot be found. "
             + f"Extension was {ext} = , but should be `nc`."
         )
 
+    with xr.open_dataset(file, decode_times=False) as f:
+        yoes = f.variables["Year_of_Emission"].data
+        moes = f.variables["Month_of_Emission"].data
+        does = f.variables["Day_of_Emission"].data
+        tes = f.variables["Total_Emission"].data
+        eruptions = f.variables["Eruption"].data
+        lats = f.variables["Latitude"].data
+        lons = f.variables["Longitude"].data
+        veis = f.variables["VEI"].data
+        miihs = f.variables["Minimum_Injection_Height"].data
+        mxihs = f.variables["Maximum_Injection_Height"].data
     return eruptions, yoes, moes, does, lats, lons, tes, veis, miihs, mxihs

@@ -80,14 +80,7 @@ def main(
         return
     _init_year = [1850, 1, 15]
     _init_year[: len(init_year)] = init_year
-    if shift_eruption != "False":
-        if shift_eruption == "True":
-            shift_eruption_to_date.shift_eruption_to_date(tuple(_init_year), None)
-        else:
-            shift_eruption_to_date.shift_eruption_to_date(
-                tuple(_init_year), shift_eruption
-            )
-    else:
+    if shift_eruption == "False":
         if option == 1:
             file = os.path.join(
                 "data",
@@ -98,4 +91,10 @@ def main(
                 raise FileNotFoundError(f"You need the file '{file}' for this option.")
         sv.create_volcanoes(
             size=size, init_year=_init_year[0], version=frc, option=option
+        )
+    elif shift_eruption == "True":
+        shift_eruption_to_date.shift_eruption_to_date(tuple(_init_year), None)
+    else:
+        shift_eruption_to_date.shift_eruption_to_date(
+            tuple(_init_year), shift_eruption
         )
