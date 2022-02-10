@@ -60,12 +60,13 @@ def find_last_output(ext: str) -> str:
     ValueError
         If the extension provided is not recognised
     """
-    if ext[0] != "." and "." in ext:
-        raise ValueError(
-            f"{ext} is not a valid extension. Use '.npz', 'npz', '.nc' or 'nc'."
-        )
-    elif ext[0] != ".":
-        ext = f".{ext}"
+    if ext[0] != ".":
+        if "." in ext:
+            raise ValueError(
+                f"{ext} is not a valid extension. Use '.npz', 'npz', '.nc' or 'nc'."
+            )
+        else:
+            ext = f".{ext}"
     synth_dir = "data/output"
     if not os.path.isdir(synth_dir):
         os.makedirs(synth_dir)
@@ -74,12 +75,10 @@ def find_last_output(ext: str) -> str:
         for f in os.listdir(synth_dir)
         if os.path.isfile(os.path.join(synth_dir, f)) and ext in f
     ]
-    if len(synth_files) == 0:
+    if not synth_files:
         sys.exit("No output files found.")
     synth_files.sort()
-    file = os.path.join(synth_dir, synth_files[-1])
-
-    return file
+    return os.path.join(synth_dir, synth_files[-1])
 
 
 def find_file(file: str) -> str:

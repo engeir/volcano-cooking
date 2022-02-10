@@ -84,12 +84,12 @@ def set_rcparams_dynamo(
     fig_dpi = 300.0
     fontsize = 8
 
-    assert ls in ["thick", "thin"]
+    assert ls in {"thick", "thin"}
     linewidth = 0.75
     if ls == "thick":
         linewidth *= 2
 
-    assert num_cols in [1, 2]
+    assert num_cols in {1, 2}
 
     # Define axis size to be used
     if num_cols == 1:
