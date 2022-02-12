@@ -46,7 +46,7 @@ def add_attributes() -> None:
         "datesec": {"_FillValue": -2147483647},
     }
     f_new.to_netcdf(
-        f'{new_path[:-3]}_2.0.nc',
+        f"{new_path[:-3]}_2.0.nc",
         "w",
         format="NETCDF3_64BIT",
         encoding=encoding,

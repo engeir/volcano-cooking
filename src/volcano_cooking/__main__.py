@@ -95,6 +95,4 @@ def main(
     elif shift_eruption == "True":
         shift_eruption_to_date.shift_eruption_to_date(tuple(_init_year), None)
     else:
-        shift_eruption_to_date.shift_eruption_to_date(
-            tuple(_init_year), shift_eruption
-        )
+        shift_eruption_to_date.shift_eruption_to_date(tuple(_init_year), shift_eruption)
