@@ -34,8 +34,8 @@ def test_create_volcaoes(runner: CliRunner) -> None:
         for v in range(r):
             d = os.path.join("data", "output")
             now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-            out_npz = os.path.join(d, f"synthetic_volcanoes_{now}.npz")
-            out_nc = os.path.join(d, f"synthetic_volcanoes_{now}.nc")
+            out_npz = os.path.join(os.getcwd(), d, f"synthetic_volcanoes_{now}.npz")
+            out_nc = os.path.join(os.getcwd(), d, f"synthetic_volcanoes_{now}.nc")
             synthetic_volcanoes.create_volcanoes(version=v)
             assert os.path.isfile(out_nc)
             assert os.path.isfile(out_npz)
