@@ -27,7 +27,6 @@ jobs:
           poetry run pytest --cov=./ --cov-report=xml
 
       - name: Coverage upload
-        uses: actions/checkout@master
         uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
