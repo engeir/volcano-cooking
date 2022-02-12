@@ -27,14 +27,12 @@ jobs:
           poetry run pytest --cov=./ --cov-report=xml
 
       - name: Coverage upload
-        uses: actions/checkout@master
         uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
           directory: ./coverage/reports/
-          files: ./coverage1.xml,./coverage2.xml # optional
-          flags: unittests # optional
+          files: ./coverage.xml # optional
+          # flags: unittests # optional
           name: codecov-umbrella # optional
-          path_to_write_report: ./coverage/codecov_report.txt
-          fail_ci_if_error: true # optional (default = false)
+          # fail_ci_if_error: true # optional (default = false)
           verbose: true # optional (default = false)
