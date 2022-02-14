@@ -210,7 +210,7 @@ wget --no-check-certificate https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputd
 Now the only thing we need to do is running `volcano-cooking` with the flag `-o`, and
 choose the type of forcing we want (see `volcano-cooking --lst`).
 
-### FPP
+## FPP
 
 In the long run, this project should be able to produce volcanic forcing files where the
 volcanic eruptions are generated from an FPP.
@@ -221,7 +221,7 @@ amplitudes.
 
 The most natural variable to adjust according to the amplitudes is the total emission.
 
-### Generator class
+## Generator class
 
 Since the volcanoes can conceivably be generated in different ways, it might be a good
 idea to create a class which takes in all the variables that are needed and then checks
