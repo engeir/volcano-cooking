@@ -32,12 +32,18 @@ class ReWrite(Data):
         ------
         IndexError
             If the loaded dataset does not include needed dimensions and variables.
+        FileNotFoundError
+            If the original forcing file cannot be found.
         """
         file = os.path.join(
             "data",
             "originals",
             "VolcanEESMv3.11_SO2_850-2016_Mscale_Zreduc_2deg_c191125",
         )
+        if not os.path.exists(file + ".nc"):
+            raise FileNotFoundError(
+                f"{file} not found. Consult README on how to download."
+            )
         f_orig = xr.open_dataset(file + ".nc", decode_times=False)
         # Check that the file contain crucial data.
         if any(d not in f_orig.dims for d in ["time", "altitude", "lat", "lon"]):
