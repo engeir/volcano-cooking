@@ -1,5 +1,6 @@
 """Compare two xarray datasets' dimensions and variables."""
 
+import os
 from typing import List, Union
 
 import xarray as xr
@@ -25,6 +26,8 @@ def compare_datasets(*args: Union[str, xr.Dataset]) -> None:
     xr_app = xr_list.append
     for arr in args:
         if isinstance(arr, str):
+            if not os.path.isfile(arr):
+                raise TypeError(f"{arr} is not a file")
             xr_app(xr.open_dataset(arr, decode_times=False))
         elif isinstance(arr, xr.Dataset):
             xr_app(arr)
