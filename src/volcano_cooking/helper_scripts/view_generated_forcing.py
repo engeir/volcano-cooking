@@ -121,11 +121,11 @@ def check_dir(ext: str) -> str:
     """
     if ext[0] == ".":
         ext = ext[1:]
-    d = "data/output"
+    d = os.path.join("data", "output")
     if not os.path.isdir(d):
         os.makedirs(d)
     now = datetime.datetime.now().strftime("%Y%m%d_%H%M")
-    out_file = f"{d}/synthetic_volcanoes_{now}.{ext}"
+    out_file = os.path.join(d, f"synthetic_volcanoes_{now}.{ext}")
     if os.path.isfile(out_file):
         sys.exit(f"The file {out_file} already exists.")
     return out_file

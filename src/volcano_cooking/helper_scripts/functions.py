@@ -23,19 +23,19 @@ def find_original(filename: Optional[str] = None) -> str:
     str
         The path and name of the original forcing file
     """
-    orig_dir = "data/originals/"
+    orig_dir = os.path.join("data", "originals")
     if not os.path.isdir(orig_dir):
         os.makedirs(orig_dir)
     if filename is None:
-        original_file = (
-            "data/originals/volcan-eesm_global_2015_so2-emissions-database_v1.0.nc"
+        original_file = os.path.join(
+            "data",
+            "originals",
+            "volcan-eesm_global_2015_so2-emissions-database_v1.0.nc",
         )
     else:
-        if filename[0] == "/":
-            filename = filename[1:]
         if ".nc" not in filename:
             filename += ".nc"
-        original_file = orig_dir + filename
+        original_file = os.path.join(orig_dir, filename)
     if not os.path.isfile(original_file):
         sys.exit(f"Can't find file {original_file}")
 
@@ -67,7 +67,7 @@ def find_last_output(ext: str) -> str:
             )
         else:
             ext = f".{ext}"
-    synth_dir = "data/output"
+    synth_dir = os.path.join("data", "output")
     if not os.path.isdir(synth_dir):
         os.makedirs(synth_dir)
     synth_files = [

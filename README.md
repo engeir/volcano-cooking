@@ -15,7 +15,6 @@ their frequency.
 
 ## TODO
 
-- Combine paths with `os.join` instead of hard coded `/`
 - Create a template file so need to download original is removed
 
 ## Install
