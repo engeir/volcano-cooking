@@ -43,17 +43,7 @@ def adjust_altitude_range(
     threshold = 3.5  # Tg
     idx = (tes > threshold) & (mxihs > 20)
     mxihs[idx] = 20
-    miihs[idx] = min(miihs[idx], 18)
-    # alt_range = (20, 29)
-    #
-    # for i, (mi, mx) in enumerate(zip(miihs, mxihs)):
-    #     if mi > alt_range[1]:
-    #         # Lower injection height is higher than upper bound
-    #         miihs[i] = alt_range[0]
-    #         mxihs[i] = alt_range[1]
-    #     elif mx > alt_range[1]:
-    #         # Upper injection height is higher than upper bound
-    #         mxihs[i] = alt_range[1]
+    miihs[miihs[idx] > 18] = 18
     return miihs, mxihs
 
 
