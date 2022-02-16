@@ -1,9 +1,12 @@
 """Main file to run the program."""
 
 import os
+import ssl
+import sys
 from typing import List
 
 import click
+import wget
 
 import volcano_cooking.configurations.shift_eruption_to_date as shift_eruption_to_date
 import volcano_cooking.synthetic_volcanoes as sv
@@ -88,7 +91,7 @@ def main(
                 "VolcanEESMv3.11_SO2_850-2016_Mscale_Zreduc_2deg_c191125.nc",
             )
             if not os.path.exists(file):
-                raise FileNotFoundError(f"You need the file '{file}' for this option.")
+                get_forcing_file(file)
         sv.create_volcanoes(
             size=size, init_year=_init_year[0], version=frc, option=option
         )
@@ -96,3 +99,22 @@ def main(
         shift_eruption_to_date.shift_eruption_to_date(tuple(_init_year), None)
     else:
         shift_eruption_to_date.shift_eruption_to_date(tuple(_init_year), shift_eruption)
+
+
+def get_forcing_file(file: str) -> None:
+    """Download the original forcing file.
+
+    Parameters
+    ----------
+    file : str
+        The path and filename of the file to download.
+    """
+    here = os.path.join(os.getcwd(), "data", "originals")
+    print(f"No forcing file found in {here}.")
+    query = "Do you want to download the original forcing file? (2.2GB)"
+    if click.confirm(query):
+        url = "https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/chem/stratvolc/VolcanEESMv3.11_SO2_850-2016_Mscale_Zreduc_2deg_c191125.nc"
+        ssl._create_default_https_context = ssl._create_unverified_context
+        wget.download(url, os.path.join(os.getcwd(), file))
+    else:
+        sys.exit("Not downloading file. Exiting gracefully.")

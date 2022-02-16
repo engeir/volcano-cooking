@@ -21,6 +21,7 @@ cftime = "^1.5.0"
 netCDF4 = "^1.5.8"
 superposed-pulses = "^1.2"
 xarray = "^0.21.1"
+wget = "^3.2"
 
 [tool.poetry.group.dev.dependencies]
 coverage = "^6.3"
