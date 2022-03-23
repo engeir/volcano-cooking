@@ -13,7 +13,11 @@ import volcano_cooking.helper_scripts as hs
 
 
 def sparse_to_lin(
-    t: np.ndarray, sy: Optional[int] = None, ey: Optional[int] = None, remove: int = 1
+    t: np.ndarray,
+    sy: Optional[int] = None,
+    ey: Optional[int] = None,
+    samples_per_year: int = 12,
+    remove: int = 1,
 ) -> Tuple[np.ndarray, List, List]:
     """Re-sample an uneven time axis to one with linear spacing.
 
@@ -29,6 +33,8 @@ def sparse_to_lin(
         The assumed first year of the time axis
     ey: int, optional
         The assumed end year of the time axis
+    samples_per_year: int
+        The number of samples per year.
     remove: int
         Remove the number of elements at the end of the time array equal to 'remove'.
 
@@ -57,7 +63,9 @@ def sparse_to_lin(
     # New time axis (stop at December)
     sy = int(t[0]) if sy is None else sy
     ey = int(t[-1] + 1) if ey is None else ey
-    t_i = np.linspace(sy, ey, (ey - sy) * 12 + 1)[:-remove]
+    t_i = np.linspace(sy, ey, (ey - sy) * samples_per_year + 1)[
+        : -int(remove * samples_per_year / 12)
+    ]
     # Find indices in t_i that are closest to t. If one element in t_i is closest to two
     # or more elements in t, only the one closest in t is kept (avoid repetition of
     # indices).
@@ -108,6 +116,15 @@ def sparse_to_lin(
     help="Set the end year.",
 )
 @click.option(
+    "-spy",
+    "--samples-per-year",
+    "samples_per_year",
+    default=12,
+    show_default=True,
+    type=int,
+    help="Set the number of samples per year.",
+)
+@click.option(
     "-lm",
     default="Dec",
     show_default=True,
@@ -121,7 +138,15 @@ def sparse_to_lin(
     type=bool,
     help="Show an example plot of original and new.",
 )
-def main(filename: str, save: bool, show: bool, sy: int, ey: int, lm: str):
+def main(
+    filename: str,
+    save: bool,
+    show: bool,
+    sy: int,
+    ey: int,
+    samples_per_year: int,
+    lm: str,
+):
     """View a plot of `filename`.
 
     Parameters
@@ -136,6 +161,8 @@ def main(filename: str, save: bool, show: bool, sy: int, ey: int, lm: str):
         The assumed first year of the time axis
     ey: int
         The assumed end year of the time axis
+    samples_per_year: int
+        The number of samples per year.
     lm: str
         The last month of the last year
     """
@@ -155,7 +182,7 @@ def main(filename: str, save: bool, show: bool, sy: int, ey: int, lm: str):
     # Grab forcing file with list of timing of volcanic events (uneven in time)
     t, tes = hs.frc_datetime2float(in_file=filename)
     # Get a linspaced time axis and two masks.
-    t_i, t_mask, ti_mask = sparse_to_lin(t, sy, ey, last_month)
+    t_i, t_mask, ti_mask = sparse_to_lin(t, sy, ey, samples_per_year, last_month)
 
     # Create new total emission array with linear sampling in time
     tes_new = np.zeros_like(t_i)
