@@ -58,7 +58,7 @@ def sparse_to_lin(
     >>> )
     >>> t2, t_m, t2_m = sparse_to_lin(t)
     >>> assert t[t_m].shape == t2[t2_m].shape
-    True
+    Elements are within half a time step from each other: True
     """
     # New time axis (stop at December)
     sy = int(t[0]) if sy is None else sy
@@ -86,8 +86,8 @@ def sparse_to_lin(
         t_mask_app(c + idx)
         ti_mask_app(arr[0])
         c += len(arr)
-    closeness = np.allclose(t[t_mask], t_i[ti_mask], atol=1 / 24)
-    print(f"Elements are within half a month from each other: {closeness}")
+    closeness = np.allclose(t[t_mask], t_i[ti_mask], atol=1 / (2 * samples_per_year))
+    print(f"Elements are within half a time step from each other: {closeness}")
     return t_i, t_mask, ti_mask
 
 
