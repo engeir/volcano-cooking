@@ -22,6 +22,7 @@ netCDF4 = "^1.5.8"
 superposed-pulses = "^1.2"
 xarray = "^0.21.1"
 wget = "^3.2"
+dask = "^2022.3.0"
 
 [tool.poetry.group.dev.dependencies]
 coverage = "^6.3"
@@ -35,6 +36,8 @@ darglint = "^1.8.0"
 pytest = "^6.2.4"
 pytest-cov = "^3.0.0"
 mypy = "^0.931"
+xdoctest = "^0.15.10"
+Pygments = "^2.11.2"
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
