@@ -36,6 +36,7 @@ __GENERATORS__ = {
     0: create.GenerateRandomNormal,
     1: create.GenerateFPP,
     2: create.GenerateSingleVolcano,
+    3: create.GenerateRegularIntervals,
 }
 
 

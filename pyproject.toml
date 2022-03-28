@@ -24,7 +24,7 @@ xarray = "^0.21.1"
 wget = "^3.2"
 dask = "^2022.3.0"
 
-[tool.poetry.group.dev.dependencies]
+[tool.poetry.dev-dependencies]
 coverage = "^6.3"
 black = "^21.7b0"
 isort = "^5.9.3"

@@ -2,6 +2,7 @@
 
 
 import datetime as dt
+from itertools import cycle
 from typing import List, Tuple, Union
 
 import cftime
@@ -29,12 +30,12 @@ def single_date_and_emission(
     does: np.ndarray
         Array of length 'size' with the day of a date
     veis: np.ndarray
-        Array of length 'size' with the Total_Emission as a 1D numpy array
+        Array of length 'size' with the VEI as a 1D numpy array
     """
-    yoes = np.array([init_year - 1, init_year + 2, init_year + 8], dtype=np.int16)
+    yoes = np.array([init_year - 1, init_year + 2, init_year + 100], dtype=np.int16)
     moes = np.array([1, 1, 1], dtype=np.int8)
     does = np.array([15, 15, 15], dtype=np.int8)
-    veis = np.array([11, 11, 11], dtype=np.int8)
+    veis = np.array([1, 7, 1], dtype=np.int8)
     return yoes, moes, does, veis
 
 
@@ -84,6 +85,38 @@ def random_dates(
         does[idx] = np.sort(does[idx])
 
     return yoes, moes, does
+
+
+def regular_intervals():
+    """Create dates with regular intervals.
+
+    This function creates dates with regular intervals and a pre-defined magnitude as VEI.
+
+    Returns
+    -------
+    yoes: np.ndarray
+        Array of length 'size' with the year of a date
+    moes: np.ndarray
+        Array of length 'size' with the month of a date
+    does: np.ndarray
+        Array of length 'size' with the day of a date
+    veis: np.ndarray
+        Array of length 'size' with the VEI
+    """
+    year_sep = 3
+    init_year = 1850
+    month = 3
+    day = 15
+    size = 100
+    te = cycle([2000, 40, 5])
+    yoes = np.zeros(size, dtype=np.int16) + init_year
+    moes = np.zeros(size, dtype=np.int8) + month
+    does = np.zeros(size, dtype=np.int8) + day
+    tes = np.ones(size, dtype=np.float32)
+    for i in range(size):
+        yoes[i] += i * year_sep
+        tes[i] = next(te)
+    return yoes, moes, does, tes
 
 
 def fpp_dates_and_emissions(

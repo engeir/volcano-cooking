@@ -283,7 +283,7 @@ class Generate(ABC):
     def gen_dates_totalemission_vei(self) -> None:
         """Generate dates, total emission and VEI."""
 
-    def __gen_rest(self) -> None:
+    def _gen_rest(self) -> None:
         """Generate the rest with default settings.
 
         The rest refer to `eruptions`, the eruption number, `lats`, `lons` and `miihs` and
@@ -316,7 +316,7 @@ class Generate(ABC):
         self.yoes -= abs(self.init_year - self.yoes[0]) + 1
         if len(self.veis) != self.size:
             self.size = len(self.veis)
-        self.__gen_rest()
+        self._gen_rest()
 
     def get_arrays(self) -> List[np.ndarray]:
         """Return all generated data.
@@ -363,6 +363,12 @@ class GenerateFPP(Generate):
         self.yoes, self.moes, self.does, self.tes = create.fpp_dates_and_emissions(
             self.size, self.init_year
         )
+        self.veis = convert.totalemission_to_vei(self.tes)
+
+
+class GenerateRegularIntervals(Generate):
+    def gen_dates_totalemission_vei(self) -> None:
+        self.yoes, self.moes, self.does, self.tes = create.regular_intervals()
         self.veis = convert.totalemission_to_vei(self.tes)
 
 
