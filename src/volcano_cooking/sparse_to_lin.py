@@ -66,15 +66,15 @@ def sparse_to_lin(
     t_i = np.linspace(sy, ey, (ey - sy) * samples_per_year + 1)[
         : -int(remove * samples_per_year / 12)
     ]
-    # Find indices in t_i that are closest to t. If one element in t_i is closest to two
-    # or more elements in t, only the one closest in t is kept (avoid repetition of
-    # indices).
+    # Find indices in `t_i` that are closest to `t`. If one element in `t_i` is closest
+    # to two or more elements in `t`, only the one closest in `t` is kept (avoid
+    # repetition of indices).
     mask = abs(t[None, :] - t_i[:, None]).argmin(axis=0)
     _, mask_idx = np.unique(mask, return_index=True)
     mask_sections = [mask[m : mask_idx[i + 1]] for i, m in enumerate(mask_idx[:-1])]
     mask_sections.append(mask[mask_idx[-1] :])
-    # Now we find the indices of t that we want to keep. c works as the index of the first
-    # item in each array inside mask_sections
+    # Now we find the indices of `t` that we want to keep. `c` works as the index of the
+    # first item in each array inside mask_sections
     c = 0
     t_mask: List[int] = []
     t_mask_app = t_mask.append
@@ -181,6 +181,13 @@ def main(
         last_month = 13 - months[lm]
     # Grab forcing file with list of timing of volcanic events (uneven in time)
     t, tes = hs.frc_datetime2float(in_file=filename)
+    # Remove data points outside of `sy` and `ey`
+    if sy is not None:
+        tes = tes[t >= sy]
+        t = t[t >= sy]
+    if ey is not None:
+        tes = tes[t <= ey]
+        t = t[t <= ey]
     # Get a linspaced time axis and two masks.
     t_i, t_mask, ti_mask = sparse_to_lin(t, sy, ey, samples_per_year, last_month)
 
@@ -201,7 +208,8 @@ def main(
         plt.show()
 
 
-if __name__ == "__main__":
+def example() -> None:
+    """Show an example use of function."""
     # fmt: off
     a = np.array(
         [
@@ -211,3 +219,7 @@ if __name__ == "__main__":
     )
     # fmt: on
     sparse_to_lin(a)
+
+
+if __name__ == "__main__":
+    main()
