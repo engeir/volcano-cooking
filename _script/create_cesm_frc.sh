@@ -92,9 +92,17 @@ fi
 # Add attributes to the coordinate `altitude_int`, which we do via the python script
 # `easy_fix.py`.
 echo "Fixing the attributes of the altitude_int coordinate..."
-XRMSG="\nCannot import xarray. Activate the environment where you installed the project
-and re-run, or run manually with a python interpreter containing xarray as:\n
-echo $new_file | python src/volcano_cooking/modules/create/easy_fix.py"
+XRMSG="\n$BOLD${RED}Cannot import xarray.$NORM Activate the environment where you installed the project
+and re-run, or run manually with a python interpreter containing xarray as:
+
+    $ echo $new_file | python src/volcano_cooking/modules/create/easy_fix.py
+
+Please also make sure that the final step of making it cdf5 compatible is done:
+
+    $ rm $new_file
+    $ nccopy -k cdf5 ${new_file%???}_2.0.nc $new_file
+    $ rm ${new_file%???}_2.0.nc
+    $ exit 0"
 if ! python -c "import xarray" >/dev/null 2>&1; then
     echo "$XRMSG"
     exit 1
