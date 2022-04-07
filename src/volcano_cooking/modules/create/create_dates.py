@@ -108,7 +108,7 @@ def regular_intervals():
     month = 3
     day = 15
     size = 100
-    te = cycle([2000, 40, 5])
+    te = cycle([5, 1000, 40])
     yoes = np.zeros(size, dtype=np.int16) + init_year
     moes = np.zeros(size, dtype=np.int8) + month
     does = np.zeros(size, dtype=np.int8) + day
