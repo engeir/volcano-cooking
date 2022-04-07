@@ -90,7 +90,8 @@ def random_dates(
 def regular_intervals():
     """Create dates with regular intervals.
 
-    This function creates dates with regular intervals and a pre-defined magnitude as VEI.
+    This function creates dates with regular intervals and a pre-defined magnitude as
+    VEI.
 
     Returns
     -------
@@ -103,12 +104,12 @@ def regular_intervals():
     veis: np.ndarray
         Array of length 'size' with the VEI
     """
-    year_sep = 3
+    year_sep = 2
     init_year = 1850
     month = 3
     day = 15
     size = 100
-    te = cycle([5, 1000, 40])
+    te = cycle([5, 1000, 40, 200])
     yoes = np.zeros(size, dtype=np.int16) + init_year
     moes = np.zeros(size, dtype=np.int8) + month
     does = np.zeros(size, dtype=np.int8) + day
