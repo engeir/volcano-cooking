@@ -43,7 +43,8 @@ def adjust_altitude_range(
     threshold = 3.5  # Tg
     idx = (tes > threshold) & (mxihs > 20)
     mxihs[idx] = 20
-    miihs[miihs[idx] > 18] = 18
+    # If some of the lower boundaries at `idx` are higher than 18, we set them to 18.
+    miihs[idx & (miihs > 18)] = 18
     return miihs, mxihs
 
 
