@@ -28,7 +28,8 @@ def view_forcing(
     style: str = "connected",
     dark: bool = False,
     save: bool = False,
-):
+    return_fig: bool = False,
+) -> Optional[plt.Figure]:
     """View the forcing found in the generated total emission against time.
 
     Parameters
@@ -46,6 +47,13 @@ def view_forcing(
         Plot with dark background. Defaults to False
     save: bool
         Save the plot. Defaults to False.
+    return_fig: bool
+        Return the figure. Defaults to False.
+
+    Returns
+    -------
+    plt.Figure
+        The figure of the plot.
     """
     _FIG_STD_ = cosmoplots.set_rcparams_dynamo(plt.rcParams, num_cols=width)
     t, tes = frc_datetime2float(ext, in_file)
@@ -65,7 +73,10 @@ def view_forcing(
         filename = check_dir(".png")
         plt.savefig(filename, format="png")
         print(f"Saved to: {os.path.join(os.getcwd(), filename)}")
+    if return_fig:
+        return plt.gcf()
     plt.show()
+    return None
 
 
 def frc_datetime2float(
