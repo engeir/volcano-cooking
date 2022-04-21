@@ -53,9 +53,7 @@ def view_forcing(
         plt.style.use("dark_background")
     fig = plt.figure()
     ax = fig.add_axes(_FIG_STD_)
-    if style == "connected":
-        ax.plot(t, tes, "+-", color="r")
-    elif style == "bars":
+    if style == "bars":
         ax.bar(t, tes, color="r")
     else:
         ax.plot(t, tes, "+-", color="r")
@@ -182,10 +180,7 @@ def load_forcing(
         If the extension is not either 'npz' or 'nc', no files can be found and the
         variables 'yoes', 'moes', 'does' and 'tes' cannot be found.
     """
-    if in_file is None:
-        file = fnc.find_last_output(ext)
-    else:
-        file = fnc.find_file(in_file)
+    file = fnc.find_last_output(ext) if in_file is None else fnc.find_file(in_file)
     if "npz" in ext:
         with np.load(file, "r", allow_pickle=True) as f:
             yoes = f["yoes"]
