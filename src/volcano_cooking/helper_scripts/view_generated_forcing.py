@@ -13,6 +13,7 @@ import sys
 from typing import List, Optional, Tuple
 
 import cftime
+import cosmoplots
 import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
@@ -20,7 +21,14 @@ import xarray as xr
 import volcano_cooking.helper_scripts.functions as fnc
 
 
-def view_forcing(ext: Optional[str] = None, in_file: Optional[str] = None, save=False):
+def view_forcing(
+    ext: Optional[str] = None,
+    in_file: Optional[str] = None,
+    width: int = 2,
+    style: str = "connected",
+    dark: bool = False,
+    save: bool = False,
+):
     """View the forcing found in the generated total emission against time.
 
     Parameters
@@ -28,19 +36,35 @@ def view_forcing(ext: Optional[str] = None, in_file: Optional[str] = None, save=
     ext: str
         Extension of the file type used. Valid values are 'npz' and 'nc'.
     in_file: str, optional
-        Full path (absolute or relative to where the function i called) and file name of a
-        custom file to be used.
-    save: bool, deafault=False
-        Save the plot
+        Full path (absolute or relative to where the function i called) and file name of
+        a custom file to be used.
+    width: int
+        Width of the plot in number of columns. Default is 2.
+    style: str
+        Style of the plot. Default is 'connected'.
+    dark: bool
+        Plot with dark background. Defaults to False
+    save: bool
+        Save the plot. Defaults to False.
     """
+    _FIG_STD_ = cosmoplots.set_rcparams_dynamo(plt.rcParams, num_cols=width)
     t, tes = frc_datetime2float(ext, in_file)
-    _, ax = plt.subplots(figsize=(18, 9), constrained_layout=True)
-    ax.plot(t, tes, "+-")
+    if dark:
+        plt.style.use("dark_background")
+    fig = plt.figure()
+    ax = fig.add_axes(_FIG_STD_)
+    if style == "connected":
+        ax.plot(t, tes, "+-", color="r")
+    elif style == "bars":
+        ax.bar(t, tes, color="r")
+    else:
+        ax.plot(t, tes, "+-", color="r")
     plt.xlabel("Time")
     plt.ylabel("Total Emission")
     if save:
         filename = check_dir(".png")
         plt.savefig(filename, format="png")
+        print(f"Saved to: {os.path.join(os.getcwd(), filename)}")
     plt.show()
 
 
