@@ -93,6 +93,14 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
+name = "cosmoplots"
+version = "0.1.5"
+description = "Routines to get a sane default configuration for production quality plots."
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[[package]]
 name = "coverage"
 version = "6.3.2"
 description = "Code coverage measurement for Python"
@@ -798,7 +806,7 @@ tests = ["codecov", "scikit-build", "cmake", "ninja", "pybind11", "pytest", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.11"
-content-hash = "700e64f41dc21b3dc2a6594ea0ebcfb791bc7c8f1267508100721e45a66c1988"
+content-hash = "f192c2ae08b4551e71ddd0f95e67a6cc9c41c1efb35970fbc31d78a5404a5920"
 
 [metadata.files]
 atomicwrites = [
@@ -861,6 +869,10 @@ cloudpickle = [
 colorama = [
     {file = "colorama-0.4.4-py2.py3-none-any.whl", hash = "sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2"},
     {file = "colorama-0.4.4.tar.gz", hash = "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"},
+]
+cosmoplots = [
+    {file = "cosmoplots-0.1.5-py3-none-any.whl", hash = "sha256:31da750f6bbd7798e489f0244876dff3984bb82ba8ccbe6b16ba0a9d7b14f2f2"},
+    {file = "cosmoplots-0.1.5.tar.gz", hash = "sha256:b1c3cf072bf2773c005d86ab8fe2cee62eed75879444bb0b3d017dfb7fdfc932"},
 ]
 coverage = [
     {file = "coverage-6.3.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:9b27d894748475fa858f9597c0ee1d4829f44683f3813633aaf94b19cb5453cf"},
