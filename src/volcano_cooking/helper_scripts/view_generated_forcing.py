@@ -64,7 +64,8 @@ def view_forcing(
     if style == "connected":
         ax.plot(t, tes, "+-", color="r")
     elif style == "bars":
-        ax.bar(t, tes, color="r")
+        bar_width = (t[-1] - t[0]) * 0.005
+        ax.bar(t, tes, color="r", width=bar_width)
     else:
         ax.plot(t, tes, "+-", color="r")
     plt.xlabel("Time")

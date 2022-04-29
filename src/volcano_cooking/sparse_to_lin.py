@@ -21,9 +21,10 @@ def sparse_to_lin(
 ) -> Tuple[np.ndarray, List, List]:
     """Re-sample an uneven time axis to one with linear spacing.
 
-    The function returns the new linearly spaced time axis, as well as two masks, one for
-    the original time and one for the new time, which makes them as equal as possible for
-    the given resolution (resolution is set to 12, i.e. months).
+    The function returns the new linearly spaced time axis, as well as two
+    masks, one for the original time and one for the new time, which makes them
+    as equal as possible for the given resolution (resolution is set to 12,
+    i.e. months).
 
     Parameters
     ----------
@@ -43,10 +44,11 @@ def sparse_to_lin(
     np.ndarray:
         The new linearly spaced time axis
     list:
-        Masking of the original time axis that give the time stamps we want to keep that
-        match best with the new time axis
+        Masking of the original time axis that give the time stamps we want to
+        keep that match best with the new time axis
     list:
-        Masking of the new new time axis that give the time stamps kept from the original
+        Masking of the new new time axis that give the time stamps kept from
+        the original
 
     Examples
     --------
