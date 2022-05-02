@@ -83,7 +83,19 @@ def adjust_emissions(
     ----
     Modified from script provided by Herman Fæhn Fuglestvedt and according to
     http://svn.code.sf.net/p/codescripts/code/trunk/ncl/emission/createVolcEruptV3.ncl
+
+    Raises
+    ------
+    FileNotFoundError
+        If the coordinates file cannot be found.
     """
+    file = os.path.join(
+        "data",
+        "originals",
+        "fv_1.9x2.5_L30",
+    )
+    if not os.path.exists(file + ".nc"):
+        raise FileNotFoundError(f"{file} not found. Consult README on how to download.")
     mass_threshold = 15
     idx = tes > mass_threshold
     mass_factor = 1 / 1.8  # scaling factor for large eruptions
@@ -99,7 +111,7 @@ def adjust_emissions(
     kg2g = 1000
     m_mass, fraction = (64.06, 1.0)
 
-    grid = xr.open_dataset(os.path.join("data", "originals", "fv_1.9x2.5.nc"))
+    grid = xr.open_dataset(os.path.join("data", "originals", "fv_1.9x2.5_L30.nc"))
     gw = grid["gw"]  # Latitude/Gauss weights
     nLon = len(grid["lon"])
     # nLat = len(grid["lat"])

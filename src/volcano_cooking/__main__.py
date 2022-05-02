@@ -3,7 +3,7 @@
 import os
 import ssl
 import sys
-from typing import List
+from typing import List, Optional
 
 import click
 import wget
@@ -85,13 +85,17 @@ def main(
     _init_year[: len(init_year)] = init_year
     if shift_eruption == "False":
         if option == 1:
-            file = os.path.join(
-                "data",
-                "originals",
-                "VolcanEESMv3.11_SO2_850-2016_Mscale_Zreduc_2deg_c191125.nc",
-            )
-            if not os.path.exists(file):
+            location = os.path.join(os.getcwd(), "data", "originals")
+            file = "VolcanEESMv3.11_SO2_850-2016_Mscale_Zreduc_2deg_c191125.nc"
+            if not os.path.isfile(os.path.join(location, file)):
                 get_forcing_file(file)
+            file = "fv_1.9x2.5_L30"
+            if not os.path.isfile(os.path.join(os.getcwd(), file)):
+                get_forcing_file(
+                    file,
+                    url="https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata"
+                    + "/atm/cam/coords/fv_1.9x2.5_L30.nc",
+                )
         sv.create_volcanoes(
             size=size, init_year=_init_year[0], version=frc, option=option
         )
@@ -101,20 +105,36 @@ def main(
         shift_eruption_to_date.shift_eruption_to_date(tuple(_init_year), shift_eruption)
 
 
-def get_forcing_file(file: str) -> None:
+def get_forcing_file(file: str, url: Optional[str] = None) -> None:
     """Download the original forcing file.
+
+    It will be placed in `data/originals` inside the current working directory.
 
     Parameters
     ----------
-    file : str
-        The path and filename of the file to download.
+    file: str
+        The filename the file to download will be saved as.
+    url: str, optional
+        Provide the full url for where to download the file.
     """
     here = os.path.join(os.getcwd(), "data", "originals")
     print(f"No forcing file found in {here}.")
-    query = "Do you want to download the original forcing file? (2.2GB)"
+    query = "Do you want to download the original forcing file? (2.2 GB)"
     if click.confirm(query):
-        url = "https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/chem/stratvolc/VolcanEESMv3.11_SO2_850-2016_Mscale_Zreduc_2deg_c191125.nc"
+        url_ = (
+            "https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/chem"
+            + "/stratvolc/VolcanEESMv3.11_SO2_850-2016_Mscale_Zreduc_2deg_c191125.nc"
+        )
+        url = url_ if url is None else url
         ssl._create_default_https_context = ssl._create_unverified_context
-        wget.download(url, os.path.join(os.getcwd(), file))
+        wget.download(url, os.path.join(here, file))
+        if os.path.isfile(os.path.join(here, file)):
+            print(f"Successfully downloaded {os.path.join(here, file)}.")
+        else:
+            sys.exit(
+                "Failed to place the file in the correct directory. "
+                + f"You may check if the file '{file}' was downloaded somewhere else, "
+                + f"and if so place it in {here}."
+            )
     else:
-        sys.exit("Not downloading file. Exiting gracefully.")
+        sys.exit("Okay, I won't download it. Exiting gracefully.")
