@@ -89,12 +89,13 @@ def main(
             file = "VolcanEESMv3.11_SO2_850-2016_Mscale_Zreduc_2deg_c191125.nc"
             if not os.path.isfile(os.path.join(location, file)):
                 get_forcing_file(file)
-            file = "fv_1.9x2.5_L30"
+            file = "fv_1.9x2.5_L30.nc"
             if not os.path.isfile(os.path.join(os.getcwd(), file)):
                 get_forcing_file(
                     file,
                     url="https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata"
                     + "/atm/cam/coords/fv_1.9x2.5_L30.nc",
+                    not_forcing=True,
                 )
         sv.create_volcanoes(
             size=size, init_year=_init_year[0], version=frc, option=option
@@ -105,7 +106,9 @@ def main(
         shift_eruption_to_date.shift_eruption_to_date(tuple(_init_year), shift_eruption)
 
 
-def get_forcing_file(file: str, url: Optional[str] = None) -> None:
+def get_forcing_file(
+    file: str, url: Optional[str] = None, not_forcing: bool = False
+) -> None:
     """Download the original forcing file.
 
     It will be placed in `data/originals` inside the current working directory.
@@ -116,10 +119,13 @@ def get_forcing_file(file: str, url: Optional[str] = None) -> None:
         The filename the file to download will be saved as.
     url: str, optional
         Provide the full url for where to download the file.
+    not_forcing: bool
+        If some other file is downloaded, use generic text without file size warning.
     """
     here = os.path.join(os.getcwd(), "data", "originals")
-    print(f"No forcing file found in {here}.")
-    query = "Do you want to download the original forcing file? (2.2 GB)"
+    print(f"{file} was not found in {here}.")
+    query_ = "Do you want to download the original forcing file? (2.2 GB)"
+    query = f"Do you want to download '{file}'?" if not_forcing else query_
     if click.confirm(query):
         url_ = (
             "https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/chem"
@@ -128,6 +134,7 @@ def get_forcing_file(file: str, url: Optional[str] = None) -> None:
         url = url_ if url is None else url
         ssl._create_default_https_context = ssl._create_unverified_context
         wget.download(url, os.path.join(here, file))
+        print("")
         if os.path.isfile(os.path.join(here, file)):
             print(f"Successfully downloaded {os.path.join(here, file)}.")
         else:
