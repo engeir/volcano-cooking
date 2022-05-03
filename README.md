@@ -123,7 +123,7 @@ placed in a directory named `source-files` with command:
 sh _script/package_last.sh
 ```
 
-#### Setting up manually
+<details><summary><h4>Setting up manually</h4></summary><br><ul>
 
 To be able to create forcing files used by CESM2 from the newly created synthetic file,
 we need a script from the [emissions][data_source_files] directory. These are scripts
@@ -148,34 +148,6 @@ wget --no-check-certificate https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputd
 wget --no-check-certificate https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/coords/fv_1.9x2.5_L30.nc --directory-prefix data/originals
 ```
 
-<details><summary><i><b>Directory tree</b></i></summary><br><ul>
-
-```code
-.
-├── data
-│   ├── originals
-│   │   ├── createVolcEruptV3.ncl
-│   │   ├── createVolcEruptV3.ncl.original
-│   │   ├── fv_0.9x1.25_L30.nc
-│   │   ├── fv_1.9x2.5_L30.nc
-│   │   └── volcan-eesm_global_2015_so2-emissions-database_v1.0.nc
-│   └── output
-│       ├── synthetic_volcanoes_20211126_1128.nc
-│       └── synthetic_volcanoes_20211126_1128.npz
-├── LICENSE
-├── poetry.lock
-├── pyproject.toml
-├── README.md
-├── _script
-│   ├── create_cesm_frc.sh
-│   └── package_last.sh
-├── setup.cfg
-├── src
-│   └── ...
-└── tests
-    └── ...
-```
-
 </ul></details>
 
 ### Option 1 (directly change forcing file)
@@ -196,7 +168,7 @@ choose the type of forcing we want (see `volcano-cooking --lst`):
 volcano-cooking -f 1 -s 100 -o
 ```
 
-#### Get forcing and coordinate files manually
+<details><summary><h4>Get forcing and coordinate files manually</h4></summary><br><ul>
 
 > Manually downloading the files and placing them in the correct directory is *not*
 > needed. Running the command as shown above will ask you if you want to download the
@@ -220,6 +192,8 @@ We will also need a coordinate file, specifically `fv_1.9x2.5_L30.nc` which is f
 wget --no-check-certificate https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/coords/fv_0.9x1.25_L30.nc --directory-prefix data/originals
 wget --no-check-certificate https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/coords/fv_1.9x2.5_L30.nc --directory-prefix data/originals
 ```
+
+</ul></details>
 
 ## Extra
 
