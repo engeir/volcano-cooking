@@ -61,8 +61,6 @@ volcano-cooking --help
 view-frc --help
 ```
 
-## Creating complete forcing files
-
 ### Option 0 (default, using NCL-script)
 
 #### TL;DR
@@ -90,6 +88,14 @@ $ ls source-files
 20220502-140022.log                     VolcanEESMv3.11Enger_SO2_850-2016_Mscale_Zreduc_2deg_c20220502-140023.nc
 synthetic_volcanoes_20220502_135956.nc  synthetic_volcanoes_20220502_135956.npz
 ```
+
+#### Dependencies
+
+This option needs
+
+- `volcano-cooking` installed
+- A coordinate file (~ 10 kB)
+- [`ncl`](https://www.ncl.ucar.edu/Download/) executable
 
 #### Create source file for forcing
 
@@ -158,6 +164,14 @@ wget --no-check-certificate https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputd
 $ volcano-cooking -f 1 -s 100 -o
 Generating with 'GenerateFPP'...
 ```
+
+#### Dependencies
+
+This option needs
+
+- `volcano-cooking` installed
+- A coordinate file (~ 10 kB)
+- Original CESM2 forcing file (~ 2.2 GB)
 
 #### Run library
 
