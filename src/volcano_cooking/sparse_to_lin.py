@@ -74,6 +74,8 @@ def sparse_to_lin(
     mask = abs(t[None, :] - t_i[:, None]).argmin(axis=0)
     _, mask_idx = np.unique(mask, return_index=True)
     mask_sections = [mask[m : mask_idx[i + 1]] for i, m in enumerate(mask_idx[:-1])]
+    if len(mask_sections) == 0:
+        return t_i, [], []
     mask_sections.append(mask[mask_idx[-1] :])
     # Now we find the indices of `t` that we want to keep. `c` works as the index of the
     # first item in each array inside mask_sections
