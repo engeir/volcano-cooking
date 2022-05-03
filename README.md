@@ -123,7 +123,7 @@ placed in a directory named `source-files` with command:
 sh _script/package_last.sh
 ```
 
-<details><summary><h4>Setting up manually</h4></summary><br><ul>
+<details><summary><h4>Setting up manually</h4></summary><br>
 
 To be able to create forcing files used by CESM2 from the newly created synthetic file,
 we need a script from the [emissions][data_source_files] directory. These are scripts
@@ -148,7 +148,7 @@ wget --no-check-certificate https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputd
 wget --no-check-certificate https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/coords/fv_1.9x2.5_L30.nc --directory-prefix data/originals
 ```
 
-</ul></details>
+</details>
 
 ### Option 1 (directly change forcing file)
 
@@ -168,7 +168,7 @@ choose the type of forcing we want (see `volcano-cooking --lst`):
 volcano-cooking -f 1 -s 100 -o
 ```
 
-<details><summary><h4>Get forcing and coordinate files manually</h4></summary><br><ul>
+<details><summary><h4>Get forcing and coordinate files manually</h4></summary><br>
 
 > Manually downloading the files and placing them in the correct directory is *not*
 > needed. Running the command as shown above will ask you if you want to download the
@@ -193,7 +193,7 @@ wget --no-check-certificate https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputd
 wget --no-check-certificate https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/coords/fv_1.9x2.5_L30.nc --directory-prefix data/originals
 ```
 
-</ul></details>
+</details>
 
 ## Extra
 
