@@ -94,7 +94,7 @@ def adjust_emissions(
         "originals",
         "fv_1.9x2.5_L30",
     )
-    if not os.path.exists(file + ".nc"):
+    if not os.path.exists(f"{file}.nc"):
         raise FileNotFoundError(f"{file} not found. Consult README on how to download.")
     mass_threshold = 15
     idx = tes > mass_threshold
