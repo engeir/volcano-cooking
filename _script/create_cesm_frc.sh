@@ -7,6 +7,7 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 BOLD=$(tput bold)
 NORM=$(tput sgr0)
+COORDS_REMOTE="https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/coords/"
 
 ## Global
 export DATA_ORIG="data/originals"
@@ -15,15 +16,12 @@ export DATA_OUT="data/cesm"
 mkdir -p "$DATA_OUT"
 # export NCL_SCRIPT="createVolcEruptV3.1piControl.ncl"
 export NCL_SCRIPT="createVolcEruptV3.ncl"
-export COORDS1DEG="$DATA_ORIG/fv_0.9x1.25_L30.nc"
-# export COORDS2DEG="$DATA_ORIG/fv_1.9x2.5_L30.nc"
-export COORDS2DEG="$DATA_ORIG/coords_1.9x2.5_L88_c150828-copy.nc"
-# export COORDS2DEG="$DATA_ORIG/fv_1.9x2.5_L30-cdf5.nc"
-# export COORDS2DEG="$DATA_ORIG/fv_1.9x2.5_L26.nc"
-# export COORDS2DEG="$DATA_ORIG/fv_1.9x2.5.nc"
-# export COORDS2DEG="$DATA_ORIG/fv_1.9x2.5_nc3000_Nsw084_Nrs016_Co120_Fi001_ZR_GRNL_031819.nc"
+COORDS1DEG_FILE="fv_0.9x1.25_L30.nc"
+COORDS2DEG_FILE="fv_1.9x2.5_L30.nc"
+export COORDS1DEG="$DATA_ORIG/$COORDS1DEG_FILE"
+export COORDS2DEG="$DATA_ORIG/$COORDS2DEG_FILE"
+# export COORDS2DEG="$DATA_ORIG/coords_1.9x2.5_L88_c150828-copy.nc"
 SYNTH_FILE=$(find "$DATA_SYNTH" -name "*.nc" -type f -printf '%T@ %p\n' | sort -n | tail -1 | cut -f2- -d" ")
-# SYNTH_FILE="./data/originals/volcan-eesm_global_2015_so2-emissions-database_v1.0.nc"
 export SYNTH_FILE
 SYNTH_FILE_DIR=$(dirname "$SYNTH_FILE")
 export SYNTH_FILE_DIR
@@ -46,11 +44,13 @@ if ! [ -e "$DATA_ORIG/$NCL_SCRIPT" ]; then
 fi
 if ! [ -e "$COORDS1DEG" ]; then
     echo "Cannot find 1deg coordinate file."
-    exit 1
+    python -c "from volcano_cooking.__main__ import get_forcing_file;get_forcing_file('$COORDS1DEG_FILE', url='$COORDS_REMOTE$COORDS1DEG_FILE', not_forcing=True)"
+    [ -e "$COORDS1DEG" ] || exit 1
 fi
 if ! [ -e "$COORDS2DEG" ]; then
     echo "Cannot find 2deg coordinate file."
-    exit 1
+    python -c "from volcano_cooking.__main__ import get_forcing_file;get_forcing_file('$COORDS2DEG_FILE', url='$COORDS_REMOTE$COORDS2DEG_FILE', not_forcing=True)"
+    [ -e "$COORDS2DEG" ] || exit 1
 fi
 if ! type "ncl" >/dev/null; then
     echo "Cannot find ncl executable"
