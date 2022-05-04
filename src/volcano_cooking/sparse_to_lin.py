@@ -71,7 +71,9 @@ def sparse_to_lin(
     # Find indices in `t_i` that are closest to `t`. If one element in `t_i` is closest
     # to two or more elements in `t`, only the one closest in `t` is kept (avoid
     # repetition of indices).
-    mask = abs(t[None, :] - t_i[:, None]).argmin(axis=0)
+    # Make `t` a row vector (1, N) and `t_i` a column vector (M, 1), compute the
+    # absolute difference -> (M, N) and pick the minimum along N -> (N,)
+    mask = np.abs(t[None, :] - t_i[:, None]).argmin(axis=0)
     _, mask_idx = np.unique(mask, return_index=True)
     mask_sections = [mask[m : mask_idx[i + 1]] for i, m in enumerate(mask_idx[:-1])]
     if len(mask_sections) == 0:
@@ -226,4 +228,4 @@ def example() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    example()
