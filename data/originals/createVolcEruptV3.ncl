@@ -23,7 +23,7 @@ MassFactor = 1/1.8 ; scaling factor for large eruptions
 ;=========================================
 FirstYear = 850
 ;LastYear  = 1849
-doMassScaling = True
+doMassScaling = False
 doAltReduction = True
 altSO2thresh = 3.5 ; threshold (Tg) for altitude reduction to 18-20 km
 ;res="2deg"
