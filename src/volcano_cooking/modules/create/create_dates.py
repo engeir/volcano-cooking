@@ -35,8 +35,8 @@ def single_date_and_emission(
     yoes = np.array([init_year - 1, init_year + 2, init_year + 100], dtype=np.int16)
     moes = np.array([1, 1, 1], dtype=np.int8)
     does = np.array([15, 15, 15], dtype=np.int8)
-    veis = np.array([1, 7, 1], dtype=np.int8)
-    return yoes, moes, does, veis
+    tes = np.array([1, 400, 1], dtype=np.float32)
+    return yoes, moes, does, tes
 
 
 def random_dates(
