@@ -4,6 +4,8 @@ This implements a wrapper for a function to be able to use it as a stand-alone p
 takes a filename as a mandatory input parameter.
 """
 
+import sys
+
 import click
 
 import volcano_cooking.helper_scripts.view_generated_forcing as v
@@ -60,5 +62,5 @@ def main(
         print(f"Available styles: {styles}")
         return
     if style not in styles:
-        raise ValueError(f"Style {style} not available. Available styles: {styles}")
+        sys.exit(f"Style '{style}' not available. Available styles: {styles}")
     v.view_forcing(in_file=filename, width=width, style=style, dark=dark, save=save)
