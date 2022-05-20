@@ -104,6 +104,10 @@ def main(
     if run_ncl:
         # subprocess.call(["sh", os.getcwd()])
         print(["sh", os.getcwd()])
+        this_file = os.path.dirname(os.path.abspath(__file__))
+        shell_file = f"{this_file}/create_cesm_frc.sh"
+        print(shell_file)
+        print(os.path.isfile(shell_file))
         return
     if package_last:
         # subprocess.call(["sh", os.getcwd()])
