@@ -27,6 +27,7 @@ def add_attributes() -> None:
     if not os.path.exists(new_path):
         raise FileNotFoundError(f"Cannot find file named {new_path}.")
     orig_path = os.path.join(
+        os.getcwd(),
         "data",
         "originals",
         "VolcanEESMv3.11_SO2_850-2016_Mscale_Zreduc_2deg_c191125.nc",
