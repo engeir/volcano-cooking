@@ -2,6 +2,7 @@
 
 import os
 import ssl
+import subprocess
 import sys
 from typing import List, Optional
 
@@ -102,16 +103,16 @@ def main(
             print(f"{cl}: {sv.__GENERATORS__[cl].__name__}")
         return
     if run_ncl:
-        # subprocess.call(["sh", os.getcwd()])
-        print(["sh", os.getcwd()])
-        this_file = os.path.dirname(os.path.abspath(__file__))
-        shell_file = f"{this_file}/create_cesm_frc.sh"
-        print(shell_file)
-        print(os.path.isfile(shell_file))
+        this_dir = os.path.dirname(os.path.abspath(__file__))
+        shell_file = f"{this_dir}/create_cesm_frc.sh"
+        print(["sh", shell_file])
+        subprocess.call(["sh", shell_file])
         return
     if package_last:
-        # subprocess.call(["sh", os.getcwd()])
-        print(["sh", os.getcwd()])
+        this_dir = os.path.dirname(os.path.abspath(__file__))
+        shell_file = f"{this_dir}/package_last.sh"
+        print(["sh", shell_file])
+        subprocess.call(["sh", shell_file])
         return
     _init_year = [1850, 1, 15]
     _init_year[: len(init_year)] = init_year
