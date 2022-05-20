@@ -155,7 +155,8 @@ def get_forcing_file(
     not_forcing: bool
         If some other file is downloaded, use generic text without file size warning.
     """
-    here = os.path.join(os.getcwd(), "data", "originals")
+    # here = os.path.join(os.getcwd(), "data", "originals")
+    here = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
     print(f"{file} was not found in {here}.")
     query_ = "Do you want to download the original forcing file? (2.2 GB)"
     query = f"Do you want to download '{file}'?" if not_forcing else query_
