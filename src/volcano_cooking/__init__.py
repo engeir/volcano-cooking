@@ -1,2 +1,2 @@
 # src/volcano_cooking/__init__.py
-__version__ = "0.7.0-alpha.7"
+__version__ = "0.7.0-alpha.8"
