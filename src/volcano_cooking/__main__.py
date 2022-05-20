@@ -104,9 +104,9 @@ def main(
         return
     if run_ncl:
         this_dir = os.path.dirname(os.path.abspath(__file__))
-        shell_file = f"{this_dir}/create_cesm_frc.sh {this_dir}"
+        shell_file = f"{this_dir}/create_cesm_frc.sh"
         print(["sh", shell_file])
-        subprocess.call(["sh", shell_file])
+        subprocess.call(["sh", shell_file, this_dir])
         return
     if package_last:
         this_dir = os.path.dirname(os.path.abspath(__file__))
