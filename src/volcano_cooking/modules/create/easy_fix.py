@@ -15,6 +15,8 @@ import sys
 
 import xarray as xr
 
+from volcano_cooking.__main__ import get_forcing_file
+
 
 def add_attributes() -> None:
     # Read from standard input
@@ -29,7 +31,10 @@ def add_attributes() -> None:
         "originals",
         "VolcanEESMv3.11_SO2_850-2016_Mscale_Zreduc_2deg_c191125.nc",
     )
-
+    location = os.path.join(os.getcwd(), "data", "originals")
+    file = "VolcanEESMv3.11_SO2_850-2016_Mscale_Zreduc_2deg_c191125.nc"
+    if not os.path.isfile(os.path.join(location, file)):
+        get_forcing_file(file)
     f_orig = xr.open_dataset(orig_path, decode_times=False)
     f_new = xr.open_dataset(new_path, decode_times=False)
 
