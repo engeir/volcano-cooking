@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "volcano-cooking"
-version = "0.7.0-alpha.6"
+version = "0.7.0-alpha.7"
 description = "Make some volcanoes and simulate them in CESM2"
 authors = ["engeir <eirroleng@gmail.com>"]
 license = "GPL-3.0"

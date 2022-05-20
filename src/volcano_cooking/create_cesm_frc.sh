@@ -106,7 +106,7 @@ if ! python -c "import xarray" >/dev/null 2>&1; then
     echo "$XRMSG"
     exit 1
 fi
-echo "$new_file" | python src/volcano_cooking/modules/create/easy_fix.py
+echo "$new_file" | python "$THIS_DIR"/modules/create/easy_fix.py
 
 # Make it a `cdf5` compatible file.
 rm "$new_file"
