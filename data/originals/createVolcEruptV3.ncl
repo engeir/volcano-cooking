@@ -649,7 +649,8 @@ if (savefile) then
   globalAtt@input_method = "SERIAL" ; used per file if others are INTERP_MISSING_MONTHS
   globalAtt@data_script = nl+\
        "Converted from data_source_files by program "+get_script_name()+nl+\
-       "SVN path: https://svn.code.sf.net/p/codescripts/code/trunk/ncl/emission"
+       "SVN path to original: https://svn.code.sf.net/p/codescripts/code/trunk/ncl/emission"+nl+\
+       "Edited version found in repository: https://github.com/engeir/volcano-cooking"
   globalAtt@cesm_contact = nl+\
       "Mike Mills, NCAR ACOM, mmills@ucar.edu"
   globalAtt@creation_date     = nl+\
@@ -664,13 +665,15 @@ if (savefile) then
       "     for Earth System Models): Volcanic sulphur dioxide (SO2) emissions"+nl+\
       "     database from 1850 to present. Centre for Environmental Data Analysis"
   globalAtt@data_source_url    = nl+\
-      "http://catalogue.ceda.ac.uk/uuid/bfbd5ec825fa422f9a858b14ae7b2a0d"
+      "http://catalogue.ceda.ac.uk/uuid/bfbd5ec825fa422f9a858b14ae7b2a0d"+nl+\
+      "This file was generated from volcano-cooking at https://github.com/engeir/volcano-cooking"
   globalAtt@data_doi    = nl+\
       "10.5285/76ebdc0b-0eed-4f70-b89e-55e606bcd568"
   globalAtt@data_creator = nl+\
       "Ryan Neely, University of Leeds, UK, earrn@leeds.ac.uk, eruption database for 850-1976"+nl+\
       "Anja Schmidt University of Leeds, UK, a.schmidt@leeds.ac.uk, eruption database for 1977-present"+nl+\
-      "Mike Mills, NCAR ACOM, mmills@ucar.edu"
+      "Mike Mills, NCAR ACOM, mmills@ucar.edu"+nl+\
+      "Eirik Rolland Enger, University of Tromsø, eirik.r.enger@uit.no, synthetic eruption database"
   globalAtt@title = nl+\
       "SO2 emissions from stratospheric volcanoes, "+inYear(0)+"."+inMonth(0)+"."+inDay(0)+"-"\
         +inYear(tv)+"."+inMonth(tv)+"."+inDay(tv)
