@@ -14,7 +14,7 @@ DATA_ORIG="data/originals"
 export DATA_SYNTH="data/output"
 export DATA_OUT="data/cesm"
 mkdir -p "$DATA_OUT"
-THIS_DIR=$(python -c "os.path.dirname(os.path.abspath(__file__))")
+THIS_DIR=$(python -c "import os; os.path.dirname(os.path.abspath(__file__))")
 export NCL_SCRIPT="createVolcEruptV3.ncl"
 COORDS1DEG_FILE="fv_0.9x1.25_L30.nc"
 COORDS2DEG_FILE="fv_1.9x2.5_L30.nc"
