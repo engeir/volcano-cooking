@@ -64,7 +64,7 @@ def create_volcanoes(
     IndexError
         If `version` is not a valid index of the generator dictionary.
     """
-    # CREATE DATA ---------------------------------------------------------------------- #
+    # CREATE DATA -------------------------------------------------------------------- #
 
     if version not in __GENERATORS__ or version < 0:
         raise IndexError(
@@ -76,7 +76,7 @@ def create_volcanoes(
     g.generate()
     all_arrs = g.get_arrays()
 
-    # CREATE NETCDF FILE AND SAVE ------------------------------------------------------ #
+    # CREATE NETCDF FILE AND SAVE ---------------------------------------------------- #
 
     frc_cls = create.ReWrite(*all_arrs) if option == 1 else create.Data(*all_arrs)
     frc_cls.make_dataset()

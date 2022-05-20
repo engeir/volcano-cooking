@@ -10,17 +10,16 @@ NORM=$(tput sgr0)
 COORDS_REMOTE="https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/coords/"
 
 ## Global
-export DATA_ORIG="data/originals"
+DATA_ORIG="data/originals"
 export DATA_SYNTH="data/output"
 export DATA_OUT="data/cesm"
 mkdir -p "$DATA_OUT"
-# export NCL_SCRIPT="createVolcEruptV3.1piControl.ncl"
+THIS_DIR="$1"
 export NCL_SCRIPT="createVolcEruptV3.ncl"
 COORDS1DEG_FILE="fv_0.9x1.25_L30.nc"
 COORDS2DEG_FILE="fv_1.9x2.5_L30.nc"
 export COORDS1DEG="$DATA_ORIG/$COORDS1DEG_FILE"
 export COORDS2DEG="$DATA_ORIG/$COORDS2DEG_FILE"
-# export COORDS2DEG="$DATA_ORIG/coords_1.9x2.5_L88_c150828-copy.nc"
 SYNTH_FILE=$(find "$DATA_SYNTH" -name "*.nc" -type f -printf '%T@ %p\n' | sort -n | tail -1 | cut -f2- -d" ")
 export SYNTH_FILE
 SYNTH_FILE_DIR=$(dirname "$SYNTH_FILE")
@@ -38,7 +37,7 @@ if [ -z "$SYNTH_FILE" ]; then
     echo "Cannot find synthetic volcano forcing file. Generate with 'volcano-cooking'."
     exit 1
 fi
-if ! [ -e "$DATA_ORIG/$NCL_SCRIPT" ]; then
+if ! [ -e "$THIS_DIR/$NCL_SCRIPT" ]; then
     echo "Cannot find file '$NCL_SCRIPT'."
     exit 1
 fi
@@ -78,7 +77,7 @@ res=$res
 Running NCL script...
 " >"$DATA_OUT"/logs/"$current_day".log
 
-ncl "$DATA_ORIG/$NCL_SCRIPT" 2>&1 | tee -a "$DATA_OUT"/logs/"$current_day".log
+ncl "$THIS_DIR/$NCL_SCRIPT" 2>&1 | tee -a "$DATA_OUT"/logs/"$current_day".log
 echo "$GREEN${BOLD}Log file created at ""$DATA_OUT/logs/""$current_day.log$NORM"
 # The file need to be in NetCDF3 format. Could specify this in the ncl script, but the
 # nccopy command seems to support more formats, so perhaps it is better to use that(?).
@@ -107,7 +106,7 @@ if ! python -c "import xarray" >/dev/null 2>&1; then
     echo "$XRMSG"
     exit 1
 fi
-echo "$new_file" | python src/volcano_cooking/modules/create/easy_fix.py
+echo "$new_file" | python "$THIS_DIR"/modules/create/easy_fix.py
 
 # Make it a `cdf5` compatible file.
 rm "$new_file"

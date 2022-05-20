@@ -2,6 +2,7 @@
 
 import os
 import ssl
+import subprocess
 import sys
 from typing import List, Optional
 
@@ -69,6 +70,24 @@ from volcano_cooking import __version__
     help="Shift eruptions of provided file to 'init_year'. "
     + "If no file is provided, the last created file is used.",
 )
+@click.option(
+    "--run-ncl",
+    "run_ncl",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    type=bool,
+    help="Run the shell script that generate forcing from emission file.",
+)
+@click.option(
+    "--package-last",
+    "package_last",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    type=bool,
+    help="Move all last created files to a 'source-file' directory.",
+)
 def main(
     frc: int,
     init_year: List[int],
@@ -76,10 +95,22 @@ def main(
     lst: bool,
     option: int,
     shift_eruption: str,
+    run_ncl: bool,
+    package_last: bool,
 ) -> None:
     if lst:
         for cl in sv.__GENERATORS__:
             print(f"{cl}: {sv.__GENERATORS__[cl].__name__}")
+        return
+    if run_ncl:
+        this_dir = os.path.dirname(os.path.abspath(__file__))
+        shell_file = f"{this_dir}/create_cesm_frc.sh"
+        subprocess.call(["sh", shell_file, this_dir])
+        return
+    if package_last:
+        this_dir = os.path.dirname(os.path.abspath(__file__))
+        shell_file = f"{this_dir}/package_last.sh"
+        subprocess.call(["sh", shell_file])
         return
     _init_year = [1850, 1, 15]
     _init_year[: len(init_year)] = init_year
@@ -123,6 +154,7 @@ def get_forcing_file(
         If some other file is downloaded, use generic text without file size warning.
     """
     here = os.path.join(os.getcwd(), "data", "originals")
+    os.makedirs(here, exist_ok=True)
     print(f"{file} was not found in {here}.")
     query_ = "Do you want to download the original forcing file? (2.2 GB)"
     query = f"Do you want to download '{file}'?" if not_forcing else query_

@@ -2,7 +2,6 @@
 
 Notes
 -----
-
 This script is run from the shell script `create_cesm_frc.sh`, but can be run manually as
 ```python
 echo <input-file> | python src/volcano_cooking/modules/create/easy_fix.py
@@ -24,17 +23,15 @@ def add_attributes() -> None:
         raise TypeError(f"Are you sure {new_path} is a valid netCDF file?")
     if not os.path.exists(new_path):
         raise FileNotFoundError(f"Cannot find file named {new_path}.")
-    orig_path = os.path.join(
-        "data",
-        "originals",
-        "VolcanEESMv3.11_SO2_850-2016_Mscale_Zreduc_2deg_c191125.nc",
-    )
 
-    f_orig = xr.open_dataset(orig_path, decode_times=False)
     f_new = xr.open_dataset(new_path, decode_times=False)
 
     f_new["altitude_int"] = f_new["altitude_int"].assign_attrs(
-        **f_orig["altitude_int"].attrs
+        **{
+            "standard_name": "altitude interval",
+            "units": "km",
+            "long_name": "altitude interval",
+        }
     )
     encoding = {
         "lat": {"_FillValue": None},
