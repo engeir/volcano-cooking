@@ -59,8 +59,9 @@ def create_synthetic_file() -> None:
 
     # CREATE NETCDF FILE AND SAVE ---------------------------------------------------- #
     # The `-o` option you can provide to `volcano-cooking` decides whether to create
-    # with `create.Data` or with `create.ReWrite`. `create.Data` is the default (in
-    # `volcano-cooking`) and what I have used successfully.
+    # with `create.ReWrite` or with `create.Data`. `create.Data` is the default (in
+    # `volcano-cooking`) and what I mostly use. You use `create.ReWrite` if you use the
+    # `-o` option.
     option = 0
     frc_cls = create.ReWrite(*all_arrs) if option == 1 else create.Data(*all_arrs)
     frc_cls.make_dataset()
@@ -70,5 +71,6 @@ def create_synthetic_file() -> None:
 if __name__ == "__main__":
     # Now, running this script will generate a new synthetic file with the same
     # properties as if you ran `volcano-cooking` using the `GenerateRegularIntervals`
-    # class.
+    # class, i.e., it is equivalent to:
+    # `volcano-cooking -f 3 -s 100 -init 1850`
     create_synthetic_file()
