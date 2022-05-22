@@ -21,6 +21,10 @@ and their frequency.
 
 The package is published on [PyPI] and installable via `pip`:
 
+```bash
+pip install volcano-cooking
+```
+
 To contribute to the project, clone and install the full development version (uses
 [poetry] for dependencies):
 
