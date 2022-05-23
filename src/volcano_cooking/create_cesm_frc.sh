@@ -29,7 +29,12 @@ SYNTH_EXT="${SYNTH_FILE_BASE##*.}"
 SYNTH_BASE="${SYNTH_FILE_BASE%.*}"
 export SYNTH_BASE
 export SYNTH_EXT
-export res="2deg"
+export RES="2deg"
+
+# Check if an .env file exists and load from it.
+if [ -f .env ]; then
+    export "$(xargs < .env)"
+fi
 
 # Check availability
 
@@ -41,12 +46,12 @@ if ! [ -e "$THIS_DIR/$NCL_SCRIPT" ]; then
     echo "Cannot find file '$NCL_SCRIPT'."
     exit 1
 fi
-if ! [ -e "$COORDS1DEG" ]; then
+if ! [ -e "$COORDS1DEG" ] && [ "$RES" = "1deg" ]; then
     echo "Cannot find 1deg coordinate file."
     python -c "from volcano_cooking.__main__ import get_forcing_file;get_forcing_file('$COORDS1DEG_FILE', url='$COORDS_REMOTE$COORDS1DEG_FILE', not_forcing=True)"
     [ -e "$COORDS1DEG" ] || exit 1
 fi
-if ! [ -e "$COORDS2DEG" ]; then
+if ! [ -e "$COORDS2DEG" ] && [ "$RES" = "2deg" ]; then
     echo "Cannot find 2deg coordinate file."
     python -c "from volcano_cooking.__main__ import get_forcing_file;get_forcing_file('$COORDS2DEG_FILE', url='$COORDS_REMOTE$COORDS2DEG_FILE', not_forcing=True)"
     [ -e "$COORDS2DEG" ] || exit 1
@@ -72,7 +77,7 @@ SYNTH_FILE=$SYNTH_FILE
 SYNTH_FILE_DIR=$SYNTH_FILE_DIR
 SYNTH_BASE=$SYNTH_BASE
 SYNTH_EXT=$SYNTH_EXT
-res=$res
+RES=$RES
 
 Running NCL script...
 " >"$DATA_OUT"/logs/"$current_day".log

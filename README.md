@@ -78,6 +78,14 @@ volcano-cooking --help
 view-frc --help
 ```
 
+When running the command `volcano-cooking --run-ncl`, a few environment variables will
+be used, which can be controlled by setting them in a `.env` file. See
+[`.env.example`](./.env.example) to see some default values. With this you can for
+example easily change the grid resolution to be `1deg` rather than `2deg` (default).
+
+If you want to change this to an even grater extent, you may be able to set this in the
+`.env` file, otherwise fork the repo and make your own version!
+
 ### Option 0 (default, using NCL-script)
 
 #### TL;DR
@@ -133,10 +141,8 @@ volcano-cooking --run-ncl
 
 If the needed coordinate files are missing, you will be asked if you want to download
 them. If you want to use different files, or change the default resolution (default is 2
-degrees), edit
-[src/volcano_cooking/create_cesm_frc.sh](src/volcano_cooking/create_cesm_frc.sh)
-accordingly (need the repository installed). In this case, you also need to manually
-download whatever coordinate file you want to use. See section [Setting up
+degrees), edit [.env](./.env.example) accordingly. In this case, you also need to
+manually download whatever coordinate file you want to use. See section [Setting up
 manually](#setting-up-manually).
 
 #### Wrap up
