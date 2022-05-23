@@ -5,7 +5,7 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/shea_util.ncl"
 
 print("in "+get_script_name())
 
-res=getenv("res")
+res=getenv("RES")
 
 ;=========================================
 ; Setup for CMIP6 1850-2016
