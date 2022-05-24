@@ -1,6 +1,6 @@
 """Test cases for module synthetic_volcanoes."""
 
-import datetime
+import glob
 import os
 
 import pytest
@@ -33,11 +33,12 @@ def test_create_volcaoes(runner: CliRunner) -> None:
         r = len(synthetic_volcanoes.__GENERATORS__)
         for v in range(r):
             d = os.path.join("data", "output")
-            now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-            out_npz = os.path.join(os.getcwd(), d, f"synthetic_volcanoes_{now}.npz")
-            out_nc = os.path.join(os.getcwd(), d, f"synthetic_volcanoes_{now}.nc")
+            out_npz = os.path.join(os.getcwd(), d, "synthetic_volcanoes_*.npz")
+            out_nc = os.path.join(os.getcwd(), d, "synthetic_volcanoes_*.nc")
             synthetic_volcanoes.create_volcanoes(version=v)
-            assert os.path.isfile(out_nc)
-            assert os.path.isfile(out_npz)
-            os.remove(out_nc)
-            os.remove(out_npz)
+            created_npz = glob.glob(out_npz)[0]
+            created_nc = glob.glob(out_nc)[0]
+            assert os.path.isfile(created_nc)
+            assert os.path.isfile(created_npz)
+            os.remove(created_nc)
+            os.remove(created_npz)
