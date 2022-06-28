@@ -316,8 +316,9 @@ class Generate(ABC):
         maximum injection heights.
         """
         self.gen_dates_totalemission_vei()
-        # Shift first eruption to occur before initial year
-        self.yoes -= abs(self.init_year - self.yoes[0]) + 1
+        if self.file is None:
+            # Shift first eruption to occur before initial year
+            self.yoes -= abs(self.init_year - self.yoes[0]) + 1
         if len(self.veis) != self.size:
             self.size = len(self.veis)
         self._gen_rest()

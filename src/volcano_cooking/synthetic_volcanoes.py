@@ -82,6 +82,12 @@ def create_volcanoes(
         )
     if file is not None:
         print(f"Generating with '{__GENERATORS__[4].__name__}'...")
+        print(
+            "WARNING: When generating with this option, eruptions are not shifted to "
+            + "have one eruption prior to the first simulation year. Add an extra "
+            + "eruption at an early (and late) time that you know will cover the whole "
+            + "simulation you are planning."
+        )
         g = __GENERATORS__[4](size, init_year, file)
     else:
         print(f"Generating with '{__GENERATORS__[version].__name__}'...")
