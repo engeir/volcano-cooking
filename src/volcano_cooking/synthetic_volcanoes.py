@@ -7,6 +7,8 @@ eruption.
 The lat/lon location is also included, but considered unimportant and thus the
 same location is used for all volcanoes.
 """
+from typing import Optional
+
 import volcano_cooking.modules.create as create
 
 # ====================================================================================== #
@@ -37,11 +39,16 @@ __GENERATORS__ = {
     1: create.GenerateFPP,
     2: create.GenerateSingleVolcano,
     3: create.GenerateRegularIntervals,
+    4: create.GenerateFromFile,
 }
 
 
 def create_volcanoes(
-    size: int = 251, init_year: int = 1850, version: int = 0, option: int = 0
+    size: int = 251,
+    init_year: int = 1850,
+    version: int = 0,
+    option: int = 0,
+    file: Optional[str] = None,
 ) -> None:
     """Create volcanoes starting at the year 1850.
 
@@ -58,6 +65,8 @@ def create_volcanoes(
         Choose one of the versions from the '__GENERATORS__' dictionary
     option: int
         Choose which option to use when generating forcing
+    file: str, optional
+        Read eruption dates and emissions from file.
 
     Raises
     ------
@@ -71,8 +80,12 @@ def create_volcanoes(
             f"No version exists for index {version}. "
             + "It must be one of {__GENERATORS__.keys()}."
         )
-    print(f"Generating with '{__GENERATORS__[version].__name__}'...")
-    g = __GENERATORS__[version](size, init_year)
+    if file is not None:
+        print(f"Generating with '{__GENERATORS__[4].__name__}'...")
+        g = __GENERATORS__[4](size, init_year, file)
+    else:
+        print(f"Generating with '{__GENERATORS__[version].__name__}'...")
+        g = __GENERATORS__[version](size, init_year)
     g.generate()
     all_arrs = g.get_arrays()
 

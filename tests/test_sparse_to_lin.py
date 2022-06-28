@@ -55,11 +55,7 @@ def test_main_succeeds(runner: CliRunner) -> None:
         d = os.path.join("data", "output")
         now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         out_npz = os.path.join(d, f"synthetic_volcanoes_{now}.npz")
-        v = len(synthetic_volcanoes.__GENERATORS__) - 1
+        v = len(synthetic_volcanoes.__GENERATORS__) - 2
         synthetic_volcanoes.create_volcanoes(version=v)
         result = runner.invoke(sparse_to_lin.main, [out_npz])
         assert result.exit_code == 0
-
-
-if __name__ == "__main__":
-    test_sparse_to_lin()

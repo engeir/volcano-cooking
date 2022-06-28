@@ -54,7 +54,7 @@ symbol_list_2 = ["^", "v"]
 symbol_list_1 = ["o"]
 
 
-golden_ratio = 0.5 * (1.0 + 5 ** 0.5)
+golden_ratio = 0.5 * (1.0 + 5**0.5)
 
 
 def set_rcparams_dynamo(

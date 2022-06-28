@@ -104,7 +104,7 @@ def adjust_emissions(
     duration = 21600  # 6 hours in seconds
     avogadros_number = 6.022140857e23  # Avogadro's constant in "mol^{-1}"
     d_earth = 12742e3  # in "m"
-    s_earth = np.pi * d_earth ** 2
+    s_earth = np.pi * d_earth**2
     # dalt = 1e3
     dalt = mxihs * 1e5 - miihs * 1e5  # Emission depth in cm
     m3_to_cm3 = 1.0e6
