@@ -189,3 +189,55 @@ def fpp_dates_and_emissions(
     del does_l
     tes = np.array(amp, dtype=np.float32)
     return yoes, moes, does, tes
+
+
+def dates_and_emission_from_json(table: dict) -> tuple[np.ndarray, ...]:
+    """Create dates and total emissions from dictionary.
+
+    Data is originally set in a json file, and read using the `json` library.
+
+    Parameters
+    ----------
+    table: dict
+        The dates and emissions as handles in the dictionary.
+
+    Returns
+    -------
+    yoes: np.ndarray
+        Array of length 'size' with the year of a date
+    moes: np.ndarray
+        Array of length 'size' with the month of a date
+    does: np.ndarray
+        Array of length 'size' with the day of a date
+    tes:
+        Array of length 'size' with the Total_Emission as a 1D numpy array
+
+    Raises
+    ------
+    KeyError
+        If the sections in the loaded json file do not all have the same length.
+    """
+    lens = map(len, table.values())
+    if len(set(lens)) != 1:
+        raise KeyError("All sections in json file must have the same length.")
+    yoes_l: List[int] = []
+    yoes_ap = yoes_l.append
+    moes_l: List[int] = []
+    moes_ap = moes_l.append
+    does_l: List[int] = []
+    does_ap = does_l.append
+    tes_l: List[float] = []
+    tes_ap = tes_l.append
+    for dates in table["dates"]:
+        y, m, d = dates.split("-")
+        yoes_ap(int(y))
+        moes_ap(int(m))
+        does_ap(int(d))
+    for emissions in table["emissions"]:
+        tes_ap(float(emissions))
+    yoes = np.array(yoes_l, dtype=np.int16)
+    moes = np.array(moes_l, dtype=np.int8)
+    does = np.array(does_l, dtype=np.int8)
+    tes = np.array(tes_l, dtype=np.float32)
+
+    return yoes, moes, does, tes

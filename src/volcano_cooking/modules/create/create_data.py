@@ -1,10 +1,11 @@
 """Script that implement the class which correctly created a netCDF4 file and saves it."""
 
 import datetime
+import json
 import os
 import sys
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Optional
 
 import numpy as np
 import xarray as xr
@@ -256,7 +257,7 @@ class Data:
 class Generate(ABC):
     """ABC for generating data with different properties."""
 
-    def __init__(self, size: int, init_year: int) -> None:
+    def __init__(self, size: int, init_year: int, file: Optional[str] = None) -> None:
         """Initialise object by giving all variables that should be put in the .nc file.
 
         Parameters
@@ -265,6 +266,8 @@ class Generate(ABC):
             The total number of volcanoes
         init_year: int
             The first possible year for a volcanic eruption
+        file: str, optional
+            Path to the json file.
         """
         self.eruptions: np.ndarray = np.array([])
         self.yoes: np.ndarray = np.array([])
@@ -278,6 +281,7 @@ class Generate(ABC):
         self.mxihs: np.ndarray = np.array([])
         self.size = size
         self.init_year = init_year
+        self.file = file
 
     @abstractmethod
     def gen_dates_totalemission_vei(self) -> None:
@@ -286,16 +290,16 @@ class Generate(ABC):
     def _gen_rest(self) -> None:
         """Generate the rest with default settings.
 
-        The rest refer to `eruptions`, the eruption number, `lats`, `lons` and `miihs` and
-        `mxihs`, the minimum and maximum heights of injection which are both assumed
+        The rest refer to `eruptions`, the eruption number, `lats`, `lons` and `miihs`
+        and `mxihs`, the minimum and maximum heights of injection which are both assumed
         functions of `veis`, the Volcanic Explosivity Index.
         """
         # This only (in the real data set) store a number for each volcanic event,
         # increasing as new events occur. If a volcanic eruption have several emissions
-        # listed in the forcing file the number is repeated, giving a list similar to [1,
-        # 2, 3, 4, 4, 4, 5, 5, 6, 7, ...].  Here, the fourth and fifth eruptions lasted
-        # long enough and to get more samples in the forcing file. Anyway, its most likely
-        # not important, so I just put gibberish in it.
+        # listed in the forcing file the number is repeated, giving a list similar to
+        # [1, 2, 3, 4, 4, 4, 5, 5, 6, 7, ...].  Here, the fourth and fifth eruptions
+        # lasted long enough and to get more samples in the forcing file. Anyway, its
+        # most likely not important, so I just put gibberish in it.
         self.eruptions = np.random.randint(1, high=20, size=self.size, dtype=np.int8)
 
         # Place all volcanoes at equator
@@ -312,8 +316,9 @@ class Generate(ABC):
         maximum injection heights.
         """
         self.gen_dates_totalemission_vei()
-        # Shift first eruption to occur before initial year
-        self.yoes -= abs(self.init_year - self.yoes[0]) + 1
+        if self.file is None:
+            # Shift first eruption to occur before initial year
+            self.yoes -= abs(self.init_year - self.yoes[0]) + 1
         if len(self.veis) != self.size:
             self.size = len(self.veis)
         self._gen_rest()
@@ -376,5 +381,17 @@ class GenerateSingleVolcano(Generate):
     def gen_dates_totalemission_vei(self) -> None:
         self.yoes, self.moes, self.does, self.tes = create.single_date_and_emission(
             self.init_year
+        )
+        self.veis = convert.totalemission_to_vei(self.tes)
+
+
+class GenerateFromFile(Generate):
+    def gen_dates_totalemission_vei(self) -> None:
+        if self.file is None:
+            raise AttributeError("Cannot use GenerateFromFile without a json file.")
+        with open(self.file) as f:
+            a = json.load(f)
+        self.yoes, self.moes, self.does, self.tes = create.dates_and_emission_from_json(
+            a
         )
         self.veis = convert.totalemission_to_vei(self.tes)

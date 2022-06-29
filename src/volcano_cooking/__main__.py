@@ -88,6 +88,13 @@ from volcano_cooking import __version__
     type=bool,
     help="Move all last created files to a 'source-file' directory.",
 )
+@click.option(
+    "--file",
+    "file",
+    type=click.Path(exists=True),
+    default=None,
+    help="Set volcanic eruption dates and strength from file.",
+)
 def main(
     frc: int,
     init_year: List[int],
@@ -97,7 +104,9 @@ def main(
     shift_eruption: str,
     run_ncl: bool,
     package_last: bool,
+    file: Optional[str],
 ) -> None:
+    # First handle list, run ncl and package commands which overrides all other.
     if lst:
         for cl in sv.__GENERATORS__:
             print(f"{cl}: {sv.__GENERATORS__[cl].__name__}")
@@ -112,6 +121,7 @@ def main(
         shell_file = f"{this_dir}/package_last.sh"
         subprocess.call(["sh", shell_file])
         return
+
     _init_year = [1850, 1, 15]
     _init_year[: len(init_year)] = init_year
     if shift_eruption == "False":
@@ -128,9 +138,12 @@ def main(
                     + "/atm/cam/coords/fv_1.9x2.5_L30.nc",
                     not_forcing=True,
                 )
-        sv.create_volcanoes(
-            size=size, init_year=_init_year[0], version=frc, option=option
-        )
+        if file is None:
+            sv.create_volcanoes(
+                size=size, init_year=_init_year[0], version=frc, option=option
+            )
+        else:
+            sv.create_volcanoes(file=file)
     elif shift_eruption == "True":
         shift_eruption_to_date.shift_eruption_to_date(tuple(_init_year), None)
     else:
