@@ -28,7 +28,7 @@ cosmoplots = "^0.1.5"
 
 [tool.poetry.dev-dependencies]
 coverage = "^6.4"
-black = "^22.3"
+black = "^22.6"
 isort = "^5.9.3"
 flake8 = "^4.0.1"
 pre-commit = "^2.19.0"
