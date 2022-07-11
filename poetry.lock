@@ -473,7 +473,7 @@ virtualenv = ">=20.0.8"
 
 [[package]]
 name = "pre-commit-hooks"
-version = "4.2.0"
+version = "4.3.0"
 description = "Some out-of-the-box hooks for pre-commit."
 category = "dev"
 optional = false
@@ -481,7 +481,7 @@ python-versions = ">=3.7"
 
 [package.dependencies]
 "ruamel.yaml" = ">=0.15"
-toml = "*"
+tomli = {version = ">=1.1.0", markers = "python_version < \"3.11\""}
 
 [[package]]
 name = "py"
@@ -807,7 +807,7 @@ tests = ["cmake", "codecov", "ninja", "pybind11", "pytest-cov", "pytest-cov", "p
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.11"
-content-hash = "6624a249800a9c57029d746ca42b1544c3782f70c1297109855ecfbfe4fdfd45"
+content-hash = "7166a2876b4981a74c0feaad751449eeecc321a9764bd85b2b8574ad5261b704"
 
 [metadata.files]
 atomicwrites = []
