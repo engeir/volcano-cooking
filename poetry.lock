@@ -457,7 +457,7 @@ testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
 name = "pre-commit"
-version = "2.19.0"
+version = "2.20.0"
 description = "A framework for managing and maintaining multi-language pre-commit hooks."
 category = "dev"
 optional = false
@@ -807,7 +807,7 @@ tests = ["cmake", "codecov", "ninja", "pybind11", "pytest-cov", "pytest-cov", "p
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.11"
-content-hash = "b98fcdf7dcca2768fde0ccc395fb06a84eb9c9110702a6d0ab659d0369d44c73"
+content-hash = "6624a249800a9c57029d746ca42b1544c3782f70c1297109855ecfbfe4fdfd45"
 
 [metadata.files]
 atomicwrites = []
