@@ -583,7 +583,7 @@ python-versions = "*"
 
 [[package]]
 name = "pyupgrade"
-version = "2.37.0"
+version = "2.37.1"
 description = "A tool to automatically upgrade syntax for newer versions."
 category = "dev"
 optional = false
@@ -807,7 +807,7 @@ tests = ["cmake", "codecov", "ninja", "pybind11", "pytest-cov", "pytest-cov", "p
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.11"
-content-hash = "7166a2876b4981a74c0feaad751449eeecc321a9764bd85b2b8574ad5261b704"
+content-hash = "aa79a2704f33571a46950b91194562fdadf5fdb3b205000101224b7af4eb2abb"
 
 [metadata.files]
 atomicwrites = []
