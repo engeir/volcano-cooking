@@ -34,7 +34,7 @@ export RES="2deg"
 
 # Check if an .env file exists and load from it.
 if [ -f .env ]; then
-    # This needs word splitting, don't quote it.
+    # NOTE: This needs word splitting, don't quote it.
     export $(grep -v '^#' .env | xargs -d '\n')
 fi
 
