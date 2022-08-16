@@ -86,6 +86,13 @@ example easily change the grid resolution to be `1deg` rather than `2deg` (defau
 If you want to change this to an even grater extent, you may be able to set this in the
 `.env` file, otherwise fork the repo and make your own version!
 
+> For more complete examples, have a look at the `examples` directory. Cloning this
+> repository and running `volcano-cooking --file json.json` from *inside* the `examples`
+> directory will result in some output files generated to a new `data` directory inside
+> `examples`. If you further rename `.env.example` → `.env` you may also run
+> `volcano-cooking --run-ncl` and `volcano-cooking --package-last` (this assumes you
+> follow option 0, see below).
+
 ### Option 0 (default, using NCL-script)
 
 #### TL;DR
