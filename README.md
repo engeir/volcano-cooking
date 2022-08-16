@@ -25,26 +25,9 @@ The package is published on [PyPI] and installable via `pip`:
 pip install volcano-cooking
 ```
 
-To contribute to the project, clone and install the full development version (uses
-[poetry] for dependencies):
-
-```bash
-git clone https://github.com/engeir/volcano-cooking.git
-cd volcano-cooking
-poetry install
-pre-commit install
-```
-
-Before committing new changes to a branch you can run command
-
-```bash
-nox
-```
-
-to run the full test suite. You will need [Poetry], [nox] and [nox-poetry] installed for
-this.
-
 ## Usage
+
+### The basics
 
 There are two CLI programs coming with this project. The main program is
 `volcano-cooking`, which will create a `.nc` and `.npz` file in the `data/output`
@@ -78,20 +61,23 @@ volcano-cooking --help
 view-frc --help
 ```
 
+### Examples
+
 When running the command `volcano-cooking --run-ncl`, a few environment variables will
 be used, which can be controlled by setting them in a `.env` file. See
-[`.env.example`](./.env.example) to see some default values. With this you can for
-example easily change the grid resolution to be `1deg` rather than `2deg` (default).
+[`.env.example`](./examples/.env.example) to see some default values. With this you can
+for example easily change the grid resolution to be `1deg` rather than `2deg` (default).
 
-If you want to change this to an even grater extent, you may be able to set this in the
-`.env` file, otherwise fork the repo and make your own version!
+The [__examples__](./examples/) directory also include an example on how to use the
+`--file` option. Cloning this repository and running `volcano-cooking --file json.json`
+from *inside* the __examples__ directory will result in some output files generated to a
+new __data__ directory inside __examples__. If you further rename `.env.example` →
+`.env` you may also run `volcano-cooking --run-ncl` and `volcano-cooking --package-last`
+(this assumes you follow option 0, see below).
 
-> For more complete examples, have a look at the `examples` directory. Cloning this
-> repository and running `volcano-cooking --file json.json` from *inside* the `examples`
-> directory will result in some output files generated to a new `data` directory inside
-> `examples`. If you further rename `.env.example` → `.env` you may also run
-> `volcano-cooking --run-ncl` and `volcano-cooking --package-last` (this assumes you
-> follow option 0, see below).
+Finally, there is also a script [`custom_generator.py`](./examples/custom_generator.py)
+which show how you might define your own generator classes and functions. Run as `python
+custom_generator.py`.
 
 ### Option 0 (default, using NCL-script)
 
@@ -250,6 +236,27 @@ A similar file to those that are created is needed to be able to use some script
 `helper_scripts` directory. By default, it assumes the file is named
 `volcan-eesm_global_2015_so2-emissions-database_v1.0.nc` and that it is placed inside
 the `data/originals` directory. You can find this file [here][volc-frc].
+
+## Contributing
+
+To contribute to the project, clone and install the full development version (uses
+[poetry] for dependencies):
+
+```bash
+git clone https://github.com/engeir/volcano-cooking.git
+cd volcano-cooking
+poetry install
+pre-commit install
+```
+
+Before committing new changes to a branch you can run command
+
+```bash
+nox
+```
+
+to run the full test suite. You will need [Poetry], [nox] and [nox-poetry] installed for
+this.
 
 [data_source_files]: https://svn.code.sf.net/p/codescripts/code/trunk/ncl/emission
 [common-ncl]: http://svn.code.sf.net/p/codescripts/code/trunk/ncl/lib/common.ncl

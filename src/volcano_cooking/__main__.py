@@ -93,7 +93,7 @@ from volcano_cooking import __version__
     "file",
     type=click.Path(exists=True),
     default=None,
-    help="Set volcanic eruption dates and strength from file.",
+    help="Set volcanic eruption dates and strength from a json file.",
 )
 def main(
     frc: int,
