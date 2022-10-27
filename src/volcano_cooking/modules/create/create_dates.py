@@ -191,7 +191,7 @@ def fpp_dates_and_emissions(
     return yoes, moes, does, tes
 
 
-def dates_and_emission_from_json(table: dict) -> tuple[np.ndarray, ...]:
+def from_json(table: dict, generator: create.Generate) -> create.Generate:
     """Create dates and total emissions from dictionary.
 
     Data is originally set in a json file, and read using the `json` library.
@@ -200,6 +200,8 @@ def dates_and_emission_from_json(table: dict) -> tuple[np.ndarray, ...]:
     ----------
     table: dict
         The dates and emissions as handles in the dictionary.
+    generator: create.Generate
+        A Generate object to which the table values are written.
 
     Returns
     -------
@@ -220,6 +222,8 @@ def dates_and_emission_from_json(table: dict) -> tuple[np.ndarray, ...]:
     lens = map(len, table.values())
     if len(set(lens)) != 1:
         raise KeyError("All sections in json file must have the same length.")
+    if not {"dates", "emissions"}.issubset(set(table)):
+        raise KeyError("The keys 'dates' and 'emissions' must be present.")
     yoes_l: List[int] = []
     yoes_ap = yoes_l.append
     moes_l: List[int] = []
@@ -233,11 +237,34 @@ def dates_and_emission_from_json(table: dict) -> tuple[np.ndarray, ...]:
         yoes_ap(int(y))
         moes_ap(int(m))
         does_ap(int(d))
+    generator.yoes = np.array(yoes_l, dtype=np.int16)
+    generator.moes = np.array(moes_l, dtype=np.int8)
+    generator.does = np.array(does_l, dtype=np.int8)
     for emissions in table["emissions"]:
         tes_ap(float(emissions))
-    yoes = np.array(yoes_l, dtype=np.int16)
-    moes = np.array(moes_l, dtype=np.int8)
-    does = np.array(does_l, dtype=np.int8)
-    tes = np.array(tes_l, dtype=np.float32)
-
-    return yoes, moes, does, tes
+    generator.tes = np.array(tes_l, dtype=np.float32)
+    if "lat" in table:
+        lat_l: List[float] = []
+        lat_ap = lat_l.append
+        for lat in table["lat"]:
+            lat_ap(lat)
+        generator.lats = np.array(lat_l, dtype=np.float32)
+    if "lon" in table:
+        lon_l: List[float] = []
+        lon_ap = lon_l.append
+        for lon in table["lon"]:
+            lon_ap(lon)
+        generator.lons = np.array(lon_l, dtype=np.float32)
+    if "minimum injection height" in table:
+        miihs_l: List[float] = []
+        miihs_ap = miihs_l.append
+        for miihs in table["minimum injection height"]:
+            miihs_ap(miihs)
+        generator.miihs = np.array(miihs_l, dtype=np.float32)
+    if "maximum injection height" in table:
+        mxihs_l: List[float] = []
+        mxihs_ap = mxihs_l.append
+        for mxihs in table["maximum injection height"]:
+            mxihs_ap(mxihs)
+        generator.mxihs = np.array(mxihs_l, dtype=np.float32)
+    return generator

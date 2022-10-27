@@ -40,11 +40,11 @@ class ReWrite(Data):
             "originals",
             "VolcanEESMv3.11_SO2_850-2016_Mscale_Zreduc_2deg_c191125",
         )
-        if not os.path.exists(file + ".nc"):
+        if not os.path.exists(f"{file}.nc"):
             raise FileNotFoundError(
                 f"{file} not found. Consult README on how to download."
             )
-        f_orig = xr.open_dataset(file + ".nc", decode_times=False)
+        f_orig = xr.open_dataset(f"{file}.nc", decode_times=False)
         # Check that the file contain crucial data.
         needed_dims = ["time", "altitude", "lat", "lon"]
         if any(d not in f_orig.dims for d in needed_dims):
@@ -125,7 +125,7 @@ class ReWrite(Data):
             # way, all meta data is also used in the new Dataset as in the old, which is
             # needed.
             if v == "stratvolc":
-                input = xr.DataArray(
+                the_input = xr.DataArray(
                     new_eruptions,
                     dims=["time", "altitude", "lat", "lon"],
                     coords={
@@ -135,15 +135,15 @@ class ReWrite(Data):
                     },
                 )
             elif v == "date":
-                input = xr.DataArray(new_dates.astype(np.int32), dims="time")
+                the_input = xr.DataArray(new_dates.astype(np.int32), dims="time")
             elif v == "datesec":
-                input = xr.DataArray(new_datesecs.astype(np.int32), dims="time")
+                the_input = xr.DataArray(new_datesecs.astype(np.int32), dims="time")
             else:
                 raise IndexError(
                     f"'{v}' is an unknown variable that I do not have an implementation for."
                 )
-            input = input.assign_attrs(**f_orig[v].attrs)
-            self.my_frc = self.my_frc.assign({v: input})
+            the_input = the_input.assign_attrs(**f_orig[v].attrs)
+            self.my_frc = self.my_frc.assign({v: the_input})
 
         # helper_scripts.compare_datasets(self.my_frc, f_orig)
 
@@ -171,10 +171,10 @@ class ReWrite(Data):
             elif a == "data_source_files":
                 self.my_frc.attrs[a] = "https://github.com/engeir/volcano-cooking"
             elif a == "creation_date":
-                if datetime.today().strftime("%Z"):
-                    this_day = datetime.today().strftime("%a %b %d %X %Z %Y")
+                if datetime.now().strftime("%Z"):
+                    this_day = datetime.now().strftime("%a %b %d %X %Z %Y")
                 else:
-                    this_day = datetime.today().strftime("%a %b %d %X %Y")
+                    this_day = datetime.now().strftime("%a %b %d %X %Y")
                 self.my_frc.attrs[a] = this_day
             elif a == "cesm_contact":
                 self.my_frc.attrs[a] = "None"
@@ -199,7 +199,7 @@ class ReWrite(Data):
                     d_ = "0" * (w_1 - len(str(int(d)))) + str(int(d)) + " "
                     amin_ = f"{amin:.3f}".rjust(w_23) + " "
                     amax_ = f"{amax:.3f}".rjust(w_23) + " "
-                    v_ = str(v).center(w_4) + " "
+                    v_ = f"{str(v).center(w_4)} "
                     e_ = f"{e:.5e}".rjust(w_5)
                     nl = d_ + amin_ + amax_ + v_ + e_ + "\n"
                     summary += nl
