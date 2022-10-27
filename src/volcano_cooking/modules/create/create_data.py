@@ -155,7 +155,7 @@ class Data:
                 Creator="Eirik R. Enger",
                 DOI="#####",
                 Citation="#####",
-                Notes="All emissions are created from a filtered Poisson process (FPP).",
+                Notes="Emissions source file created with the `volcano-cooking` python package.",
             ),
         )
 
@@ -269,16 +269,16 @@ class Generate(ABC):
         file: str, optional
             Path to the json file.
         """
-        self.eruptions: np.ndarray = np.array([])
-        self.yoes: np.ndarray = np.array([])
-        self.moes: np.ndarray = np.array([])
-        self.does: np.ndarray = np.array([])
-        self.lats: np.ndarray = np.array([])
-        self.lons: np.ndarray = np.array([])
-        self.tes: np.ndarray = np.array([])
-        self.veis: np.ndarray = np.array([])
-        self.miihs: np.ndarray = np.array([])
-        self.mxihs: np.ndarray = np.array([])
+        self.eruptions: np.ndarray
+        self.yoes: np.ndarray
+        self.moes: np.ndarray
+        self.does: np.ndarray
+        self.lats: np.ndarray
+        self.lons: np.ndarray
+        self.tes: np.ndarray
+        self.veis: np.ndarray
+        self.miihs: np.ndarray
+        self.mxihs: np.ndarray
         self.size = size
         self.init_year = init_year
         self.file = file
@@ -287,12 +287,31 @@ class Generate(ABC):
     def gen_dates_totalemission_vei(self) -> None:
         """Generate dates, total emission and VEI."""
 
+    def gen_lat_lon(self) -> None:
+        """Generate latitude and longitude.
+
+        If not set by the subclasses, a fixed location of 0deg N, 1deg E will be used.
+        """
+        if not hasattr(self, "lats"):
+            # Place all volcanoes at equator
+            self.lats = np.zeros(self.size, dtype=np.float32)  # Equator
+        if not hasattr(self, "lons"):
+            self.lons = np.ones(self.size, dtype=np.float32)
+
+    def gen_injection_heights(self) -> None:
+        """Generate minimum and maximum injection heights.
+
+        By default, the minimum and maximum heights of injection which are both assumed
+        functions of `veis`, the Volcanic Explosivity Index.
+        """
+        if not hasattr(self, "miihs") and not hasattr(self, "mxihs"):
+            self.miihs, self.mxihs = convert.vei_to_injectionheights(self.veis)
+
     def _gen_rest(self) -> None:
         """Generate the rest with default settings.
 
-        The rest refer to `eruptions`, the eruption number, `lats`, `lons` and `miihs`
-        and `mxihs`, the minimum and maximum heights of injection which are both assumed
-        functions of `veis`, the Volcanic Explosivity Index.
+        The rest refer to `eruptions`, the eruption number. These do not matter when
+        working with synthetic data.
         """
         # This only (in the real data set) store a number for each volcanic event,
         # increasing as new events occur. If a volcanic eruption have several emissions
@@ -302,12 +321,6 @@ class Generate(ABC):
         # most likely not important, so I just put gibberish in it.
         self.eruptions = np.random.randint(1, high=20, size=self.size, dtype=np.int8)
 
-        # Place all volcanoes at equator
-        self.lats = np.zeros(self.size, dtype=np.float32)  # Equator
-        self.lons = np.ones(self.size, dtype=np.float32)
-
-        self.miihs, self.mxihs = convert.vei_to_injectionheights(self.veis)
-
     def generate(self) -> None:
         """Generate all data arrays needed in the volcanic forcing netCDF file.
 
@@ -316,11 +329,19 @@ class Generate(ABC):
         maximum injection heights.
         """
         self.gen_dates_totalemission_vei()
+        if len(self.veis) != self.size:
+            self.size = len(self.veis)
+        self.gen_lat_lon()
+        self.gen_injection_heights()
+        # Make sure minimum heights are actually smaller than maximum heights
+        for idx, (i, j) in enumerate(zip(self.miihs, self.mxihs)):
+            self.miihs[idx] = min(i, j)
+            self.mxihs[idx] = max(i, j)
+        self.mxihs = self.mxihs.astype(np.float32)
+        self.miihs = self.miihs.astype(np.float32)
         if self.file is None:
             # Shift first eruption to occur before initial year
             self.yoes -= abs(self.init_year - self.yoes[0]) + 1
-        if len(self.veis) != self.size:
-            self.size = len(self.veis)
         self._gen_rest()
 
     def get_arrays(self) -> List[np.ndarray]:
@@ -391,7 +412,5 @@ class GenerateFromFile(Generate):
             raise AttributeError("Cannot use GenerateFromFile without a json file.")
         with open(self.file) as f:
             a = json.load(f)
-        self.yoes, self.moes, self.does, self.tes = create.dates_and_emission_from_json(
-            a
-        )
+        self = create.from_json(a, self)
         self.veis = convert.totalemission_to_vei(self.tes)
