@@ -1,2 +1,4 @@
-# src/volcano_cooking/__init__.py
-__version__ = "0.8.0"
+"""Create source and forcing files used in the CESM2 climate model."""
+from importlib_metadata import version
+
+__version__ = version(__package__)
