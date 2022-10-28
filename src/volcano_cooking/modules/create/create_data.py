@@ -302,10 +302,19 @@ class Generate(ABC):
         """Generate minimum and maximum injection heights.
 
         By default, the minimum and maximum heights of injection which are both assumed
-        functions of `veis`, the Volcanic Explosivity Index.
+        functions of `veis`, the Volcanic Explosivity Index. If only one of them is
+        given, the other is given a default constant value of 18 (20) for the minimum
+        (maximum) injection height.
         """
         if not hasattr(self, "miihs") and not hasattr(self, "mxihs"):
             self.miihs, self.mxihs = convert.vei_to_injectionheights(self.veis)
+            return
+        if not hasattr(self, "miihs"):
+            self.miihs = np.ones(self.size, dtype=np.float32) * 18
+            return
+        if not hasattr(self, "mxihs"):
+            self.mxihs = np.ones(self.size, dtype=np.float32) * 20
+            return
 
     def _gen_rest(self) -> None:
         """Generate the rest with default settings.

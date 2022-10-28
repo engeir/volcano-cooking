@@ -219,6 +219,14 @@ def from_json(table: dict, generator: create.Generate) -> create.Generate:
     KeyError
         If the sections in the loaded json file do not all have the same length.
     """
+    _AVAILABLE_KEYS = {
+        "dates",
+        "emissions",
+        "lat",
+        "lon",
+        "minimum injection height",
+        "maximum injection height",
+    }
     lens = map(len, table.values())
     if len(set(lens)) != 1:
         raise KeyError("All sections in json file must have the same length.")
@@ -232,7 +240,7 @@ def from_json(table: dict, generator: create.Generate) -> create.Generate:
     does_ap = does_l.append
     tes_l: List[float] = []
     tes_ap = tes_l.append
-    for dates in table["dates"]:
+    for dates in table.pop("dates"):
         y, m, d = dates.split("-")
         yoes_ap(int(y))
         moes_ap(int(m))
@@ -240,31 +248,40 @@ def from_json(table: dict, generator: create.Generate) -> create.Generate:
     generator.yoes = np.array(yoes_l, dtype=np.int16)
     generator.moes = np.array(moes_l, dtype=np.int8)
     generator.does = np.array(does_l, dtype=np.int8)
-    for emissions in table["emissions"]:
+    for emissions in table.pop("emissions"):
         tes_ap(float(emissions))
     generator.tes = np.array(tes_l, dtype=np.float32)
-    if "lat" in table:
+    if lats := table.pop("lat", False):
         lat_l: List[float] = []
         lat_ap = lat_l.append
-        for lat in table["lat"]:
+        for lat in lats:
             lat_ap(lat)
         generator.lats = np.array(lat_l, dtype=np.float32)
-    if "lon" in table:
+    if lons := table.pop("lon", False):
         lon_l: List[float] = []
         lon_ap = lon_l.append
-        for lon in table["lon"]:
+        for lon in lons:
             lon_ap(lon)
         generator.lons = np.array(lon_l, dtype=np.float32)
-    if "minimum injection height" in table:
+    if miihss := table.pop("minimum injection height", False):
         miihs_l: List[float] = []
         miihs_ap = miihs_l.append
-        for miihs in table["minimum injection height"]:
+        for miihs in miihss:
             miihs_ap(miihs)
         generator.miihs = np.array(miihs_l, dtype=np.float32)
-    if "maximum injection height" in table:
+    if mxihss := table.pop("maximum injection height", False):
         mxihs_l: List[float] = []
         mxihs_ap = mxihs_l.append
-        for mxihs in table["maximum injection height"]:
+        for mxihs in mxihss:
             mxihs_ap(mxihs)
         generator.mxihs = np.array(mxihs_l, dtype=np.float32)
+    _RED = "\033[0;31m"
+    _BOLD = "\033[1m"
+    _END = "\033[0m"
+    if table:
+        print(
+            f"{_RED}{_BOLD}WARNING: some keys in the json table were not used: "
+            + f"{table.keys()} Remember that the available keys are\n\t"
+            + f"{_AVAILABLE_KEYS}.{_END}"
+        )
     return generator
