@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "volcano-cooking"
-version = "0.9.0"
+version = "0.9.1"
 description = "Make some volcanoes and simulate them in CESM2"
 authors = ["engeir <eirroleng@gmail.com>"]
 license = "GPL-3.0-or-later"
@@ -25,6 +25,7 @@ xarray = ">=0.21.1,<2022.11.0"
 wget = "^3.2"
 dask = "^2022.3.0"
 cosmoplots = "^0.1.5"
+importlib-metadata = "^5.0.0"
 
 [tool.poetry.dev-dependencies]
 coverage = "^6.5"
