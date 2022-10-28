@@ -27,7 +27,7 @@ pip install volcano-cooking
 
 <!-- FIXME: add reference to available classes -->
 If you only plan on using the already present generator classes and only need the CLI
-program, it is recommended to install this with [`pipx`][pipx-source]:
+program, it is recommended to install this with [pipx][pipx-source]:
 
 ```bash
 pipx install volcano-cooking
