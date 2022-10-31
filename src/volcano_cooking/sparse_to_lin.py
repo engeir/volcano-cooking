@@ -47,8 +47,7 @@ def sparse_to_lin(
         Masking of the original time axis that give the time stamps we want to
         keep that match best with the new time axis
     list:
-        Masking of the new new time axis that give the time stamps kept from
-        the original
+        Masking of the new time axis that give the time stamps kept from the original
 
     Examples
     --------
@@ -153,25 +152,7 @@ def main(
     samples_per_year: int,
     lm: str,
 ):
-    """View a plot of `filename`.
-
-    Parameters
-    ----------
-    filename: str
-        Name of the file you want plotted
-    save: bool
-        Save the arrays to a .npz file. Defaults to False
-    show: bool
-        Show a plot of the original and new volcanic forcing arrays
-    sy: int
-        The assumed first year of the time axis
-    ey: int
-        The assumed end year of the time axis
-    samples_per_year: int
-        The number of samples per year.
-    lm: str
-        The last month of the last year
-    """
+    """View a plot of `filename`."""
     # Decide on the last month
     lm = lm.lower()
     # fmt: off
