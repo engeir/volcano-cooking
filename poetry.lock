@@ -828,7 +828,7 @@ python-versions = "*"
 
 [[package]]
 name = "xarray"
-version = "2022.10.0"
+version = "2022.11.0"
 description = "N-D labeled arrays and datasets in Python"
 category = "main"
 optional = false
@@ -884,7 +884,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.11"
-content-hash = "8e6b7c55c530cc727e1fbd97542582d25ffc5f148322074aa48c4823ff0fdd15"
+content-hash = "ef793f46a28bc1d07e4abb93c8e8b37cc1d525e1f70fa73790f8c1e172751f5c"
 
 [metadata.files]
 attrs = [
@@ -1689,8 +1689,8 @@ wget = [
     {file = "wget-3.2.zip", hash = "sha256:35e630eca2aa50ce998b9b1a127bb26b30dfee573702782aa982f875e3f16061"},
 ]
 xarray = [
-    {file = "xarray-2022.10.0-py3-none-any.whl", hash = "sha256:e4e574820ff8eb7dbc119c5089d30860b73160bd587cc045ae37a128b8eb4fc2"},
-    {file = "xarray-2022.10.0.tar.gz", hash = "sha256:b39ff3475f73eaacdf831b0ab7eb6930e7b5933e46dcf71b9327f4c4bb941793"},
+    {file = "xarray-2022.11.0-py3-none-any.whl", hash = "sha256:228ed50ab3f1f7e2ba66670ded05f0bee46c69c4f902f346947b5723479af97f"},
+    {file = "xarray-2022.11.0.tar.gz", hash = "sha256:3008a302877f87a0f9043b1f01a4ad4e85b668bbdd38d488764098624632f527"},
 ]
 xdoctest = [
     {file = "xdoctest-1.1.0-py3-none-any.whl", hash = "sha256:da330c4dacee51f3c785820bc743188fb6f7c64c5fa1c54bff8836b3cf23d69b"},
