@@ -73,12 +73,20 @@ def sparse_to_lin(
     # repetition of indices).
     # Make `t` a row vector (1, N) and `t_i` a column vector (M, 1), compute the
     # absolute difference -> (M, N) and pick the minimum along N -> (N,)
+    # `mask` represents which index of the new linspaced time array the given element of
+    # the original time array is closest. `mask_idx` represents unique elements of the
+    # new time array that should be used, and `mask_sections` represents the cluster of
+    # elements in the original that are closest to a given element of the new linspaced
+    # time array.
     mask = np.abs(t[None, :] - t_i[:, None]).argmin(axis=0)
     _, mask_idx = np.unique(mask, return_index=True)
-    mask_sections = [mask[m : mask_idx[i + 1]] for i, m in enumerate(mask_idx[:-1])]
-    if not mask_sections:
-        return t_i, [], []
-    mask_sections.append(mask[mask_idx[-1] :])
+    if len(t) == 1:
+        mask_sections = [mask[mask_idx[-1] :]]
+    else:
+        mask_sections = [mask[m : mask_idx[i + 1]] for i, m in enumerate(mask_idx[:-1])]
+        if not mask_sections:
+            return t_i, [], []
+        mask_sections.append(mask[mask_idx[-1] :])
     # Now we find the indices of `t` that we want to keep. `c` works as the index of the
     # first item in each array inside mask_sections
     c = 0
