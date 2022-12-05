@@ -26,6 +26,7 @@ mypy-extensions = ">=0.4.3"
 pathspec = ">=0.9.0"
 platformdirs = ">=2"
 tomli = {version = ">=1.1.0", markers = "python_full_version < \"3.11.0a7\""}
+typing-extensions = {version = ">=3.10.0.0", markers = "python_version < \"3.10\""}
 
 [package.extras]
 colorama = ["colorama (>=0.4.3)"]
@@ -141,7 +142,7 @@ python-versions = ">=3.6,<4.0"
 
 [[package]]
 name = "dask"
-version = "2022.11.1"
+version = "2022.12.0"
 description = "Parallel PyData with Task Scheduling"
 category = "main"
 optional = false
@@ -158,10 +159,10 @@ toolz = ">=0.8.2"
 
 [package.extras]
 array = ["numpy (>=1.18)"]
-complete = ["bokeh (>=2.4.2,<3)", "distributed (==2022.11.1)", "jinja2", "numpy (>=1.18)", "pandas (>=1.0)"]
+complete = ["bokeh (>=2.4.2,<3)", "distributed (==2022.12.0)", "jinja2", "numpy (>=1.18)", "pandas (>=1.0)"]
 dataframe = ["numpy (>=1.18)", "pandas (>=1.0)"]
 diagnostics = ["bokeh (>=2.4.2,<3)", "jinja2"]
-distributed = ["distributed (==2022.11.1)"]
+distributed = ["distributed (==2022.12.0)"]
 test = ["pandas[test]", "pre-commit", "pytest", "pytest-rerunfailures", "pytest-xdist"]
 
 [[package]]
@@ -432,7 +433,10 @@ optional = false
 python-versions = ">=3.8"
 
 [package.dependencies]
-numpy = {version = ">=1.21.0", markers = "python_version >= \"3.10\""}
+numpy = [
+    {version = ">=1.20.3", markers = "python_version < \"3.10\""},
+    {version = ">=1.21.0", markers = "python_version >= \"3.10\""},
+]
 python-dateutil = ">=2.8.1"
 pytz = ">=2020.1"
 
@@ -879,7 +883,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 
 [metadata]
 lock-version = "1.1"
-python-versions = "~3.10"
+python-versions = ">=3.8,<3.11"
 content-hash = "1f272b4df1d3ba58cb357ca0db5d61012ccf4633d2d04238b7c19a93911d0c02"
 
 [metadata.files]
@@ -1085,8 +1089,8 @@ darglint = [
     {file = "darglint-1.8.1.tar.gz", hash = "sha256:080d5106df149b199822e7ee7deb9c012b49891538f14a11be681044f0bb20da"},
 ]
 dask = [
-    {file = "dask-2022.11.1-py3-none-any.whl", hash = "sha256:89e3772c30072c7dacd83846164eca6bc0a8b347df7bc0ab2ce69f7effdc03bd"},
-    {file = "dask-2022.11.1.tar.gz", hash = "sha256:18e5c442778cdbb177041dadf9950546884c0f1ce1ac25c98aa2cade2a9d83f0"},
+    {file = "dask-2022.12.0-py3-none-any.whl", hash = "sha256:3995d2b856920f90bc9bba7329cbe839fe0d45b4e674da22320f37a2d0e3e4f8"},
+    {file = "dask-2022.12.0.tar.gz", hash = "sha256:159acc4a65f2ea042b453f12dee66fd515a159f4b3b9ca0d08c18cae485a2be0"},
 ]
 distlib = [
     {file = "distlib-0.3.6-py2.py3-none-any.whl", hash = "sha256:f35c4b692542ca110de7ef0bea44d73981caeb34ca0b9b6b2e6d7790dda8f80e"},
