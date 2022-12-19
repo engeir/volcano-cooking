@@ -30,7 +30,7 @@ importlib-metadata = "^5.0.0"
 [tool.poetry.dev-dependencies]
 coverage = "^7.0"
 black = "^22.12"
-isort = "^5.11.2"
+isort = "^5.11.3"
 flake8 = "^5.0.4"
 pre-commit = "^2.20.0"
 pre-commit-hooks = "^4.4.0"
