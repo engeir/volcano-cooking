@@ -28,7 +28,7 @@ cosmoplots = "^0.1.5"
 importlib-metadata = ">=5,<7"
 
 [tool.poetry.dev-dependencies]
-coverage = "^7.0"
+coverage = "^7.1"
 black = "^22.12"
 isort = "^5.11.4"
 flake8 = "^5.0.4"
