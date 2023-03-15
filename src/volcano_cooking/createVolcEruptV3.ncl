@@ -12,38 +12,38 @@ res=getenv("RES")
 ;=========================================
 ; FirstYear=1850
 LastYear=2016
-;doMassScaling = True
+; doMassScaling = True
 massSO2thresh = 15 ; threshold (Tg) for eruptions scaled by MassFactor
 MassFactor = 1/1.8 ; scaling factor for large eruptions
-;doAltReduction = True
-;altSO2thresh = 3.5 ; threshold (Tg) for altitude reduction to 18-20 km
+; doAltReduction = True
+; altSO2thresh = 3.5 ; threshold (Tg) for altitude reduction to 18-20 km
 
 ;=========================================
 ; Setup for Last Millenium 850-1849
 ;=========================================
 FirstYear = 850
-;LastYear  = 1849
+; LastYear  = 1849
 doMassScaling = False
 doAltReduction = True
 altSO2thresh = 3.5 ; threshold (Tg) for altitude reduction to 18-20 km
-;res="2deg"
+; res="2deg"
 
 ; Possibly set this to true?
 doVEIspread=False ; spread emissions for VEI 5 & 6?
 VEI6_factor=1.0 ; mass factor for VEI6 eruptions
 VEI5_factor=1.0 ; mass factor for VEI6 eruptions
 
-;Set min/max latitude of Pinatubo plume here:
+; Set min/max latitude of Pinatubo plume here:
 PinLat=-999.0
-;PinMinLat=0.0
+; PinMinLat=0.0
 PinMinLat=-999.0
 
 
-;remove_list=(/"Cerro Hudson"/)
-;remove_date=(/19910815/)
+; remove_list=(/"Cerro Hudson"/)
+; remove_date=(/19910815/)
 
-;remove_list=(/"Mount Pinatubo"/)
-;remove_date=(/19910615/)
+; remove_list=(/"Mount Pinatubo"/)
+; remove_date=(/19910615/)
 
 if (isvar("remove_list")) then
   nRemove=dimsizes(remove_list)
@@ -155,12 +155,12 @@ if (infiletype.eq."txt") then
   print("nhead="+nhead)
 
   lines  = asciiread(infile,-1,"string")
-  ;print((/lines(nhead)/))
+  ; print((/lines(nhead)/))
   ncols = str_fields_count(lines(nhead),delim)
   print("ncols="+ncols)
 
   fields=str_split(header(nhead-1),delim)
-  ;print(fields)
+  ; print(fields)
   yearCol    =ind(fields.eq."Start_Year")+1
   monthCol   =ind(fields.eq."Start_Month")+1
   dayCol     =ind(fields.eq."Start_Day")+1
@@ -172,8 +172,8 @@ if (infiletype.eq."txt") then
   altBotCol  =ind(fields.eq."Lower_column_height_km")+1
   volcNameCol=ind(fields.eq."Volcano")+1
 
-  ;print("yearCol="+yearCol)
-  ;print("monthCol="+monthCol)
+  ; print("yearCol="+yearCol)
+  ; print("monthCol="+monthCol)
 
   inYear =toint(str_get_field(lines(nhead:),yearCol,delim))
   inMonth=toint(str_get_field(lines(nhead:),monthCol,delim))
@@ -201,8 +201,8 @@ else ; netCDF
   Volcano_Name =ncid->Eruption@Volcano_Name
   volcName = str_strip(str_split(Volcano_Name,","))
 
-;  printVarSummary(volcName)
-;  printVarSummary(inSO2)
+  ; printVarSummary(volcName)
+  ; printVarSummary(inSO2)
 
 end if
 
@@ -299,31 +299,31 @@ print(" ")
 ; Shift longitude from -180,180 to 0,360
 inLon=where(inLon.ge.0,inLon,inLon+360.)
 
-;print(sprinti("%4.4i",inYear)+" "+sprinti("%3.2i",inMonth)+sprinti("%3.2i",inDay)+" "+\
-;      sprintf("%7.3f",inLat)+" "+sprintf("%7.3f",inLon)+" "+\
-;      sprintf("%5.2f",inTop)+" "+sprintf("%5.2f",inBot)+" "+\
-;      sprinti("%2.1i",inVEI)+" "+\
-;      sprintf("%8.5f",inSO2)+" "+volcName)
+; print(sprinti("%4.4i",inYear)+" "+sprinti("%3.2i",inMonth)+sprinti("%3.2i",inDay)+" "+\
+;       sprintf("%7.3f",inLat)+" "+sprintf("%7.3f",inLon)+" "+\
+;       sprintf("%5.2f",inTop)+" "+sprintf("%5.2f",inBot)+" "+\
+;       sprinti("%2.1i",inVEI)+" "+\
+;       sprintf("%8.5f",inSO2)+" "+volcName)
 
 indVolcs=ind(inSO2.gt.0.and.inYear.ge.FirstYear.and.inYear.le.LastYear)
 nVolc=dimsizes(indVolcs)
 print(nVolc+" eruptions for years "+FirstYear+" to "+LastYear)
 
 ; Manually add new eruptions
-;if (volcName(indVolcs(nVolc-1)).eq."Calbuco".and.inYear(indVolcs(nVolc-1)).eq.2015) then
-;  newVolcName=(/"Etna","Pavlof"/)
-;  newDate=(/20151203,20160327/)
-;  newSO2=(/0.053,0.02/)
-;  newLat=(/37.73,55.42/)
-;  newLon=(/15.00,198.10/)
-;  newTop=(/12,11/)
-;  newBot=(/8,6.1/)
-;  nVolcTot=nVolc+dimsizes(newVolcName)
-;else
-  nVolcTot=nVolc
-;end if
+; if (volcName(indVolcs(nVolc-1)).eq."Calbuco".and.inYear(indVolcs(nVolc-1)).eq.2015) then
+;   newVolcName=(/"Etna","Pavlof"/)
+;   newDate=(/20151203,20160327/)
+;   newSO2=(/0.053,0.02/)
+;   newLat=(/37.73,55.42/)
+;   newLon=(/15.00,198.10/)
+;   newTop=(/12,11/)
+;   newBot=(/8,6.1/)
+;   nVolcTot=nVolc+dimsizes(newVolcName)
+; else
+nVolcTot=nVolc
+; end if
 
-;print((/newVolcName/))
+; print((/newVolcName/))
 
 nTimes=nVolcTot*4+2
 date=new(nTimes,integer)
@@ -437,7 +437,7 @@ do t=0,nVolcTot-1
     tv=indVolcs(t)
     date_volc(dt)=10000*inYear(tv)+100*inMonth(tv)+inDay(tv)
 
-    ;================================
+    ; ================================
     ; Corrections for v3.11:
     ; Change date for Askja
     if (date_volc(dt).eq.18750101) then
@@ -453,8 +453,8 @@ do t=0,nVolcTot-1
      end if
 
     if (date_volc(dt).eq.19020423) then
- ;     print("Changed date for Pelee")
- ;     date_volc(dt)=19020508
+      ; print("Changed date for Pelee")
+      ; date_volc(dt)=19020508
       tv=indVolcs(t+1)
       date_volc(dt)=10000*inYear(tv)+100*inMonth(tv)+inDay(tv)
     end if
@@ -476,7 +476,7 @@ do t=0,nVolcTot-1
       print("Changed date for Agung")
       date_volc(dt)=19630317
     end if
-    ;================================
+    ; ================================
 
     if (t.gt.0) then
       if (date_volc(dt).lt.date_volc(dt-1)) then
@@ -510,7 +510,7 @@ do t=0,nVolcTot-1
     date(t1:t4)=date_volc(dt)
     datesec(t1:t4)=(/43199, 43200, 64799, 64800/) ; 6-hour emissions from 12:00 to 18:00 UT
     SO2=(/newSO2(t-nVolc)/)
-;    print(VEI)
+    ; print(VEI)
     VEI=1
     Lat=(/newLat(t-nVolc)/)
     Lon=(/newLon(t-nVolc)/)
@@ -545,16 +545,16 @@ do t=0,nVolcTot-1
         VolcArea=2.76d6 ; km2
       end if
       VolcRadius=sqrt(VolcArea/PI)
-    ; calculate Great Circle distance from eruption for each column:
+      ; calculate Great Circle distance from eruption for each column:
       distance=gc_latlon(Lat,Lon,latArr,lonArr,2,4)
-    ; select columns within radius defined by eruption area:
+      ; select columns within radius defined by eruption area:
       maskArr=where(distance.le.VolcRadius,1.0d0,0.0d0)
     end if
     MinLat=(/Lat/)
   end if
 
   nCol=toint(sum(maskArr))
-;  print("t="+t+" tv="+tv+" nVolcTot="+nVolcTot)
+  ; print("t="+t+" tv="+tv+" nVolcTot="+nVolcTot)
   totalArea(t)=sum(columnArea*maskArr)
   totalAreaKm2 =  totalArea(t) / 1d10
 
@@ -582,20 +582,20 @@ do t=0,nVolcTot-1
   globalAtt@data_summary = globalAtt@data_summary+nl+outstring
 
   do k=0,nAlt-1
-;    print(k+" "+Bot+" "+altitude_int(k+1)+" "+Top+" "+altitude_int(k))
+    ; print(k+" "+Bot+" "+altitude_int(k+1)+" "+Top+" "+altitude_int(k))
     if (Bot.lt.altitude_int(k+1).and.Top.ge.altitude_int(k)) then
       top=min((/Top,altitude_int(k+1)/))
       bot=max((/Bot,altitude_int(k)/))
       factor=todouble((top-bot)/(altitude_int(k+1)-altitude_int(k)))
 
-;      printVarSummary(maskArr)
-;      printVarSummary(stratvolc(t2,k,:,:))
+      ; printVarSummary(maskArr)
+      ; printVarSummary(stratvolc(t2,k,:,:))
       stratvolc(t2,k,:,:) = stratvolc(t2,k,:,:)+maskArr*emisRate*factor
       stratvolc(t3,k,:,:) = stratvolc(t2,k,:,:)
 
-;      print(stratvolc(t2,k,{Lat},{Lon}))
-;      print(maskArr({Lat},{Lon}))
-;      print(emisRate+" "+factor+" "+emisRate*factor)
+      ; print(stratvolc(t2,k,{Lat},{Lon}))
+      ; print(maskArr({Lat},{Lon}))
+      ; print(emisRate+" "+factor+" "+emisRate*factor)
 
     end if
   end do
@@ -634,11 +634,11 @@ if (savefile) then
   end if
 
   print("creating "+outfile)
-;  setfileoption("nc","Format","LargeFile")
+  ; setfileoption("nc","Format","LargeFile")
   setfileoption("nc","Format","NetCDF4Classic")
   ncid=addfile(outfile,"c")
 
-  ;Create UNLIMITED Record Dimension
+  ; Create UNLIMITED Record Dimension
   ;  An UNLIMITED record dimension in a netCDF file is critical if the user
   ;  plans to ever use the netCDF operators (NCO) to concatenate the file
   ;  along the time/record dimension.
@@ -677,7 +677,7 @@ if (savefile) then
   globalAtt@title = nl+\
       "SO2 emissions from stratospheric volcanoes, "+inYear(0)+"."+inMonth(0)+"."+inDay(0)+"-"\
         +inYear(tv)+"."+inMonth(tv)+"."+inDay(tv)
-      ;date(t4)
+      ; date(t4)
   globalAtt@filename = nl+\
       outfilename
   fileattdef( ncid, globalAtt )
