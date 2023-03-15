@@ -23,7 +23,7 @@ netCDF4 = "^1.5.8"
 superposed-pulses = "^1.2"
 xarray = ">=0.21.1,<2022.13.0"
 wget = "^3.2"
-dask = "^2022.3.0"
+dask = ">=2022.3,<2024.0"
 cosmoplots = "^0.1.5"
 importlib-metadata = ">=5,<7"
 
