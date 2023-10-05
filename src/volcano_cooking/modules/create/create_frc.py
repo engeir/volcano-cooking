@@ -3,9 +3,9 @@
 from abc import ABC, abstractmethod
 from typing import Tuple
 
-import model
 import numpy as np
 import scipy.stats as scp_stats
+import superposedpulses
 
 
 class FrcGenerator(ABC):
@@ -19,7 +19,7 @@ class StdFrc(FrcGenerator):
         if total_pulses < 1:
             raise ValueError(f"Can't create empty arrays, {total_pulses} = .")
         self.gamma = 0.1
-        self.my_frc = model.StandardForcingGenerator()
+        self.my_frc = superposedpulses.StandardForcingGenerator()
         self.my_frc.set_amplitude_distribution(lambda k: self.__lomax_amp(k, 1.8))
         self.times = np.arange(0, (total_pulses + 1) / self.gamma, 1 / fs)
 
@@ -39,8 +39,10 @@ class Frc(FrcGenerator):
     def __init__(self, fs: float = 1, size: int = 9999) -> None:
         # Lomax
         self.fs = fs
-        self.fpp = model.PointModel(gamma=0.1, total_duration=size, dt=1 / self.fs)
-        my_forcing_gen = model.StandardForcingGenerator()
+        self.fpp = superposedpulses.PointModel(
+            gamma=0.1, total_duration=size, dt=1 / self.fs
+        )
+        my_forcing_gen = superposedpulses.StandardForcingGenerator()
         my_forcing_gen.set_amplitude_distribution(lambda k: self.__lomax_amp(k, 1.8))
         self.fpp.set_custom_forcing_generator(my_forcing_gen)
 
