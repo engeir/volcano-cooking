@@ -38,7 +38,7 @@ pyupgrade = "^3.3.1"
 darglint = "^1.8.0"
 pytest = "^7.4.2"
 pytest-cov = "^4.0.0"
-mypy = "^1.5"
+mypy = "^1.7"
 xdoctest = "^1.1.0"
 Pygments = "^2.14.0"
 
