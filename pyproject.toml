@@ -25,7 +25,7 @@ xarray = ">=0.21.1,<2023.2.0"
 wget = "^3.2"
 dask = ">=2022.3,<2024.0"
 cosmoplots = ">=0.1.5,<0.3.0"
-importlib-metadata = ">=5,<7"
+importlib-metadata = ">=5,<8"
 
 [tool.poetry.dev-dependencies]
 coverage = "^7.3"
