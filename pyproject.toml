@@ -29,7 +29,7 @@ importlib-metadata = ">=5,<8"
 
 [tool.poetry.dev-dependencies]
 coverage = "^7.4"
-black = "^22.12"
+black = "^23.12"
 isort = "^5.13.2"
 flake8 = "^5.0.4"
 pre-commit = "^3.5.0"
