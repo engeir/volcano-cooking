@@ -280,13 +280,13 @@ poetry install
 pre-commit install
 ```
 
-Before committing new changes to a branch you may run the full test suite with:
-
-```bash
-nox
-```
-
-You will need [Poetry], [nox] and [nox-poetry] installed for this.
+<!-- Before committing new changes to a branch you may run the full test suite with: -->
+<!---->
+<!-- ```bash -->
+<!-- nox -->
+<!-- ``` -->
+<!---->
+<!-- You will need [Poetry], [nox] and [nox-poetry] installed for this. -->
 
 [common-ncl]: http://svn.code.sf.net/p/codescripts/code/trunk/ncl/lib/common.ncl
 [coord-file]: https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/coords/

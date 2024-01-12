@@ -12,7 +12,7 @@ view-frc = "volcano_cooking.view_force:main"
 sfrc-sparse2lin = "volcano_cooking.sparse_to_lin:main"
 
 [tool.poetry.dependencies]
-python = ">=3.8,<3.13"
+python = ">=3.9,<3.13"
 numpy = "^1.21.1"
 scipy = "^1.7.1"
 matplotlib = "^3.4.2"
