@@ -9,6 +9,7 @@ Note
 Modified from script provided by Herman Fæhn Fuglestvedt and using
 http://svn.code.sf.net/p/codescripts/code/trunk/ncl/emission/createVolcEruptV3.ncl
 """
+
 import os
 from typing import Tuple
 

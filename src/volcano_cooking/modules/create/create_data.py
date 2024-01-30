@@ -184,15 +184,15 @@ class Data:
         self.my_frc["Total_Emission"] = self.my_frc.Total_Emission.assign_attrs(
             Units="Tg_of_SO2"
         )
-        self.my_frc[
-            "Maximum_Injection_Height"
-        ] = self.my_frc.Maximum_Injection_Height.assign_attrs(
-            Units="km_above_mean_sea_level"
+        self.my_frc["Maximum_Injection_Height"] = (
+            self.my_frc.Maximum_Injection_Height.assign_attrs(
+                Units="km_above_mean_sea_level"
+            )
         )
-        self.my_frc[
-            "Minimum_Injection_Height"
-        ] = self.my_frc.Minimum_Injection_Height.assign_attrs(
-            Units="km_above_mean_sea_level"
+        self.my_frc["Minimum_Injection_Height"] = (
+            self.my_frc.Minimum_Injection_Height.assign_attrs(
+                Units="km_above_mean_sea_level"
+            )
         )
 
     def save_to_file(self) -> None:

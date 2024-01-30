@@ -64,3 +64,7 @@ def main(
     if style not in styles:
         sys.exit(f"Style '{style}' not available. Available styles: {styles}")
     v.view_forcing(in_file=filename, width=width, style=style, dark=dark, save=save)
+
+
+if __name__ == "__main__":
+    main()

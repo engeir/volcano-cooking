@@ -190,13 +190,15 @@ def log_tick_format(axes: plt.Axes, which: str, base: float = 10) -> plt.Axes:
         f = getattr(axes, ax)
         f.set_major_formatter(
             ticker.FuncFormatter(
-                lambda x, _: "{:g}".format(x)
-                if np.log(x) / np.log(base) in [0, 1]
-                else r"$"
-                + str(base)
-                + "^{"
-                + "{:g}".format(np.log(x) / np.log(base))
-                + r"}$"
+                lambda x, _: (
+                    "{:g}".format(x)
+                    if np.log(x) / np.log(base) in [0, 1]
+                    else r"$"
+                    + str(base)
+                    + "^{"
+                    + "{:g}".format(np.log(x) / np.log(base))
+                    + r"}$"
+                )
             )
         )
     return axes

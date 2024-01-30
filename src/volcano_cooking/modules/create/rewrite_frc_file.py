@@ -13,6 +13,7 @@ Need to reset the time dimension, and the variables date, datesec and stratvolc.
 and find a suitable altitude (perhaps from `volcano-cooking`). Then the values are set
 using the implementations from `volcano-cooking`.
 """
+
 import os
 from datetime import datetime
 
@@ -159,9 +160,9 @@ class ReWrite(Data):
                     + f"volcanoes, {start}-{end}"
                 )
             elif a == "data_creator":
-                self.my_frc.attrs[
-                    a
-                ] = "Eirik Rolland Enger, University of Tromsø, eirik.r.enger@uit.no"
+                self.my_frc.attrs[a] = (
+                    "Eirik Rolland Enger, University of Tromsø, eirik.r.enger@uit.no"
+                )
             elif a == "data_doi":
                 self.my_frc.attrs[a] = "No doi yet"
             elif a == "data_source_url":
@@ -179,9 +180,9 @@ class ReWrite(Data):
             elif a == "cesm_contact":
                 self.my_frc.attrs[a] = "None"
             elif a == "data_script":
-                self.my_frc.attrs[
-                    a
-                ] = "Generated with the 'volcano-cooking' CLI with the re-write option."
+                self.my_frc.attrs[a] = (
+                    "Generated with the 'volcano-cooking' CLI with the re-write option."
+                )
             elif a == "data_summary":
                 nd = (
                     10000 * self.yoes.astype(np.float32)

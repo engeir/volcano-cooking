@@ -190,3 +190,7 @@ def get_forcing_file(
             )
     else:
         sys.exit("Okay, I won't download it. Exiting gracefully.")
+
+
+if __name__ == "__main__":
+    main()
