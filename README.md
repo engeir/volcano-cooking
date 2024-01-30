@@ -61,6 +61,12 @@ For more information, see
 volcano-cooking --help
 ```
 
+> [!TIP]
+>
+> It is also possible to run the CLI as a python module. Try: `python -m volcano_cooking
+> --help`, `python -m volcano_cooking.view_forcing --help` or `python -m
+> volcano_cooking.sparse_to_lin --help`.
+
 #### Option 0 (default, using NCL-script)
 
 ##### TL;DR

@@ -7,7 +7,6 @@ This script is intended to be used with the `--shift-eruption-to-date` flag. If 
 generated in that file, before a second file is saved with the shifted eruption.
 """
 
-
 from typing import Optional, Tuple
 
 import numpy as np

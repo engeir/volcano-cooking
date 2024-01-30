@@ -7,6 +7,7 @@ eruption.
 The lat/lon location is also included, but considered unimportant and thus the
 same location is used for all volcanoes.
 """
+
 from typing import Optional
 
 import volcano_cooking.modules.create as create

@@ -1,6 +1,5 @@
 """Script to put any function that creates correctly formatted dates."""
 
-
 import datetime as dt
 from itertools import cycle
 from typing import List, Tuple, Union
