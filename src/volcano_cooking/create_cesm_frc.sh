@@ -16,6 +16,7 @@ export DATA_OUT="data/cesm"
 mkdir -p "$DATA_OUT"
 THIS_DIR="$1"
 NCL_DIR="$1"
+PYTHON_EXEC="$2"
 export NCL_SCRIPT="createVolcEruptV3.ncl"
 COORDS1DEG_FILE="fv_0.9x1.25_L30.nc"
 COORDS2DEG_FILE="fv_1.9x2.5_L30.nc"
@@ -35,12 +36,12 @@ export RES="2deg"
 # Check if an .env file exists and load from it.
 if [ -f .env ]; then
     # NOTE: This needs word splitting, don't quote it.
-    export $(grep -v '^#' .env | xargs -d '\n')
+    export "$(grep -v '^#' .env | xargs -d '\n')"
 fi
 
 # Check availability
 
-if [ -z "$SYNTH_FILE" ]; then
+if [ "$SYNTH_FILE" = "" ]; then
     echo "Cannot find synthetic volcano forcing file. Generate with 'volcano-cooking'."
     exit 1
 fi
@@ -89,7 +90,7 @@ echo "$GREEN${BOLD}Log file created at ""$DATA_OUT/logs/""$current_day.log$NORM"
 # The file need to be in NetCDF3 format. Could specify this in the ncl script, but the
 # nccopy command seems to support more formats, so perhaps it is better to use that(?).
 new_file="$(tail <"$DATA_OUT"/logs/"$current_day".log -n1 | awk '{print $5}')"
-[ -z "$new_file" ] && echo "$RED${BOLD}No file was created. ${NORM}See the log file for details." && exit 1
+[ "$new_file" = "" ] && echo "$RED${BOLD}No file was created. ${NORM}See the log file for details." && exit 1
 if ! echo "$new_file" | grep -q ".*.nc$"; then
     echo "This ($new_file) is not a netCDF file."
     exit 1
@@ -109,11 +110,11 @@ Please also make sure that the final step of making it cdf5 compatible is done:
     $ nccopy -k cdf5 ${new_file%???}_2.0.nc $new_file
     $ rm ${new_file%???}_2.0.nc
     $ exit 0"
-if ! python -c "import xarray" >/dev/null 2>&1; then
+if ! "$PYTHON_EXEC" -c "import xarray" >/dev/null 2>&1; then
     echo "$XRMSG"
     exit 1
 fi
-echo "$new_file" | python "$THIS_DIR"/modules/create/easy_fix.py
+echo "$new_file" | "$PYTHON_EXEC" "$THIS_DIR"/modules/create/easy_fix.py
 
 # Make it a `cdf5` compatible file.
 rm "$new_file"
