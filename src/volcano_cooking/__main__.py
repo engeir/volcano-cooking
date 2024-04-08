@@ -114,7 +114,7 @@ def main(
     if run_ncl:
         this_dir = os.path.dirname(os.path.abspath(__file__))
         shell_file = f"{this_dir}/create_cesm_frc.sh"
-        subprocess.call(["sh", shell_file, this_dir])
+        subprocess.call(["sh", shell_file, this_dir, sys.executable])
         return
     if package_last:
         this_dir = os.path.dirname(os.path.abspath(__file__))
@@ -145,9 +145,13 @@ def main(
         else:
             sv.create_volcanoes(file=file)
     elif shift_eruption == "True":
-        shift_eruption_to_date.shift_eruption_to_date(tuple(_init_year), None)
+        shift_eruption_to_date.shift_eruption_to_date(
+            (_init_year[0], _init_year[1], _init_year[2]), None
+        )
     else:
-        shift_eruption_to_date.shift_eruption_to_date(tuple(_init_year), shift_eruption)
+        shift_eruption_to_date.shift_eruption_to_date(
+            (_init_year[0], _init_year[1], _init_year[2]), shift_eruption
+        )
 
 
 def get_forcing_file(
