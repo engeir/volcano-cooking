@@ -28,7 +28,7 @@ importlib-metadata = ">=5,<8"
 xarray = ">=2023.12,<2025.0"
 
 [tool.poetry.dev-dependencies]
-coverage = "^7.4"
+coverage = "^7.5"
 black = "^24.4"
 isort = "^5.13.2"
 flake8 = "^7.0.0"
