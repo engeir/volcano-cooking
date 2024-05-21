@@ -17,7 +17,6 @@ mkdir -p "$DATA_OUT"
 THIS_DIR="$1"
 NCL_DIR="$1"
 PYTHON_EXEC="$2"
-echo "Python exec: $PYTHON_EXEC"
 export NCL_SCRIPT="createVolcEruptV3.ncl"
 COORDS1DEG_FILE="fv_0.9x1.25_L30.nc"
 COORDS2DEG_FILE="fv_1.9x2.5_L30.nc"
@@ -52,12 +51,12 @@ if ! [ -e "$NCL_DIR/$NCL_SCRIPT" ]; then
 fi
 if ! [ -e "$COORDS1DEG" ] && [ "$RES" = "1deg" ]; then
     echo "Cannot find 1deg coordinate file."
-    python -c "from volcano_cooking.__main__ import get_forcing_file;get_forcing_file('$COORDS1DEG_FILE', url='$COORDS_REMOTE$COORDS1DEG_FILE', not_forcing=True)"
+    "$PYTHON_EXEC" -c "from volcano_cooking.__main__ import get_forcing_file;get_forcing_file('$COORDS1DEG_FILE', url='$COORDS_REMOTE$COORDS1DEG_FILE', not_forcing=True)"
     [ -e "$COORDS1DEG" ] || exit 1
 fi
 if ! [ -e "$COORDS2DEG" ] && [ "$RES" = "2deg" ]; then
     echo "Cannot find 2deg coordinate file."
-    python -c "from volcano_cooking.__main__ import get_forcing_file;get_forcing_file('$COORDS2DEG_FILE', url='$COORDS_REMOTE$COORDS2DEG_FILE', not_forcing=True)"
+    "$PYTHON_EXEC" -c "from volcano_cooking.__main__ import get_forcing_file;get_forcing_file('$COORDS2DEG_FILE', url='$COORDS_REMOTE$COORDS2DEG_FILE', not_forcing=True)"
     [ -e "$COORDS2DEG" ] || exit 1
 fi
 if ! type "ncl" >/dev/null; then
@@ -103,7 +102,7 @@ echo "Fixing the attributes of the altitude_int coordinate..."
 XRMSG="\n$BOLD${RED}Cannot import xarray.$NORM Activate the environment where you installed the project
 and re-run, or run manually with a python interpreter containing xarray as:
 
-    $ echo $new_file | python src/volcano_cooking/modules/create/easy_fix.py
+    $ echo $new_file | $PYTHON_EXEC src/volcano_cooking/modules/create/easy_fix.py
 
 Please also make sure that the final step of making it cdf5 compatible is done:
 
