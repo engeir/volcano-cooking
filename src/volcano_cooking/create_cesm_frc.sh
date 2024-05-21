@@ -110,12 +110,10 @@ Please also make sure that the final step of making it cdf5 compatible is done:
     $ nccopy -k cdf5 ${new_file%???}_2.0.nc $new_file
     $ rm ${new_file%???}_2.0.nc
     $ exit 0"
-echo "Before checking xarray"
 if ! "$PYTHON_EXEC" -c "import xarray" >/dev/null 2>&1; then
     echo "$XRMSG"
     exit 1
 fi
-echo "Before running python from shell"
 echo "$new_file" | "$PYTHON_EXEC" "$THIS_DIR"/modules/create/easy_fix.py
 
 # Make it a `cdf5` compatible file.
