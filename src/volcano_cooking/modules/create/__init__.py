@@ -1,3 +1,5 @@
+"""Module for creating eruptions."""
+
 from volcano_cooking.modules.create.create_data import *  # noqa:F401,F403
 from volcano_cooking.modules.create.create_dates import *  # noqa:F401,F403
 from volcano_cooking.modules.create.create_frc import *  # noqa:F401,F403

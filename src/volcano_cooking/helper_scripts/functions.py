@@ -15,7 +15,7 @@ def find_original(filename: Optional[str] = None) -> str:
 
     Parameters
     ----------
-    filename: str (optional)
+    filename : Optional[str]
         Name of the file inside the originals directory you want to look at
 
     Returns
@@ -47,7 +47,7 @@ def find_last_output(ext: str) -> str:
 
     Parameters
     ----------
-    ext: str
+    ext : str
             The file ending
 
     Returns
@@ -86,7 +86,7 @@ def find_file(file: str) -> str:
 
     Parameters
     ----------
-    file: str
+    file : str
         Full path (absolute or relative to where the function is called) and file name of
         a custom file to be used.
 

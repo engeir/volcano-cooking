@@ -15,7 +15,9 @@ using the implementations from `volcano-cooking`.
 """
 
 import os
+from collections.abc import Mapping
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 import numpy as np
 import xarray as xr
@@ -24,9 +26,14 @@ import xarray as xr
 from volcano_cooking.modules import convert
 from volcano_cooking.modules.create.create_data import Data
 
+if TYPE_CHECKING:
+    from xarray.backends.api import T_NetcdfTypes
+
 
 class ReWrite(Data):
-    def make_dataset(self) -> None:
+    """Change the volcanic forcing used in CESM."""
+
+    def make_dataset(self) -> None:  # noqa: PLR0915
         """Re-writes the original netCDF file with new variables.
 
         Raises
@@ -82,7 +89,7 @@ class ReWrite(Data):
             np.array([zero_lat]),
         )
         ai_dim = "altitude_int"
-        self.my_frc = self.my_frc.expand_dims(**{ai_dim: f_orig[ai_dim]})
+        self.my_frc = self.my_frc.expand_dims(ai_dim=f_orig[ai_dim])
         self.my_frc = self.my_frc.assign_attrs(**f_orig.attrs)
         self.my_frc[ai_dim] = self.my_frc[ai_dim].assign_attrs(**f_orig[ai_dim].attrs)
         self.my_frc.attrs["data_summary"] = ""
@@ -99,12 +106,12 @@ class ReWrite(Data):
                     self.my_frc.attrs["data_summary"] += txt_0
                     reset = True
                 alt_range = f_orig.altitude[-10:].astype(int)
-                nd = (
+                date_str = (
                     10000 * self.yoes[i].astype(np.float32)
                     + 100 * self.moes[i].astype(np.float32)
                     + self.does[i].astype(np.float32)
                 )
-                d = "0" * (8 - len(str(int(nd)))) + str(int(nd))
+                d = "0" * (8 - len(str(int(date_str)))) + str(int(date_str))
                 amin_0 = f"{self.miihs[i]:.3f}"
                 amax_0 = f"{self.mxihs[i]:.3f}"
                 amin_1 = f"{alt_range[0].data}"
@@ -148,7 +155,7 @@ class ReWrite(Data):
 
         # helper_scripts.compare_datasets(self.my_frc, f_orig)
 
-    def __set_global_attrs(self, file) -> None:
+    def __set_global_attrs(self, file) -> None:  # noqa: PLR0912
         for a in self.my_frc.attrs:
             if a == "filename":
                 self.my_frc.attrs[a] = file
@@ -184,7 +191,7 @@ class ReWrite(Data):
                     "Generated with the 'volcano-cooking' CLI with the re-write option."
                 )
             elif a == "data_summary":
-                nd = (
+                date_str = (
                     10000 * self.yoes.astype(np.float32)
                     + 100 * self.moes.astype(np.float32)
                     + self.does.astype(np.float32)
@@ -195,7 +202,7 @@ class ReWrite(Data):
                 summary += "=" * tot_width + "\n"
                 summary += "YYYYMMDD AltMin  AltMax  VEI Em(cm-3s-1)\n"
                 for d, amin, amax, v, e in zip(
-                    nd, self.miihs, self.mxihs, self.veis, self.tes
+                    date_str, self.miihs, self.mxihs, self.veis, self.tes
                 ):
                     d_ = "0" * (w_1 - len(str(int(d)))) + str(int(d)) + " "
                     amin_ = f"{amin:.3f}".rjust(w_23) + " "
@@ -220,7 +227,7 @@ class ReWrite(Data):
         file = "VolcanEESMv3.11_SO2_850-2016_Mscale_Zreduc_2deg_c191125_edit"
         out_file = self.check_dir("nc", name=file)
         self.__set_global_attrs(file=out_file)
-        encoding = {
+        encoding: Mapping = {
             "lat": {"_FillValue": None},
             "lon": {"_FillValue": None},
             "altitude": {"_FillValue": None},
@@ -229,4 +236,5 @@ class ReWrite(Data):
             "date": {"_FillValue": -2147483647},
             "datesec": {"_FillValue": -2147483647},
         }
-        self.my_frc.to_netcdf(out_file, "w", format="NETCDF3_64BIT", encoding=encoding)
+        format: T_NetcdfTypes = "NETCDF3_64BIT"
+        self.my_frc.to_netcdf(path=out_file, format=format, encoding=encoding)

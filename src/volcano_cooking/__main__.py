@@ -4,14 +4,14 @@ import os
 import ssl
 import subprocess
 import sys
-from typing import List, Optional
+from typing import Optional
 
 import click
 import wget
 
-import volcano_cooking.configurations.shift_eruption_to_date as shift_eruption_to_date
 import volcano_cooking.synthetic_volcanoes as sv
 from volcano_cooking import __version__
+from volcano_cooking.configurations import shift_eruption_to_date
 
 
 @click.command()
@@ -97,7 +97,7 @@ from volcano_cooking import __version__
 )
 def main(
     frc: int,
-    init_year: List[int],
+    init_year: list[int],
     size: int,
     lst: bool,
     option: int,
@@ -106,6 +106,7 @@ def main(
     package_last: bool,
     file: Optional[str],
 ) -> None:
+    """Volcano cooking."""
     # First handle list, run ncl and package commands which overrides all other.
     if lst:
         for cl in sv.__GENERATORS__:
@@ -163,11 +164,11 @@ def get_forcing_file(
 
     Parameters
     ----------
-    file: str
+    file : str
         The filename the file to download will be saved as.
-    url: str, optional
+    url : Optional[str]
         Provide the full url for where to download the file.
-    not_forcing: bool
+    not_forcing : bool
         If some other file is downloaded, use generic text without file size warning.
     """
     here = os.path.join(os.getcwd(), "data", "originals")

@@ -6,7 +6,6 @@ import numpy as np
 import pytest
 import xarray as xr
 from click.testing import CliRunner
-
 from volcano_cooking import synthetic_volcanoes
 
 
@@ -27,7 +26,7 @@ def test_file_exists(runner: CliRunner) -> None:
 
     Parameters
     ----------
-    runner: CliRunner
+    runner : CliRunner
         Runner for creating isolated file  system.
     """
     with runner.isolated_filesystem():
@@ -40,7 +39,7 @@ def test_forcing_file_indexes(runner: CliRunner) -> None:
 
     Parameters
     ----------
-    runner: CliRunner
+    runner : CliRunner
         Runner for creating isolated file  system.
     """
     with runner.isolated_filesystem():

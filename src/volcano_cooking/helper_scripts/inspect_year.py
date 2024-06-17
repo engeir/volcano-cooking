@@ -6,6 +6,7 @@ import volcano_cooking.helper_scripts.functions as fnc
 
 
 def inspect_year() -> None:
+    """Print out the data from all ten variables in a table, starting at any given year."""
     year = 1865
 
     file = fnc.find_last_output("nc")
@@ -46,9 +47,9 @@ def inspect_year() -> None:
             print("".join(element.ljust(col_width) for element in p_list))
 
 
-def main():
+def _main():
     inspect_year()
 
 
 if __name__ == "__main__":
-    main()
+    _main()

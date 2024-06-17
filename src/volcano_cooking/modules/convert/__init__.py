@@ -1,3 +1,5 @@
+"""Conversion functions for the volcano parameters."""
+
 from volcano_cooking.modules.convert.adjust_emissions_and_heights import *  # noqa:F401,F403
 from volcano_cooking.modules.convert.convert_between_variables import *  # noqa:F401,F403
 

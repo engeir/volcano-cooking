@@ -11,7 +11,6 @@ http://svn.code.sf.net/p/codescripts/code/trunk/ncl/emission/createVolcEruptV3.n
 """
 
 import os
-from typing import Tuple
 
 import numpy as np
 import xarray as xr
@@ -19,21 +18,21 @@ import xarray as xr
 
 def adjust_altitude_range(
     miihs: np.ndarray, mxihs: np.ndarray, tes: np.ndarray
-) -> Tuple[np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray]:
     """Adjust altitude range to within the layers of CESM2.
 
     Parameters
     ----------
-    miihs: np.ndarray
+    miihs : np.ndarray
         Minimum injection heights
-    mxihs: np.ndarray
+    mxihs : np.ndarray
         Maximum injection heights
-    tes: np.ndarray
+    tes : np.ndarray
         Total emissions
 
     Returns
     -------
-    Tuple[np.ndarray, np.ndarray]
+    tuple[np.ndarray, np.ndarray]
         Adjusted minimum and maximum injection heights
 
     Note
@@ -42,10 +41,12 @@ def adjust_altitude_range(
     http://svn.code.sf.net/p/codescripts/code/trunk/ncl/emission/createVolcEruptV3.ncl
     """
     threshold = 3.5  # Tg
-    idx = (tes > threshold) & (mxihs > 20)
-    mxihs[idx] = 20
+    max_height = 20
+    min_height = 18
+    idx = (tes > threshold) & (mxihs > max_height)
+    mxihs[idx] = max_height
     # If some of the lower boundaries at `idx` are higher than 18, we set them to 18.
-    miihs[idx & (miihs > 18)] = 18
+    miihs[idx & (miihs > min_height)] = min_height
     return miihs, mxihs
 
 
@@ -64,15 +65,15 @@ def adjust_emissions(
 
     Parameters
     ----------
-    miihs: np.ndarray
+    miihs : np.ndarray
         Minimum injection heights
-    mxihs: np.ndarray
+    mxihs : np.ndarray
         Maximum injection heights
-    tes: np.ndarray
+    tes : np.ndarray
         Total emissions
-    e_lons: np.ndarray
+    e_lons : np.ndarray
         Longitude of the eruption
-    e_lats: np.ndarray
+    e_lats : np.ndarray
         Latitude of the eruption
 
     Returns
@@ -80,15 +81,15 @@ def adjust_emissions(
     np.ndarray
         The total column emission
 
-    Note
-    ----
-    Modified from script provided by Herman Fæhn Fuglestvedt and according to
-    http://svn.code.sf.net/p/codescripts/code/trunk/ncl/emission/createVolcEruptV3.ncl
-
     Raises
     ------
     FileNotFoundError
         If the coordinates file cannot be found.
+
+    Note
+    ----
+    Modified from script provided by Herman Fæhn Fuglestvedt and according to
+    http://svn.code.sf.net/p/codescripts/code/trunk/ncl/emission/createVolcEruptV3.ncl
     """
     file = os.path.join(
         "data",

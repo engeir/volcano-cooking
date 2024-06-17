@@ -11,11 +11,17 @@ where `<input-file>` is the name of the netCDF file you want to edit.
 
 import os
 import sys
+from collections.abc import Mapping
+from typing import TYPE_CHECKING
 
 import xarray as xr
 
+if TYPE_CHECKING:
+    from xarray.backends.api import T_NetcdfTypes
+
 
 def add_attributes() -> None:
+    """Fix the netCDF file with complete set of attributes."""
     # Read from standard input
     data = sys.stdin.readlines()
     new_path = data[0].strip("\n")
@@ -33,7 +39,7 @@ def add_attributes() -> None:
             "long_name": "altitude interval",
         }
     )
-    encoding = {
+    encoding: Mapping = {
         "lat": {"_FillValue": None},
         "lon": {"_FillValue": None},
         "altitude": {"_FillValue": None},
@@ -42,10 +48,10 @@ def add_attributes() -> None:
         "date": {"_FillValue": -2147483647},
         "datesec": {"_FillValue": -2147483647},
     }
+    format: T_NetcdfTypes = "NETCDF3_64BIT"
     f_new.to_netcdf(
-        f"{new_path[:-3]}_2.0.nc",
-        "w",
-        format="NETCDF3_64BIT",
+        path=f"{new_path[:-3]}_2.0.nc",
+        format=format,
         encoding=encoding,
     )
 

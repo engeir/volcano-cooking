@@ -8,28 +8,24 @@ repos:
         stages: [commit]
         entry: check-added-large-files
         language: system
-      - id: isort
-        name: isort
+      - id: ruff_fmt
+        name: Ruff format
         stages: [commit]
         language: system
-        entry: poetry run isort src
+        entry: ruff format
         types: [python]
-
-      - id: black
-        name: black
+      - id: ruff_check
+        name: Ruff check
         stages: [commit]
         language: system
-        entry: poetry run black src
+        entry: ruff check --fix
         types: [python]
-
-      - id: flake8
-        name: flake8
+      - id: xdoctest
+        name: xdoctest
         stages: [commit]
         language: system
-        entry: poetry run flake8 src
+        entry: poetry run xdoctest
         types: [python]
-        exclude: setup.py
-
       - id: mypy
         name: mypy
         stages: [commit]
@@ -37,23 +33,13 @@ repos:
         entry: poetry run mypy
         types: [python]
         require_serial: true
-
-      - id: darglint
-        name: darglint
+      - id: pydoclint
+        name: pydoclint
         stages: [commit]
         language: system
-        entry: poetry run darglint src
+        entry: poetry run pydoclint # src tests
         types: [python]
         require_serial: true
-
-      - id: pyupgrade
-        name: pyupgrade
-        stages: [commit]
-        language: system
-        entry: poetry run pyupgrade
-        types: [python]
-        require_serial: true
-
       - id: pytest
         name: pytest
         stages: [commit]
@@ -61,3 +47,9 @@ repos:
         entry: poetry run pytest tests
         types: [python]
         pass_filenames: false
+      - id: pydocstringformatter
+        name: pydocstringformatter
+        stages: [commit]
+        language: system
+        entry: rye run pydocstringformatter src tests
+        types: [python]

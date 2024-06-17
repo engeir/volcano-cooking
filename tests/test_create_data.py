@@ -1,12 +1,12 @@
 """Test cases for the create_data module."""
+
 import inspect
 import json
 
 import numpy as np
 import pytest
-from click.testing import CliRunner
-
 import volcano_cooking.modules.create.create_data as cr
+from click.testing import CliRunner
 
 
 @pytest.fixture

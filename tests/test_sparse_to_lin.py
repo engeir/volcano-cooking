@@ -6,20 +6,33 @@ import os
 import numpy as np
 import pytest
 from click.testing import CliRunner
-
 from volcano_cooking import sparse_to_lin, synthetic_volcanoes
 
 
 def test_sparse_to_lin() -> None:
-    # fmt: off
+    """Test the conversion from sparse to linear time."""
     t = np.array(
         [
-            0, 1e-3, 2e-3, 3e-3, 4e-3, 5e-3,
-            4, 6, 7.85, 7.91, 7.92, 7.925,
-            7.93, 7.96, 7.99, 8.001, 8.002, 8.003,
+            0,
+            1e-3,
+            2e-3,
+            3e-3,
+            4e-3,
+            5e-3,
+            4,
+            6,
+            7.85,
+            7.91,
+            7.92,
+            7.925,
+            7.93,
+            7.96,
+            7.99,
+            8.001,
+            8.002,
+            8.003,
         ]
     )
-    # fmt: on
     correct = np.array([0, 4, 6, 7.85, 7.92, 8.001])
     t2, t_m, t2_m = sparse_to_lin.sparse_to_lin(t)
     assert t[t_m].shape == t2[t2_m].shape
@@ -48,7 +61,7 @@ def test_main_succeeds(runner: CliRunner) -> None:
 
     Parameters
     ----------
-    runner: CliRunner
+    runner : CliRunner
         Runner for creating isolated file systems.
     """
     with runner.isolated_filesystem():
