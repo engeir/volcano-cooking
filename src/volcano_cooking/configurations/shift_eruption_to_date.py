@@ -7,39 +7,41 @@ This script is intended to be used with the `--shift-eruption-to-date` flag. If 
 generated in that file, before a second file is saved with the shifted eruption.
 """
 
-from typing import Optional, Tuple
+from typing import Optional
 
 import numpy as np
-import xarray as xr
-
 import volcano_cooking.helper_scripts.functions as fnc
-import volcano_cooking.modules.create as create
+import xarray as xr
+from volcano_cooking.modules import create
 
 
 def shift_eruption_to_date(
-    eruption_date: Tuple[int, int, int], file: Optional[str]
+    eruption_date: tuple[int, int, int], file: Optional[str]
 ) -> None:
     """Shift the eruption date of the synthetic volcanoes file.
 
     Parameters
     ----------
-    eruption_date: Tuple[int, int, int]
+    eruption_date : tuple[int, int, int]
         Tuple with the new eruption date.
-    file: str
-        Full path (absolute or relative to where the function is called) and file name of
-        a custom file to be used.
+    file : Optional[str]
+        Full path (absolute or relative to where the function is called) and file name
+        of a custom file to be used.
 
     Raises
     ------
     ValueError
-        If the eruption date is not a valid date or if it is before or after the first and
-        last eruptions.
+        If the eruption date is not a valid date or if it is before or after the first
+        and last eruptions.
     """
-    if eruption_date[0] < 0 or eruption_date[0] > 9999:
+    end_of_time = 9999
+    allowed_months = 12
+    allowed_days = 28
+    if eruption_date[0] < 0 or eruption_date[0] > end_of_time:
         raise ValueError("Year of eruption must be between 0 and 9999, inclusive.")
-    if eruption_date[1] < 1 or eruption_date[1] > 12:
+    if eruption_date[1] < 1 or eruption_date[1] > allowed_months:
         raise ValueError("Month of eruption must be between 1 and 12, inclusive.")
-    if eruption_date[2] < 1 or eruption_date[2] > 28:
+    if eruption_date[2] < 1 or eruption_date[2] > allowed_days:
         raise ValueError("Day of eruption must be between 1 and 28, inclusive.")
     arrs = open_file("nc", file)
     first = arrs[1][0] * 10000 + arrs[2][0] * 100 + arrs[3][0]
@@ -58,20 +60,20 @@ def shift_eruption_to_date(
     frc_cls.save_to_file()
 
 
-def open_file(ext: str, in_file: Optional[str] = None) -> Tuple[np.ndarray, ...]:
+def open_file(ext: str, in_file: Optional[str] = None) -> tuple[np.ndarray, ...]:
     """Load variables from the last saved file of given extension.
 
     Parameters
     ----------
-    ext: str
+    ext : str
         Extension of the file that should be used
-    in_file: str, optional
+    in_file : Optional[str]
         Full path (absolute or relative to where the function i called) and file name of a
         custom file to be used.
 
     Returns
     -------
-    np.ndarray, ...
+    tuple[np.ndarray, ...]
         All arrays saved in the synthetic_volcanoes file, same format as the input of the
         `create.Data` class.
 

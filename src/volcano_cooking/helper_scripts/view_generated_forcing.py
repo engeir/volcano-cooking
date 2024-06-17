@@ -10,10 +10,11 @@ format that the synthetically created files are.
 import datetime
 import os
 import sys
-from typing import List, Optional, Tuple
+from typing import Optional
 
 import cftime
 import cosmoplots
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
@@ -29,30 +30,30 @@ def view_forcing(
     dark: bool = False,
     save: bool = False,
     return_fig: bool = False,
-) -> Optional[plt.Figure]:
+) -> Optional[mpl.figure.Figure]:
     """View the forcing found in the generated total emission against time.
 
     Parameters
     ----------
-    ext: str
+    ext : Optional[str]
         Extension of the file type used. Valid values are 'npz' and 'nc'.
-    in_file: str, optional
+    in_file : Optional[str]
         Full path (absolute or relative to where the function i called) and file name of
         a custom file to be used.
-    width: int
+    width : int
         Width of the plot in number of columns. Default is 2.
-    style: str
+    style : str
         Style of the plot. Default is 'connected'.
-    dark: bool
+    dark : bool
         Plot with dark background. Defaults to False
-    save: bool
+    save : bool
         Save the plot. Defaults to False.
-    return_fig: bool
+    return_fig : bool
         Return the figure. Defaults to False.
 
     Returns
     -------
-    plt.Figure
+    Optional[mpl.figure.Figure]
         The figure of the plot.
     """
     _FIG_STD_ = cosmoplots.set_rcparams_dynamo(plt.rcParams, num_cols=width)
@@ -82,22 +83,22 @@ def view_forcing(
 
 def frc_datetime2float(
     ext: Optional[str] = None, in_file: Optional[str] = None
-) -> Tuple[np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray]:
     """Convert time axis from datetime to float.
 
     Parameters
     ----------
-    ext: str
+    ext : Optional[str]
         Extension of the file type used. Valid values are 'npz' and 'nc'.
-    in_file: str, optional
+    in_file : Optional[str]
         Full path (absolute or relative to where the function i called) and file name of a
         custom file to be used.
 
     Returns
     -------
-    np.ndarray:
+    np.ndarray
         Time axis of the input file
-    np.ndarray:
+    np.ndarray
         Values of the input file
 
     Raises
@@ -115,15 +116,17 @@ def frc_datetime2float(
     else:
         raise ValueError(f"This file cannot be viewed: {in_file} = ")
 
-    dates: List[datetime.datetime] = []
-    dates_ap: List[str] = []
+    dates: list[datetime.datetime] = []
+    dates_ap: list[str] = []
     d_app = dates.append
     d_ap_app = dates_ap.append
-    for y, m, d in zip(yoes, moes, does):
-        y = str("0" * (4 - len(str(y)))) + f"{y}"
-        m = str("0" * (2 - len(str(m)))) + f"{m}"
-        d = str("0" * (2 - len(str(d)))) + f"{d}"
-        if len(y) != 4 or len(m) != len(d) != 2:
+    y_str_len = 4
+    md_str_len = 2
+    for y_, m_, d_ in zip(yoes, moes, does):
+        y = str("0" * (4 - len(str(y_)))) + f"{y_}"
+        m = str("0" * (2 - len(str(m_)))) + f"{m_}"
+        d = str("0" * (2 - len(str(d_)))) + f"{d_}"
+        if len(y) != y_str_len or len(m) != len(d) != md_str_len:
             raise ValueError(
                 "Year, month and/or day is not formatted properly. "
                 + f"{len(y)} = , {len(m)} = , {len(d)} = , need 4, 2, 2."
@@ -147,7 +150,7 @@ def check_dir(ext: str) -> str:
 
     Parameters
     ----------
-    ext: str
+    ext : str
         The file ending
 
     Returns
@@ -169,24 +172,24 @@ def check_dir(ext: str) -> str:
 
 def load_forcing(
     ext: str, in_file: Optional[str] = None
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Load variables from the last saved file of given extension.
 
     Data about the date and total emission found in either the last npz or nc file.
 
     Parameters
     ----------
-    ext: str
+    ext : str
         Extension of the file that should be used
-    in_file: str, optional
-        Full path (absolute or relative to where the function i called) and file name of a
-        custom file to be used.
+    in_file : Optional[str]
+        Full path (absolute or relative to where the function i called) and file name of
+        a custom file to be used.
 
     Returns
     -------
-    np.ndarray, np.ndarray, np.ndarray, np.ndarray
-        Dates and forcing (total emissions) is returnd in the order years, months, days,
-        total emission
+    tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
+        Dates and forcing (total emissions) is returned in the order years, months,
+        days, total emission
 
     Raises
     ------
@@ -214,13 +217,14 @@ def load_forcing(
     else:
         raise NameError(
             "Names 'yoes', 'moes', 'does' and 'tes' are not found. "
-            + f"Extension was {ext} = , but shuld be 'npz' or 'nc'."
+            f"Extension was {ext} = , but should be 'npz' or 'nc'."
         )
 
     return yoes, moes, does, tes
 
 
 def main():
+    """Run the main function."""
     # Remember to remove plt.show() when timing
     # import timeit
     # t1 = timeit.timeit(lambda: view_forcing("nc"), number=1000)

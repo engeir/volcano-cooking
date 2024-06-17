@@ -10,7 +10,7 @@ same location is used for all volcanoes.
 
 from typing import Optional
 
-import volcano_cooking.modules.create as create
+from volcano_cooking.modules import create
 
 # ====================================================================================== #
 # Need:
@@ -35,7 +35,7 @@ import volcano_cooking.modules.create as create
 # ====================================================================================== #
 
 
-__GENERATORS__ = {
+__GENERATORS__: dict[int, type[create.Generate]] = {
     0: create.GenerateRandomNormal,
     1: create.GenerateFPP,
     2: create.GenerateSingleVolcano,
@@ -58,15 +58,15 @@ def create_volcanoes(
 
     Parameters
     ----------
-    size: int
+    size : int
         The total number of eruptions
-    init_year: int
+    init_year : int
         First year in the climate model
-    version: int
+    version : int
         Choose one of the versions from the '__GENERATORS__' dictionary
-    option: int
+    option : int
         Choose which option to use when generating forcing
-    file: str, optional
+    file : Optional[str]
         Read eruption dates and emissions from file.
 
     Raises
@@ -85,9 +85,9 @@ def create_volcanoes(
         print(f"Generating with '{__GENERATORS__[4].__name__}'...")
         print(
             "WARNING: When generating with this option, eruptions are not shifted to "
-            + "have one eruption prior to the first simulation year. Add an extra "
-            + "eruption at an early (and late) time that you know will cover the whole "
-            + "simulation you are planning."
+            "have one eruption prior to the first simulation year. Add an extra "
+            "eruption at an early (and late) time that you know will cover the whole "
+            "simulation you are planning."
         )
         g = __GENERATORS__[4](size, init_year, file)
     else:
@@ -104,6 +104,7 @@ def create_volcanoes(
 
 
 def main():
+    """Run the main function."""
     create_volcanoes(size=300, init_year=1)
 
 

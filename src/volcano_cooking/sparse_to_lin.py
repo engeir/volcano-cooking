@@ -4,7 +4,7 @@ It takes a filename as a mandatory input parameter.
 """
 
 import os
-from typing import List, Optional, Tuple
+from typing import Optional
 
 import click
 import numpy as np
@@ -18,7 +18,7 @@ def sparse_to_lin(
     ey: Optional[int] = None,
     samples_per_year: int = 12,
     remove: int = 1,
-) -> Tuple[np.ndarray, List, List]:
+) -> tuple[np.ndarray, list, list]:
     """Re-sample an uneven time axis to one with linear spacing.
 
     The function returns the new linearly spaced time axis, as well as two
@@ -28,25 +28,25 @@ def sparse_to_lin(
 
     Parameters
     ----------
-    t: np.ndarray
+    t : np.ndarray
         The time axis with uneven time stamps.
-    sy: int, optional
+    sy : Optional[int]
         The assumed first year of the time axis
-    ey: int, optional
+    ey : Optional[int]
         The assumed end year of the time axis
-    samples_per_year: int
+    samples_per_year : int
         The number of samples per year.
-    remove: int
+    remove : int
         Remove the number of elements at the end of the time array equal to 'remove'.
 
     Returns
     -------
-    np.ndarray:
+    np.ndarray
         The new linearly spaced time axis
-    list:
+    list
         Masking of the original time axis that give the time stamps we want to
         keep that match best with the new time axis
-    list:
+    list
         Masking of the new time axis that give the time stamps kept from the original
 
     Examples
@@ -89,9 +89,9 @@ def sparse_to_lin(
     # Now we find the indices of `t` that we want to keep. `c` works as the index of the
     # first item in each array inside mask_sections
     c = 0
-    t_mask: List[int] = []
+    t_mask: list[int] = []
     t_mask_app = t_mask.append
-    ti_mask: List[int] = []
+    ti_mask: list[int] = []
     ti_mask_app = ti_mask.append
     for arr in mask_sections:
         # Find index of t (arr) that is closest to t_i[arr]

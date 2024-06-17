@@ -3,21 +3,22 @@
 from itertools import cycle
 
 import numpy as np
-
-import volcano_cooking.modules.convert as convert
-import volcano_cooking.modules.create as create
+from volcano_cooking.modules import convert, create
 
 # We first need to create a generator class. This inherits from Generate. Let us just
 # create the regular intervals generator again.
 
 
 class GenerateRegularIntervals2(create.Generate):
+    """Create a custom generator class."""
+
     def gen_dates_totalemission_vei(self) -> None:
+        """Implement necessary methods."""
         self.yoes, self.moes, self.does, self.tes = regular_intervals2()
         self.veis = convert.totalemission_to_vei(self.tes)
 
 
-def regular_intervals2():
+def regular_intervals2() -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Create dates with regular intervals.
 
     This function creates dates with regular intervals and a pre-defined magnitude as
@@ -25,13 +26,13 @@ def regular_intervals2():
 
     Returns
     -------
-    yoes: np.ndarray
+    yoes : np.ndarray
         Array of length 'size' with the year of a date
-    moes: np.ndarray
+    moes : np.ndarray
         Array of length 'size' with the month of a date
-    does: np.ndarray
+    does : np.ndarray
         Array of length 'size' with the day of a date
-    veis: np.ndarray
+    veis : np.ndarray
         Array of length 'size' with the VEI
     """
     year_sep = 2
@@ -51,6 +52,7 @@ def regular_intervals2():
 
 
 def create_synthetic_file() -> None:
+    """Run example."""
     # CREATE DATA -------------------------------------------------------------------- #
     size, init_year = 100, 1850
     g = GenerateRegularIntervals2(size, init_year)

@@ -4,8 +4,6 @@ The converting functions are made through trial and error by matching the synthe
 created variables with one real data set used in CESM2.
 """
 
-from typing import Tuple
-
 import numpy as np
 
 
@@ -14,7 +12,7 @@ def vei_to_totalemission(veis: np.ndarray) -> np.ndarray:
 
     Parameters
     ----------
-    veis: np.ndarray
+    veis : np.ndarray
         The array of VEI that should be converted to Total_Emission
 
     Returns
@@ -41,7 +39,7 @@ def totalemission_to_vei(tes: np.ndarray) -> np.ndarray:
 
     Parameters
     ----------
-    tes: np.ndarray
+    tes : np.ndarray
         The array of Total_Emission that should be converted to VEI
 
     Returns
@@ -66,7 +64,7 @@ def totalemission_to_vei(tes: np.ndarray) -> np.ndarray:
     return veis
 
 
-def vei_to_injectionheights(veis: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+def vei_to_injectionheights(veis: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     """Convert VEI to minimum and maximum injection heights.
 
     When we set the minimum and maximum injection heights we should make sure the minimum
@@ -76,7 +74,7 @@ def vei_to_injectionheights(veis: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
 
     Parameters
     ----------
-    veis: np.ndarray
+    veis : np.ndarray
         The array of VEI that should be converted to Total_Emission
 
     Returns
@@ -85,8 +83,9 @@ def vei_to_injectionheights(veis: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         The resulting minimum and maximum injection heights as a 1D numpy arrays.
         The first element is the lower bound, second is upper bound.
     """
-    scale_max = np.array([80 if v > 3 else 10 for v in veis])
-    scale_min = np.array([20 if v > 3 else 1 for v in veis])
+    vei_limit = 3
+    scale_max = np.array([80 if v > vei_limit else 10 for v in veis])
+    scale_min = np.array([20 if v > vei_limit else 1 for v in veis])
     mxihs = np.abs(
         np.random.normal(1, 2.0, size=len(veis)).astype(np.float32) * scale_max
     )
@@ -94,9 +93,10 @@ def vei_to_injectionheights(veis: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         np.random.normal(1, 2.0, size=len(veis)).astype(np.float32) * scale_min
     )
     # Finally we make sure the lower bound is less than 30:
-    idx_min = miihs > 30
+    max_height = 30
+    idx_min = miihs > max_height
     miihs[idx_min] = 18
-    idx_max = mxihs > 30
+    idx_max = mxihs > max_height
     mxihs[idx_max] = 20
 
     for idx, (i, j) in enumerate(zip(miihs, mxihs)):

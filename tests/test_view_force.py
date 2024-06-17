@@ -1,12 +1,10 @@
 """Test cases for module view_force."""
 
-
 import json
 from unittest.mock import MagicMock, patch
 
 import pytest
 from click.testing import CliRunner
-
 from volcano_cooking import synthetic_volcanoes, view_force
 
 
@@ -28,15 +26,16 @@ def test_main_succeeds(mock_fig: MagicMock, runner: CliRunner) -> None:
 
     Parameters
     ----------
-    mock_fig: MagicMock
+    mock_fig : MagicMock
         Suppress call to plt.show().
-    runner: CliRunner
+    runner : CliRunner
         Runner for creating isolated file systems.
     """
     r = len(synthetic_volcanoes.__GENERATORS__)
     data = {"dates": ["1850-01-17", "1860-01-01"], "emissions": ["400", "400"]}
     for v in range(r):
-        file = "new_file.json" if v == 4 else None
+        from_file_generator_index = 4
+        file = "new_file.json" if v == from_file_generator_index else None
         with runner.isolated_filesystem():
             with open("new_file.json", "w") as f:
                 json.dump(data, f, indent=2)

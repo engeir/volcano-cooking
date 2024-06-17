@@ -4,7 +4,6 @@ import numpy as np
 import pytest
 import xarray as xr
 from click.testing import CliRunner
-
 from volcano_cooking.helper_scripts import compare_datasets
 
 
@@ -21,6 +20,7 @@ def runner() -> CliRunner:
 
 
 def test_errors() -> None:
+    """Test that errors are raised."""
     with pytest.raises(TypeError):
         compare_datasets(np.array([1, 2, 3]))  # type: ignore
     with pytest.raises(TypeError):
@@ -36,7 +36,7 @@ def test_comparison(runner: CliRunner) -> None:
 
     Parameters
     ----------
-    runner: CliRunner
+    runner : CliRunner
         Runner for creating isolated file systems.
     """
     with runner.isolated_filesystem():

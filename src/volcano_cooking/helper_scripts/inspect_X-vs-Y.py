@@ -7,6 +7,7 @@ import volcano_cooking.helper_scripts.functions as fnc
 
 
 def x_vs_y() -> None:
+    """Compare two variables across the original and synthetic forcing files."""
     yax_file = fnc.find_original()
     xax_file = fnc.find_last_output("nc")
 
@@ -46,9 +47,9 @@ def x_vs_y() -> None:
     plt.show()
 
 
-def main():
+def _main():
     x_vs_y()
 
 
 if __name__ == "__main__":
-    main()
+    _main()

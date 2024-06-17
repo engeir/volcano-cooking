@@ -13,6 +13,7 @@ import volcano_cooking.helper_scripts.functions as fnc
 
 
 def compare_nc_files() -> None:
+    """Compare netCDF files."""
     original_file = fnc.find_original()
     synthetic_file = fnc.find_last_output("nc")
 
@@ -44,9 +45,9 @@ def compare_nc_files() -> None:
         print("")
 
 
-def main():
+def _main():
     compare_nc_files()
 
 
 if __name__ == "__main__":
-    main()
+    _main()

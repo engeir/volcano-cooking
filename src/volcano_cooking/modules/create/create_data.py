@@ -5,24 +5,45 @@ import json
 import os
 import sys
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import Optional
 
 import numpy as np
 import xarray as xr
-
-import volcano_cooking.modules.convert as convert
-import volcano_cooking.modules.create as create
+from volcano_cooking.modules import convert, create
 
 
 class Data:
     """Create data for a volcanic forcing file.
 
+    Parameters
+    ----------
+    eruptions : np.ndarray
+        Eruption number
+    yoes : np.ndarray
+        Years (four digit number) that the volcanoes occurred
+    moes : np.ndarray
+        Months (two digit number) that the volcanoes occurred
+    does : np.ndarray
+        Days (two digit number) that the volcanoes occurred
+    lats : np.ndarray
+        Latitudinal coordinate
+    lons : np.ndarray
+        Longitudinal coordinate
+    tes : np.ndarray
+        Total emission from a volcano at corresponding date
+    veis : np.ndarray
+        VEI (Volcanic Explosivity Index) of a volcano at corresponding date
+    miihs : np.ndarray
+        Minimum injection height
+    mxihs : np.ndarray
+        Maximum injection height
+
     Attributes
     ----------
-    make_dataset: method
+    make_dataset : method
         Create the xarray data set with the numpy arrays provided to the class on
         initialisation.
-    save_to_file: method
+    save_to_file : method
         Save the generated xarray data set as a netCDF4 file, and the defining numpy
         arrays to a .npz file.
     """
@@ -40,31 +61,6 @@ class Data:
         miihs: np.ndarray,
         mxihs: np.ndarray,
     ) -> None:
-        """Initialise object by giving all variables that should be put in the .nc file.
-
-        Parameters
-        ----------
-        eruptions: np.ndarray
-            Eruption number
-        yoes: np.ndarray
-            Years (four digit number) that the volcanoes occurred
-        moes: np.ndarray
-            Months (two digit number) that the volcanoes occurred
-        does: np.ndarray
-            Days (two digit number) that the volcanoes occurred
-        lats: np.ndarray
-            Latitudinal coordinate
-        lons: np.ndarray
-            Longitudinal coordinate
-        tes: np.ndarray
-            Total emission from a volcano at corresponding date
-        veis: np.ndarray
-            VEI (Volcanic Explosivity Index) of a volcano at corresponding date
-        miihs: np.ndarray
-            Minimum injection height
-        mxihs: np.ndarray
-            Maximum injection height
-        """
         self.eruptions = eruptions
         self.yoes = yoes
         self.moes = moes
@@ -232,9 +228,9 @@ class Data:
 
         Parameters
         ----------
-        ext: str
+        ext : str
             The file ending
-        name: str
+        name : str
             The file name. Defaults to 'synthetic_volcanoes'.
 
         Returns
@@ -255,20 +251,19 @@ class Data:
 
 
 class Generate(ABC):
-    """ABC for generating data with different properties."""
+    """ABC for generating data with different properties.
+
+    Parameters
+    ----------
+    size : int
+        The total number of volcanoes
+    init_year : int
+        The first possible year for a volcanic eruption
+    file : Optional[str]
+        Path to the json file.
+    """
 
     def __init__(self, size: int, init_year: int, file: Optional[str] = None) -> None:
-        """Initialise object by giving all variables that should be put in the .nc file.
-
-        Parameters
-        ----------
-        size: int
-            The total number of volcanoes
-        init_year: int
-            The first possible year for a volcanic eruption
-        file: str, optional
-            Path to the json file.
-        """
         self.eruptions: np.ndarray
         self.yoes: np.ndarray
         self.moes: np.ndarray
@@ -353,12 +348,12 @@ class Generate(ABC):
             self.yoes -= abs(self.init_year - self.yoes[0]) + 1
         self._gen_rest()
 
-    def get_arrays(self) -> List[np.ndarray]:
+    def get_arrays(self) -> list[np.ndarray]:
         """Return all generated data.
 
         Returns
         -------
-        list
+        list[np.ndarray]
             A list of all arrays. Order is the same as the input to the Data class
 
         Raises
@@ -386,7 +381,10 @@ class Generate(ABC):
 
 
 class GenerateRandomNormal(Generate):
+    """Generate random and normally distributed eruption dates."""
+
     def gen_dates_totalemission_vei(self):
+        """Generate random dates, total emission and VEI."""
         self.yoes, self.moes, self.does = create.random_dates(self.size, self.init_year)
         # We don't want eruptions that have a VEI greater than 6.
         self.veis = np.random.normal(4, 1, size=self.size).round().astype(np.int8) % 7
@@ -394,7 +392,10 @@ class GenerateRandomNormal(Generate):
 
 
 class GenerateFPP(Generate):
+    """Generate dates from an FPP."""
+
     def gen_dates_totalemission_vei(self):
+        """Generate random dates, total emission and VEI."""
         self.yoes, self.moes, self.does, self.tes = create.fpp_dates_and_emissions(
             self.size, self.init_year
         )
@@ -402,13 +403,19 @@ class GenerateFPP(Generate):
 
 
 class GenerateRegularIntervals(Generate):
+    """Generate date with regular interval."""
+
     def gen_dates_totalemission_vei(self) -> None:
+        """Generate random dates, total emission and VEI."""
         self.yoes, self.moes, self.does, self.tes = create.regular_intervals()
         self.veis = convert.totalemission_to_vei(self.tes)
 
 
 class GenerateSingleVolcano(Generate):
+    """Generate a single date."""
+
     def gen_dates_totalemission_vei(self) -> None:
+        """Generate random dates, total emission and VEI."""
         self.yoes, self.moes, self.does, self.tes = create.single_date_and_emission(
             self.init_year
         )
@@ -416,10 +423,13 @@ class GenerateSingleVolcano(Generate):
 
 
 class GenerateFromFile(Generate):
+    """Generate eruption dates read in from file."""
+
     def gen_dates_totalemission_vei(self) -> None:
+        """Generate random dates, total emission and VEI."""
         if self.file is None:
             raise AttributeError("Cannot use GenerateFromFile without a json file.")
         with open(self.file) as f:
             a = json.load(f)
-        self = create.from_json(a, self)
+        self = create.from_json(a, self)  # type: ignore
         self.veis = convert.totalemission_to_vei(self.tes)

@@ -1,12 +1,11 @@
 """Compare two xarray datasets' dimensions and variables."""
 
 import os
-from typing import List, Union
 
 import xarray as xr
 
 
-def compare_datasets(*args: Union[str, xr.Dataset]) -> None:
+def compare_datasets(*args: str | xr.Dataset) -> None:
     """Compare any number of xarray datasets.
 
     This function checks the dimensions; their names and if it has variable attributes,
@@ -14,7 +13,7 @@ def compare_datasets(*args: Union[str, xr.Dataset]) -> None:
 
     Parameters
     ----------
-    args: Union[str, xr.Dataset]
+    *args : str | xr.Dataset
         Any number of paths to netCDF files or xarray dataset objects
 
     Raises
@@ -22,7 +21,7 @@ def compare_datasets(*args: Union[str, xr.Dataset]) -> None:
     TypeError
         If the input parameters are not of type `str` or `xr.Dataset`
     """
-    xr_list: List[xr.Dataset] = []
+    xr_list: list[xr.Dataset] = []
     xr_app = xr_list.append
     for arr in args:
         if isinstance(arr, str):
@@ -43,14 +42,12 @@ def compare_datasets(*args: Union[str, xr.Dataset]) -> None:
     print("\nChecking coordinates...")
     for i, arr in enumerate(xr_list):
         print(f"\tArray {i}:\t{list(arr.coords)}")
-        # print(f"\tArray {i}:\t{arr.coords}")
 
     print("\nChecking variables...")
     for i, arr in enumerate(xr_list):
         print(
             f"\tArray {i}:\t{[f'{v}, {arr[v].dims}, {arr[v].shape}' for v in arr.data_vars]}"
         )
-        # print(f"\tArray {i}:\t{arr.data_vars}")
         for v in arr.data_vars:
             print(f"\t\t{list(arr[v].attrs)}")
 

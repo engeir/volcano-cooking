@@ -6,7 +6,6 @@ import os
 
 import pytest
 from click.testing import CliRunner
-
 from volcano_cooking import synthetic_volcanoes
 
 
@@ -27,7 +26,7 @@ def test_create_volcaoes(runner: CliRunner) -> None:
 
     Parameters
     ----------
-    runner: CliRunner
+    runner : CliRunner
         Runner for creating isolated file  system.
     """
     data = {"dates": ["1850-01-17", "1860-01-01"], "emissions": ["400", "400"]}
@@ -35,8 +34,9 @@ def test_create_volcaoes(runner: CliRunner) -> None:
         with open("new_file.json", "w") as f:
             json.dump(data, f, indent=2)
         r = len(synthetic_volcanoes.__GENERATORS__)
+        from_file_generator_index = 4
         for v in range(r):
-            file = "new_file.json" if v == 4 else None
+            file = "new_file.json" if v == from_file_generator_index else None
             d = os.path.join("data", "output")
             out_npz = os.path.join(os.getcwd(), d, "synthetic_volcanoes_*.npz")
             out_nc = os.path.join(os.getcwd(), d, "synthetic_volcanoes_*.nc")
