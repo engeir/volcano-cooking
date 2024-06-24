@@ -39,7 +39,7 @@ xdoctest = "^1.1.5"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.9"
-pydoclint = "^0.4.1"
+pydoclint = ">=0.4.1,<0.6.0"
 pydocstringformatter = "^0.7.3"
 
 [tool.coverage.paths]
