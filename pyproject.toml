@@ -38,7 +38,7 @@ mypy = "^1.10"
 xdoctest = "^1.1.5"
 
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.4.9"
+ruff = ">=0.4.9,<0.6.0"
 pydoclint = ">=0.4.1,<0.6.0"
 pydocstringformatter = "^0.7.3"
 
